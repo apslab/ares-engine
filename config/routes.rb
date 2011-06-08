@@ -29,8 +29,6 @@ Rails.application.routes.draw do
 
   resources :recibos
 
-  resources :facturas
-
   #devise_for :users
 
   resources :clientes do 

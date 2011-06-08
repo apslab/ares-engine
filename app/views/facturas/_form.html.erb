@@ -9,7 +9,7 @@
   <% end %>
 <% end %>
 
-<%= semantic_form_for @factura do |f| %>
+<%= semantic_form_for [@cliente, @factura] do |f| %>
  <%= f.semantic_errors %>
 
 <%= f.inputs do %>

@@ -1,9 +1,12 @@
 class FacturasController < AuthorizedController
+  before_filter :find_cliente
+  before_filter :find_factura, :except => [:index, :new, :create]
+
   # GET /facturas
   # GET /facturas.xml
   
   def index
-    @search = Factura.search(params[:search])
+    @search = @cliente.facturas.search(params[:search])
     @facturas = @search.page(params[ :page ]).per(10)
 
     respond_to do |format|
@@ -15,20 +18,24 @@ class FacturasController < AuthorizedController
   # GET /facturas/1
   # GET /facturas/1.xml
   def show
-    @factura = Factura.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @factura }
+      format.pdf do
+        dump_tmp_filename = Rails.root.join('tmp',@factura.cache_key)
+        Dir.mkdir(dump_tmp_filename.dirname) unless File.directory?(dump_tmp_filename.dirname)
+        @factura.save_pdf_to(dump_tmp_filename)
+        send_file(dump_tmp_filename, :type => :pdf, :disposition => 'attachment', :filename => "#{@cliente.razonsocial}-factura-#{@factura.numero}.pdf")
+        File.delete(dump_tmp_filename)
+      end
     end
   end
 
   # GET /facturas/new
   # GET /facturas/new.xml
   def new
-    @factura = Factura.new
-    @cliente = Cliente.find(params[:cliente_id])
-    @factura.cliente_id = @cliente.id
+    @factura = @cliente.facturas.build
     
     respond_to do |format|
       format.html # new.html.erb
@@ -38,18 +45,17 @@ class FacturasController < AuthorizedController
 
   # GET /facturas/1/edit
   def edit
-    @factura = Factura.find(params[:id])
   end
 
   # POST /facturas
   # POST /facturas.xml
   def create
-    @factura = Factura.new(params[:factura])
+    @factura = @cliente.facturas.build(params[:factura])
 
     respond_to do |format|
       if @factura.save
-        format.html { redirect_to(@factura, :notice => 'Factura was successfully created.') }
-        format.xml  { render :xml => @factura, :status => :created, :location => @factura }
+        format.html { redirect_to([@cliente, @factura], :notice => 'Factura was successfully created.') }
+        format.xml  { render :xml => @factura, :status => :created, :location => [@cliente, @factura] }
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @factura.errors, :status => :unprocessable_entity }
@@ -60,11 +66,10 @@ class FacturasController < AuthorizedController
   # PUT /facturas/1
   # PUT /facturas/1.xml
   def update
-    @factura = Factura.find(params[:id])
 
     respond_to do |format|
       if @factura.update_attributes(params[:factura])
-        format.html { redirect_to(@factura, :notice => 'Factura was successfully updated.') }
+        format.html { redirect_to([@cliente, @factura], :notice => 'Factura was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -76,18 +81,16 @@ class FacturasController < AuthorizedController
   # DELETE /facturas/1
   # DELETE /facturas/1.xml
   def destroy
-    @factura = Factura.find(params[:id])
     @factura.destroy unless @factura.isprinted?
 
     respond_to do |format|
-      format.html { redirect_to(facturas_url) }
+      format.html { redirect_to(cliente_facturas_url(@cliente)) }
       format.xml  { head :ok }
     end
   end
 
   def imprimir
      require 'prawn'
-     @factura = Factura.find(params[:id])
 
      Prawn::Document.generate('factura.pdf') do |pdf|
 
@@ -165,7 +168,7 @@ class FacturasController < AuthorizedController
      end
      respond_to do |format|
        if @factura.update_attributes(params[:factura])
-         format.html { redirect_to(@factura, :notice => 'la Factura fue impresa correctamente.') }
+         format.html { redirect_to([@cliente, @factura], :notice => 'la Factura fue impresa correctamente.') }
          format.xml  { head :ok }
        else
          format.html { render :action => "edit" }
@@ -173,5 +176,15 @@ class FacturasController < AuthorizedController
        end
      end
      
+   end
+
+   protected 
+
+   def find_cliente
+     @cliente = Cliente.find(params[:cliente_id])
+   end
+
+   def find_factura
+     @factura = @cliente.facturas.find(params[:id])
    end
 end
