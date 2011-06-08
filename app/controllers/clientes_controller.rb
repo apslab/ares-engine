@@ -39,7 +39,7 @@ class ClientesController < AuthorizedController
 #    @cliente.empresa_id = current_company.id
 # esto reemplaza las dos lineas anteriores
 
-    @cliente = Cliente.new
+    @cliente = current_company.clientes.build
     
     respond_to do |format|
       format.html # new.html.erb
@@ -54,8 +54,6 @@ class ClientesController < AuthorizedController
   # POST /clientes
   # POST /clientes.xml
   def create
-    #@cliente = Cliente.new(params[:cliente])
-     
     @cliente = Cliente.new(params[:cliente].update(:empresa_id => current_company.id))
 
     respond_to do |format|
@@ -129,7 +127,6 @@ end
 protected 
 # filtro general protejido
   def filter_customer
-    #@cliente = current_company.clientes.find( params[:id] )
     @cliente = Cliente.by_company(current_company).find( params[:id] )
   end
 end

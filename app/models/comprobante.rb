@@ -40,7 +40,7 @@ class Comprobante < ActiveRecord::Base
   end  
   
   def self.referencias
-    ['factura_total','factura_subtotal','factura_impuesto']
+    ['factura_total','factura_subtotal','factura_iva','factura_iibb']
   end
   
 protected

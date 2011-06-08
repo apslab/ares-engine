@@ -67,8 +67,24 @@ class Factura < Comprobante
     define_method(methodname) { account_by_part(__method__) }    
   end
 
+  Comprobante.referencias.grep(/^factura_/).each do |methodname|
+    define_method(methodname) { account_by_part_debit(__method__ + 'debit?') }    
+  end
+
+  Comprobante.referencias.grep(/^factura_/).each do |methodname|
+    define_method(methodname) { account_by_part_credit(__method__ + 'credit?') }    
+  end
+
   def account_by_part(referencename)
     self.cliente.empresa.refenciacontables.find_by_referencename(referencename).account_id
+  end
+
+  def account_by_part_debit(referencename)
+    self.cliente.empresa.refenciacontables.find_by_referencename(referencename).debita
+  end
+
+  def account_by_part_credit(referencename)
+    not self.cliente.empresa.refenciacontables.find_by_referencename(referencename).debita
   end
     
   def to_entry
@@ -77,25 +93,22 @@ class Factura < Comprobante
       # cada referencia es mapeada al asiento
       Comprobante.referencias.grep(/^factura_/).each do |methodname|
         entry.details.new
-        
         entry.details.account_id = self.factura_total()
         entry.details.description = methodname.to_s
-        entry.details.credit = 0
-        entry.details.debit = 0
+        entry.details.credit = total_factura if self.factura_total_credit?
+        entry.details.debit = total_factura if self.factura_total_debit?
 
         entry.details.new
-        
         entry.details.account_id = self.factura_subtotal()
         entry.details.description = methodname.to_s
-        entry.details.credit = 0
-        entry.details.debit = 0
+        entry.details.credit = subtotal_factura if self.factura_subtotal_credit?
+        entry.details.debit = subtotal_factura if self.factura_subtotal_debit?
 
         entry.details.new
-        
-        entry.details.account_id = self.factura_impuesto()
+        entry.details.account_id = self.factura_iva()
         entry.details.description = methodname.to_s
-        entry.details.credit = 0
-        entry.details.debit = 0
+        entry.details.credit = total_iva_factura if self.factura_iva_credit?
+        entry.details.debit = total_iva_factura if self.factura_iva_debit?
       end
     end
     return entry
