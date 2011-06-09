@@ -27,11 +27,10 @@ class Factura < Comprobante
 
 
   def total_comprobante
-    self.total_factura
+    self.importe
   end
   
   def total_iva_factura
-    #facturadetalles.sum("preciounitario * cantidad * (1+(tasaiva/100))") 
     detalles.all.sum(&:totalivaitem)
   end
 
@@ -44,74 +43,48 @@ class Factura < Comprobante
   end
   
   def total_monto_adeudado
-    self.total_factura - self.total_monto_cancelado
+    self.importe - self.total_monto_cancelado
+  end
+   
+  #properties for entry 
+  def ventas_factura_total
+    self.importe
+  end 
+   
+  def ventas_factura_subtotal
+    self.importe - self.total_iva_factura
   end
   
-#contabilizar
-=begin
-  def factura_total
-    account_by_part(_method_)
-  end  
-
-  def factura_subtotal
-    account_by_part(_method_)    
+  def ventas_factura_iva
+    self.total_iva_factura
   end
   
-  def factura_impuesto
-    account_by_part(_method_)    
+  def ventas_factura_iibb
+    0
   end
-=end
-
-  # ['factura_total','factura_subtotal','factura_impuesto']
-  Comprobante.referencias.grep(/^factura_/).each do |methodname|
-    define_method(methodname) { account_by_part(__method__) }    
-  end
-
-  Comprobante.referencias.grep(/^factura_/).each do |methodname|
-    define_method(methodname) { account_by_part_debit(__method__ + 'debit?') }    
-  end
-
-  Comprobante.referencias.grep(/^factura_/).each do |methodname|
-    define_method(methodname) { account_by_part_credit(__method__ + 'credit?') }    
-  end
-
-  def account_by_part(referencename)
-    self.cliente.empresa.refenciacontables.find_by_referencename(referencename).account_id
-  end
-
-  def account_by_part_debit(referencename)
-    self.cliente.empresa.refenciacontables.find_by_referencename(referencename).debita
-  end
-
-  def account_by_part_credit(referencename)
-    not self.cliente.empresa.refenciacontables.find_by_referencename(referencename).debita
-  end
-    
+  #end properties for entry
+      
   def to_entry
     Entry.new do |entry|
-      entry.date_to = Date.today
+      entry.date_on     = self.fecha
+      entry.description = self.cliente.razonsocial.to_s
+      entry.exercise_id = self.cliente.company.exercises.where('started_on <= :fecha and finished_on >= :fecha',:fecha => self.fecha).first.try(:id)
+      
       # cada referencia es mapeada al asiento
-      Comprobante.referencias.grep(/^factura_/).each do |methodname|
-        entry.details.new
-        entry.details.account_id = self.factura_total()
-        entry.details.description = methodname.to_s
-        entry.details.credit = total_factura if self.factura_total_credit?
-        entry.details.debit = total_factura if self.factura_total_debit?
-
-        entry.details.new
-        entry.details.account_id = self.factura_subtotal()
-        entry.details.description = methodname.to_s
-        entry.details.credit = subtotal_factura if self.factura_subtotal_credit?
-        entry.details.debit = subtotal_factura if self.factura_subtotal_debit?
-
-        entry.details.new
-        entry.details.account_id = self.factura_iva()
-        entry.details.description = methodname.to_s
-        entry.details.credit = total_iva_factura if self.factura_iva_credit?
-        entry.details.debit = total_iva_factura if self.factura_iva_debit?
+      self.cliente.company.refenciacontables.where('referencename like "ventas_factura_%"').each do |referencia|
+        raise "falta metodo #{referencia.referencename}" unless self.respond_to?(referencia.referencename)
+        
+        next if self.send(referencia.referencename).zero?
+        
+        entry.details.build do |dt|
+          dt.account_id  = referencia.account_id
+          dt.description = referencia.referencename.to_s + ' fc' + self.numero.to_s
+          
+          dt.credit      = referencia.debita? ? 0 : self.send(referencia.referencename)
+          dt.debit       = referencia.debita? ? self.send(referencia.referencename) : 0
+        end
       end
     end
-    return entry
   end
 
   def save_pdf_to(filename)
@@ -191,37 +164,3 @@ class Factura < Comprobante
      end
   end
 end
-
-=begin
-aqui en Factura
-
-def to_entry
-  returnig Entry.new do |Entry|
-  # empiezo el mapping de
-  entry.attributo = selffactura.elatributoquelocompleta
-  end
-end
-
-de esa forma dado que tenes una factura
-fac = Factura.first
-llegas a su entry de contabilidad
-asi
-fac.to_entry
-eso devuelve un objecto entry, listo para ser salvado
-o lo que fuere
-me explique o es medio chino?
-lo piola de este approach es que te queda todo encapsulado en el modelo
-es como hacer la factura xml
-o jston
-to_json, o to_xml
-bueno aca es hacer la factura una entry de contable
-to_entry
-
-me quede pensando
-no necesitas returning en este caso
-poirque
-Entry.new do |entry|
-# inicializacion loca de entry
-end
-devuelve un obj Entry
-=end

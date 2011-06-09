@@ -46,5 +46,5 @@
 </tr>
 </table>
 </br>
-<%= link_to 'Editar', edit_factura_path(@factura) %> |
-<%= link_to 'Volver', facturas_path %>
+<%= link_to 'Editar', edit_cliente_factura_path(@factura.cliente.id,@factura) %> |
+<%= link_to 'Volver', cliente_facturas_path(@factura.cliente.id) %>

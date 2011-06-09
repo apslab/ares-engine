@@ -31,8 +31,7 @@ class Cliente < ActiveRecord::Base
    
   belongs_to :condicioniva
   belongs_to :account
-  
-  #belongs_to :empresa
+  belongs_to :company, :class_name => "Company", :foreign_key => "empresa_id"
 
   validates :cuit, :presence => true, :length => { :maximum => 11 }
   validates :razonsocial, :presence => true
