@@ -29,6 +29,8 @@ end %>
     <th>Fecha</th>
     <th>Importe</th>
     <th>Fecha Vto</th>
+    <th></th>
+    <th></th>
   </tr>
 <% @cliente.facturas.each do |cpbte| %>
   <tr>
@@ -36,8 +38,9 @@ end %>
     <td><%= cpbte.fecha %></td>
     <td><%= cpbte.importe %></td>
     <td><%= cpbte.fechavto %></td>
+    <td><%= link_to icon('application_go', :small, :title => 'ver'), [cpbte.cliente, cpbte] %></td>
+    <td><%= link_to icon('printer', :small, :title => 'Imprimir'), cliente_factura_path(cpbte.cliente, cpbte, :format => 'pdf') %></td>
   </tr>
-
 	<% cpbte.facturarecibos.each do |cpbteafectado| %>
   		<tr>
     		<td>recibo -------></td>

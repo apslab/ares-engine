@@ -152,8 +152,8 @@ class Factura < Comprobante
           pdf.stroke_bounds          
        end
        
-       pdf.draw_text self.total_iva_factura.to_s, :at => [350,25], :size => 12, :style => :bold
-       pdf.draw_text self.importe.to_s, :at => [400,25], :size => 12, :style => :bold
+       pdf.draw_text "%9.02f" % self.total_iva_factura.to_s, :at => [350,25], :size => 12, :style => :bold
+       pdf.draw_text "%9.02f" % self.importe.to_s, :at => [400,25], :size => 12, :style => :bold
 
        pdf.line_width = 1
        pdf.bounding_box [-2, 40], :width => 500, :height => 20 do

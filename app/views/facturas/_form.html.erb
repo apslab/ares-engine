@@ -11,14 +11,25 @@
 
 <%= semantic_form_for [@cliente, @factura] do |f| %>
  <%= f.semantic_errors %>
+ <%= f.semantic_errors(:importe) %>
 
-<%= f.inputs do %>
+<%= f.inputs(:class => :column_left ) do %>
   <%= f.input :fecha , :as => :datepicker %>
   <%= f.input :cliente, :label => true, :as => :select, :collection => Cliente.all.map{|c| [c.razonsocial, c.id]}, :include_blank => false %>
-  <%= f.input :numero , :as => :numeric, :input_html => { :size => 10, :style => "text-align:right;" } %>
-  <%= f.input :fechavto , :as => :datepicker %>
+<% end %>
 
-<table>
+<%= f.inputs(:class => :column_right ) do %>
+  <%= f.input :fechavto , :as => :datepicker %>
+  <%= f.input :numero , :as => :numeric, :input_html => { :size => 10, :style => "text-align:right;" } %>
+<% end %>
+
+<hr class="clear" />
+
+<div class="links">
+	<%= link_to_add_association icon('add', :small, :style => 'vertical-align:middle;')+'Agrega detalle', f, :detalles,'data-association-insertion-position' => :after , :class => 'global_button button'%>
+</div>
+<%= f.inputs do %>
+<table width="100%" style="margin-top:15px">
 	<tr>
 		<th>Descripcion</th>
 		<th>Cantidad</th>
@@ -28,11 +39,6 @@
 		<th> </th>		
 	</tr>
 </table>
-
-<div class="links">
-	<%= link_to_add_association 'agrega detalle', f, :detalles,'data-association-insertion-position' => :after %>
-</div>
-
 <div class='detalles'>
 	<%= f.semantic_fields_for :detalles do |fd|%>    
     	<%= render 'detalle_fields', :f => fd %> 
@@ -40,5 +46,5 @@
 </div>
 
 <% end %>
-<%= f.buttons %>
+<%= render('shared/common_form_buttons') %>
 <% end %>

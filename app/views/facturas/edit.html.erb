@@ -1,6 +1,10 @@
 <h1>Editando factura</h1>
 
-<%= render 'form' %>
+<% content_for(:controls) do %>
+<%= controls do |c|
+         c.item "Ver", [@factura.cliente, @factura], :icon => "application_view_detail"
+         c.item "Volver", cliente_facturas_path(@factura.cliente), :icon => "application_go"
+end %>
+<%end%>
 
-<%= link_to 'Ver', @factura %> |
-<%= link_to 'Volver', facturas_path %>
+<%= render 'form' %>

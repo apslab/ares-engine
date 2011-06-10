@@ -1,3 +1,10 @@
+<% content_for(:controls) do %>
+<%= controls do |c|
+         c.item "Editar", edit_cliente_factura_path(@factura.cliente.id,@factura), :icon => "application_form_edit"
+         c.item "Volver", cliente_facturas_path(@factura.cliente.id), :icon => "application_go"
+end %>
+<%end%>
+
 <%= semantic_attributes_for @factura do |attr| %>
   <%= attr.attributes "Cabecera" do %>
 
@@ -15,36 +22,41 @@
 
   	<%= attr.attribute :count_items, :label => "Cantidad de items en la factura" %>
   <% end %>
+
+ <hr />
+
+  <%= attr.attributes "Detalle" do %>
+	<table>
+	  <tr>
+		 <th>Descripcion</th>
+		 <th align="center">Cantidad</th>
+		 <th align="center">Precio unitario</th>
+		 <th align="center">IVA</th>
+		 <th align="center">Precio total</th>
+		 <th></th>
+		 <th></th>
+		 <th></th>	
+	  </tr>
+	<% @factura.detalles.each do |item| %>
+	  <tr>
+	    <td align="left" ><%= item.descripcion %></td>
+	    <td align="right"><%= item.cantidad %></td>
+	    <td align="right"><%= number_to_currency(item.preciounitario) %></td>
+	    <td align="right"><%= number_to_percentage(item.tasaiva, :precision => 2) %></td>
+	    <td align="right"><%= number_to_currency(item.totalitem) %></td>
+	  </tr>
+	<% end %>
+	<tr>
+	  <td align="left" ><b>Total :</b></td>
+	  <td align="right"></td>
+	  <td align="right"></td>
+	  <td align="right"></td>
+	  <td align="right"><%= number_to_currency(@factura.total) %></td>
+	</tr>
+	</table>
+	</br>
+   <% end %>
+
 <% end %>
 
-<table>
-  <tr>
-	 <th>Descripcion</th>
-	 <th align="center">Cantidad</th>
-	 <th align="center">Precio unitario</th>
-	 <th align="center">IVA</th>
-	 <th align="center">Precio total</th>
-	 <th></th>
-	 <th></th>
-	 <th></th>	
-  </tr>
-<% @factura.detalles.each do |item| %>
-  <tr>
-    <td align="left" ><%= item.descripcion %></td>
-    <td align="right"><%= item.cantidad %></td>
-    <td align="right"><%= number_to_currency(item.preciounitario) %></td>
-    <td align="right"><%= number_to_percentage(item.tasaiva, :precision => 2) %></td>
-    <td align="right"><%= number_to_currency(item.totalitem) %></td>
-  </tr>
-<% end %>
-<tr>
-  <td align="left" ><b>Total :</b></td>
-  <td align="right"></td>
-  <td align="right"></td>
-  <td align="right"></td>
-  <td align="right"><%= number_to_currency(@factura.total) %></td>
-</tr>
-</table>
-</br>
-<%= link_to 'Editar', edit_cliente_factura_path(@factura.cliente.id,@factura) %> |
-<%= link_to 'Volver', cliente_facturas_path(@factura.cliente.id) %>
+<div class="clear"></div>
