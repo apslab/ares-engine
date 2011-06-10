@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ares}
-  s.version = "0.1.1"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = [%q{AP System}]
-  s.date = %q{2011-06-08}
+  s.authors = ["AP System"]
+  s.date = %q{2011-06-10}
   s.description = %q{Adminsitracion de Ventas}
   s.email = %q{info@ap-sys.com.ar}
   s.extra_rdoc_files = [
@@ -137,9 +137,9 @@ Gem::Specification.new do |s|
     "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/lguardiola/ares}
-  s.licenses = [%q{MIT}]
-  s.require_paths = [%q{lib}]
-  s.rubygems_version = %q{1.8.5}
+  s.licenses = ["MIT"]
+  s.require_paths = ["lib"]
+  s.rubygems_version = %q{1.5.0}
   s.summary = %q{Proyecto Facturacion}
 
   if s.respond_to? :specification_version then
