@@ -2,9 +2,23 @@
   <%= javascript_tag do %>
     function calcula_total(input){
       var total = parseFloat($($(input).closest('tr').find('input.para_calcula')[0]).val()) * 	parseFloat($($(input).closest('tr').find('input.para_calcula')[1]).val()) * 
-(1 + (parseFloat($($(input).closest('tr').find('input.para_calcula')[2]).val())/100));
+(1 + (parseFloat($($(input).closest('tr').find('.tasaiva')).val())/100));
 
       $($(input).closest('tr').find('.calcula_total')[0]).html(total.toFixed(2));
+    }
+  <% end %>
+<% end %>
+
+<% content_for(:head) do %>
+  <%= javascript_tag do %>
+    function pasa_tasa(select){
+		$.getJSON('/products/'+$(select).val(), function(data) {
+		  $(select).closest('tr').find('.tasaiva').val(data.porcentaje);
+		  
+		  $(select).closest('tr').find('.labeltasaiva').html(data.porcentaje.toFixed(2));
+		
+		  calcula_total($(select).closest('tr').find('.tasaiva'));
+		});
     }
   <% end %>
 <% end %>
@@ -25,13 +39,12 @@
 
 <hr class="clear" />
 
-<div class="links">
-	<%= link_to_add_association icon('add', :small, :style => 'vertical-align:middle;')+'Agrega detalle', f, :detalles,'data-association-insertion-position' => :after , :class => 'global_button button'%>
-</div>
 <%= f.inputs do %>
-<table width="100%" style="margin-top:15px">
+
+<table width="80%" style="margin-top:15px">
 	<tr>
-		<th>Descripcion</th>
+		<th>Producto</th>
+		<th>Descripción</th>
 		<th>Cantidad</th>
 		<th>Precio unitario</th>
 		<th>tasa IVA</th>
@@ -39,12 +52,19 @@
 		<th> </th>		
 	</tr>
 </table>
+
+<% end %>
+
+<hr class="clear">
+<div class="links">
+	<%= link_to_add_association icon('add', :small, :style => 'vertical-align:middle;')+'Agrega detalle', f, :detalles,'data-association-insertion-position' => :after , :class => 'global_button button'%>
+</div>
+
 <div class='detalles'>
 	<%= f.semantic_fields_for :detalles do |fd|%>    
     	<%= render 'detalle_fields', :f => fd %> 
 	<% end %>
 </div>
 
-<% end %>
 <%= render('shared/common_form_buttons') %>
 <% end %>

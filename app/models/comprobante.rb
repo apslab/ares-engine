@@ -44,6 +44,6 @@ class Comprobante < ActiveRecord::Base
   
   protected
   def calculo_total_comprobante
-    self.importe = self.total
+    self.importe =  self.total
   end
 end

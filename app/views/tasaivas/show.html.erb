@@ -1,20 +1,35 @@
-<p id="notice"><%= notice %></p>
+<% content_for(:breadcrumbs) do %>
+<%= breadcrumbs do |b|
+	b.item "Principal", root_path
+    b.item "Tasa de IVA", tasaivas_path
+    b.item @tasaiva.detalle, root_path, :active => true
+end %>
+<%end%>
 
-<p>
-  <b>Detalle:</b>
-  <%= @tasaiva.detalle %>
-</p>
-
-<p>
-  <b>Porcentaje:</b>
-  <%= @tasaiva.porcentaje %>
-</p>
-
-<p>
-  <b>Vencimiento:</b>
-  <%= @tasaiva.vencimiento %>
-</p>
-
+<table width="100%">
+	<tbody>
+		<tr>
+			<td width="30%">Detalle</td>
+			<td width="70%"><b><%= @tasaiva.detalle %></b></td>
+		</tr>
+		<tr>
+			<td width="30%">Porcentaje</td>
+			<td width="70%"><b><%= @tasaiva.porcentaje %><b></td>
+		</tr>
+		<tr>
+			<td width="30%">Inicio vigencia</td>
+			<td width="70%"><b><%= @tasaiva.since %><b></td>
+		</tr>
+		<tr>
+			<td width="30%">Fin vigencia</td>	
+			<td width="70%"><b><%= @tasaiva.until %><b></td>
+		</tr>
+		<tr>
+			<td width="30%">Cuenta contable</td>	
+			<td width="70%"><b><%= @tasaiva.account.name %><b></td>
+		</tr>	
+	</tbody>
+</table>
 
 <%= link_to 'Edit', edit_tasaiva_path(@tasaiva) %> |
 <%= link_to 'Back', tasaivas_path %>

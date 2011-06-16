@@ -4,10 +4,8 @@ class ClientesController < AuthorizedController
   before_filter :filter_customer, :only => [:show,:edit,:update,:destroy,:cuentacorriente]
   
   def index
-#    @search = current_company.clientes.search(params[:search])
-
     @search = Cliente.by_company(current_company).search(params[:search])
-    @clientes = @search.order("razonsocial").page(params[ :page ]).per(10)
+    @clientes = @search.order("razonsocial").page(params[ :page ]).per(20)
 
     respond_to do |format|
       format.html # index.html.erb

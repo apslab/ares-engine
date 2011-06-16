@@ -1,13 +1,28 @@
 <h1>Listado de clientes</h1>
 
-<%= render 'filtros' %>
-
 <% content_for(:controls) do %>
 <%= controls do |c|
          c.item "Nuevo", new_cliente_path, :icon => "add"
          c.item "Exportar PDF", clientes_path, :icon => "report_go"
 end %>
 <%end%>
+
+<div id="filters" class="accordion">
+  <h3><a href="#">Filtros</a></h3>
+  <div class="filters-content">
+	<%= semantic_form_for @search do |f| %>
+	   <%= f.inputs do %>
+	   <%= f.input :razonsocial_contains, :label => "Razon social" %>
+	   <%= f.input :cuit_contains, :label => "CUIT" %>	
+	   <% end %>
+	   <%= f.buttons do %>
+	      <%= f.commit_button :search %>
+	   <% end %>
+	<% end %>
+  </div>
+</div>
+<div class="clear"></div>
+
 
 <% content_for(:breadcrumbs) do %>
 <%= breadcrumbs do |b|

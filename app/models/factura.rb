@@ -17,6 +17,7 @@
 require 'prawn'
 
 class Factura < Comprobante
+  
   belongs_to :cliente
   has_many :facturarecibos
   has_many :facturanotacreditos
@@ -24,7 +25,6 @@ class Factura < Comprobante
   scope :no_actualizados, where("updated_at IS NULL" )
   scope :vencidas, where("fechavto < ?", Date.today)
   scope :por_cliente, lambda {|cliente| where(:cliente_id => cliente) }
-
 
   def total_comprobante
     self.importe
@@ -58,10 +58,10 @@ class Factura < Comprobante
   def ventas_factura_iva
     self.total_iva_factura
   end
-  
+
   def ventas_factura_iibb
-    0
-  end
+    0.0
+  end  
   #end properties for entry
       
   def to_entry
@@ -71,13 +71,15 @@ class Factura < Comprobante
       entry.exercise_id = self.cliente.company.exercises.where('started_on <= :fecha and finished_on >= :fecha',:fecha => self.fecha).first.try(:id)
       
       # cada referencia es mapeada al asiento
-      self.cliente.company.refenciacontables.where('referencename like "ventas_factura_%"').each do |referencia|
+      ref = self.cliente.company.refenciacontables.where('referencename like "ventas_factura_%"')
+      
+      ref.each do |referencia|
         raise "falta metodo #{referencia.referencename}" unless self.respond_to?(referencia.referencename)
         
         next if self.send(referencia.referencename).zero?
-        
+           
         entry.details.build do |dt|
-          dt.account_id  = referencia.account_id
+          dt.account_id  = self.account_for_reference(referencia)  #referencia.account_id
           dt.description = referencia.referencename.to_s + ' fc' + self.numero.to_s
           
           dt.credit      = referencia.debita? ? 0 : self.send(referencia.referencename)
@@ -85,6 +87,12 @@ class Factura < Comprobante
         end
       end
     end
+  end
+
+
+  def account_for_reference(ref)
+    return ref.referencia.account_id unless ref.referencia.referencename.include?('ventas_factura_total')
+    return cliente.account_id.presence || ref.referencia.account_id
   end
 
   def save_pdf_to(filename)

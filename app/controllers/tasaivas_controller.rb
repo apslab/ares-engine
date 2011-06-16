@@ -1,9 +1,12 @@
 class TasaivasController < AuthorizedController
   # GET /tasaivas
   # GET /tasaivas.xml
-  def index
-    @tasaivas = Tasaiva.all
+  before_filter :filter_tasaiva, :only => [:show,:edit,:update,:destroy]
 
+
+  def index
+    @tasaivas = Tasaiva.by_company(current_company).all()
+    
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @tasaivas }
@@ -13,8 +16,6 @@ class TasaivasController < AuthorizedController
   # GET /tasaivas/1
   # GET /tasaivas/1.xml
   def show
-    @tasaiva = Tasaiva.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @tasaiva }
@@ -24,7 +25,7 @@ class TasaivasController < AuthorizedController
   # GET /tasaivas/new
   # GET /tasaivas/new.xml
   def new
-    @tasaiva = Tasaiva.new
+    @tasaiva = current_company.tasaivas.build
 
     respond_to do |format|
       format.html # new.html.erb
@@ -34,13 +35,12 @@ class TasaivasController < AuthorizedController
 
   # GET /tasaivas/1/edit
   def edit
-    @tasaiva = Tasaiva.find(params[:id])
   end
 
   # POST /tasaivas
   # POST /tasaivas.xml
   def create
-    @tasaiva = Tasaiva.new(params[:tasaiva])
+    @tasaiva = Tasaiva.new(params[:tasaiva].update(:company_id => current_company.id))
 
     respond_to do |format|
       if @tasaiva.save
@@ -56,7 +56,6 @@ class TasaivasController < AuthorizedController
   # PUT /tasaivas/1
   # PUT /tasaivas/1.xml
   def update
-    @tasaiva = Tasaiva.find(params[:id])
 
     respond_to do |format|
       if @tasaiva.update_attributes(params[:tasaiva])
@@ -72,12 +71,17 @@ class TasaivasController < AuthorizedController
   # DELETE /tasaivas/1
   # DELETE /tasaivas/1.xml
   def destroy
-    @tasaiva = Tasaiva.find(params[:id])
     @tasaiva.destroy
 
     respond_to do |format|
       format.html { redirect_to(tasaivas_url) }
       format.xml  { head :ok }
     end
+  end
+  
+  protected 
+  # filtro general protejido
+  def filter_tasaiva
+    @tasaiva = Tasaiva.by_company(current_company).find( params[:id] )
   end
 end

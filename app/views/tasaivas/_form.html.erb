@@ -1,29 +1,14 @@
-<%= form_for(@tasaiva) do |f| %>
-  <% if @tasaiva.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@tasaiva.errors.count, "error") %> prohibited this tasaiva from being saved:</h2>
+<%= semantic_form_for(@tasaiva) do |f| %>
+<%= f.semantic_errors %>
 
-      <ul>
-      <% @tasaiva.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+<%= f.inputs do %>
+  <%= f.input :detalle %>
+  <%= f.input :porcentaje %>
+  <%= f.input :since, :as => :date %>
+  <%= f.input :until, :as => :date %>
+  <%= f.input :account, :label => true, :as => :select, :collection => 
+current_company.accounts.leaves.map{|a|[a.self_and_ancestors.map(&:name).join(' &raquo; ').html_safe, a.id]} , :include_blank => true %>
+<% end %> 
 
-  <div class="field">
-    <%= f.label :detalle %><br />
-    <%= f.text_field :detalle %>
-  </div>
-  <div class="field">
-    <%= f.label :porcentaje %><br />
-    <%= f.text_field :porcentaje %>
-  </div>
-  <div class="field">
-    <%= f.label :vencimiento %><br />
-    <%= f.date_select :vencimiento %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= f.buttons %>
 <% end %>

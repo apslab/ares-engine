@@ -16,8 +16,9 @@
 
 class Detalle < ActiveRecord::Base
   belongs_to :detallable, :polymorphic => true
-  
-  attr_accessible :cantidad, :descripcion, :preciounitario, :tasaiva
+  belongs_to :product
+    
+  attr_accessible :cantidad, :descripcion, :preciounitario, :product_id, :tasaiva
   attr_accessor :totalitem
 
   validates :cantidad, :presence => true , :numericality => true, :numericality => { :greater_than => 0 }

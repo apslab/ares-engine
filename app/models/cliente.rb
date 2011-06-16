@@ -65,4 +65,8 @@ class Cliente < ActiveRecord::Base
    end   
   end
   
+  def _account_id
+    _read_attribute(:account_id) || Refenciacontable.find_by_referencename_and_company_id('ventas_factura_total',read_attribute(:empresa_id)).try(:account_id)
+  end
+    
 end
