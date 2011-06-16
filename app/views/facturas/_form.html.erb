@@ -5,7 +5,13 @@
 (1 + (parseFloat($($(input).closest('tr').find('.tasaiva')).val())/100));
 
       $($(input).closest('tr').find('.calcula_total')[0]).html(total.toFixed(2));
+      var total_total=0.0;
+      $('.calcula_total').each(function(i,data){
+	    total_total+=parseFloat($(data).html());
+      });
+      $('.total_total').html(total_total.toFixed(2));
     }
+
   <% end %>
 <% end %>
 
@@ -14,10 +20,13 @@
     function pasa_tasa(select){
 		$.getJSON('/products/'+$(select).val(), function(data) {
 		  $(select).closest('tr').find('.tasaiva').val(data.porcentaje);
+		  $(select).closest('tr').find('.preciounitario').val(data.price);
+		  $(select).closest('tr').find('.description').val(data.description);
 		  
 		  $(select).closest('tr').find('.labeltasaiva').html(data.porcentaje.toFixed(2));
 		
 		  calcula_total($(select).closest('tr').find('.tasaiva'));
+		  $(select).closest('tr').find('.cantidad').focus();
 		});
     }
   <% end %>
@@ -29,7 +38,7 @@
 
 <%= f.inputs(:class => :column_left ) do %>
   <%= f.input :fecha , :as => :datepicker %>
-  <%= f.input :cliente, :label => true, :as => :select, :collection => Cliente.all.map{|c| [c.razonsocial, c.id]}, :include_blank => false %>
+  <%= f.input :cliente, :label => true, :as => :select, :collection => current_company.clientes.map{|c| [c.razonsocial, c.id]}, :include_blank => false %>
 <% end %>
 
 <%= f.inputs(:class => :column_right ) do %>
@@ -49,7 +58,7 @@
 		<th>Precio unitario</th>
 		<th>tasa IVA</th>
 		<th>Total item</th>
-		<th> </th>		
+		<th>Total <%= content_tag(:span, f.object.importe.presence || 0.0, :class => 'total_total') %></th>		
 	</tr>
 </table>
 
