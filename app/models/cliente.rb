@@ -33,13 +33,13 @@ class Cliente < ActiveRecord::Base
   belongs_to :account
   belongs_to :company, :class_name => "Company", :foreign_key => "empresa_id"
 
-  validates :cuit, :presence => true, :length => { :maximum => 11 }
   validates :razonsocial, :presence => true
   validates :codigo, :presence => true
   validates_uniqueness_of :codigo, :scope => [:empresa_id]
-  validates_uniqueness_of :cuit, :scope => [:empresa_id]
-
-  validates_numericality_of :cuit, :only_integer => true, :message => "solo numeros"
+  
+  validates :cuit, :allow_nil => true,:length => { :maximum => 11 }
+  validates_uniqueness_of :cuit, :scope => [:empresa_id], :allow_nil => true
+  validates_numericality_of :cuit, :only_integer => true, :message => "solo numeros", :allow_nil => true
   # validates_inclusion_of :cuit, :in => 20000000000..38000000000, :message => "solo puede ingresar numeros entre 20 y 38."
 
   attr_accessible :razonsocial, :condicioniva_id, :codigo, :cuit, :telefono, :direccion, :contacto, :empresa_id, :account_id

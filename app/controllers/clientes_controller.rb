@@ -5,7 +5,7 @@ class ClientesController < AuthorizedController
   
   def index
     @search = Cliente.by_company(current_company).search(params[:search])
-    @clientes = @search.order("razonsocial").page(params[ :page ]).per(20)
+    @clientes = @search.order("razonsocial").page(params[ :page ]).per(15)
 
     respond_to do |format|
       format.html # index.html.erb
