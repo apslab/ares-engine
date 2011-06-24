@@ -2,7 +2,7 @@
 
 <% content_for(:controls) do %>
 <%= controls do |c|
-         c.item "Ver", cliente_path(@cliente), :icon => "show"
+         c.item "Ver", cliente_path(@cliente), :icon => "application_go"
 end %>
 <%end%>
 
@@ -15,5 +15,3 @@ end %>
 <%end%>
 
 <%= render 'form' %>
-
-<%= link_to 'Ver', @cliente %> |
