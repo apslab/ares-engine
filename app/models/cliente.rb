@@ -58,9 +58,8 @@ class Cliente < ActiveRecord::Base
   # 1) rails g cancan:ability
   
   def control_sin_comprobantes
-
    if [comprobantes].any? {|cpbte| cpbte.any? }
-     self.errors[:base] = "error que queres hacer?"
+     errors.add(:base,"La cuenta posee " + comprobantes.count.to_s() + " comprobantes asociado.")
      return false
    end   
   end

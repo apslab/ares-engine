@@ -47,19 +47,37 @@ class Factura < Comprobante
   end
    
   #properties for entry 
-  def ventas_factura_total
+  def ventas_factura_total(*args)
+    entry,referencia = args
+    
     self.importe
   end 
    
-  def ventas_factura_subtotal
-    self.importe - self.total_iva_factura
+  def ventas_factura_subtotal(*args)
+    options = args.extract_options! # para permitir flexibilidad a la hora de pasar parametros por hash
+    entry,referencia = args
+    
+    x = detalles.group_by{|detalle| detalle.product.account_id} 
+
+    x.each do |account_id, detalles|
+      total = detalles.sum{|detalle| detalle.importe} 
+
+      entry.details.build do |dt|
+        dt.account_id  = account_id  #referencia.account_id
+        dt.description = __method__ + ' fc' + self.numero.to_s
+
+        dt.credit      = referencia.debita? ? 0 : total
+        dt.debit       = referencia.debita? ? total : 0      
+      end
+    end 
+    #self.importe - self.total_iva_factura
   end
   
-  def ventas_factura_iva
+  def ventas_factura_iva(entry)
     self.total_iva_factura
   end
 
-  def ventas_factura_iibb
+  def ventas_factura_iibb(entry)
     0.0
   end  
   #end properties for entry
@@ -76,23 +94,27 @@ class Factura < Comprobante
       ref.each do |referencia|
         raise "falta metodo #{referencia.referencename}" unless self.respond_to?(referencia.referencename)
         
-        next if self.send(referencia.referencename).zero?
-           
-        entry.details.build do |dt|
-          dt.account_id  = self.account_for_reference(referencia)  #referencia.account_id
-          dt.description = referencia.referencename.to_s + ' fc' + self.numero.to_s
-          
-          dt.credit      = referencia.debita? ? 0 : self.send(referencia.referencename)
-          dt.debit       = referencia.debita? ? self.send(referencia.referencename) : 0
-        end
+        next if self.send(referencia.referencename,entry,referencia)        
       end
     end
   end
 
 
   def account_for_reference(ref)
-    return ref.referencia.account_id unless ref.referencia.referencename.include?('ventas_factura_total')
-    return cliente.account_id.presence || ref.referencia.account_id
+    if ref = 'ventas_factura_subtotal'
+       return details.account_id.presence || ref.account_id
+    else  
+detalles.asiento_patial
+ventas_factura_iva
+
+    return ref.account_id unless ref.referencename.include?('ventas_factura_total')
+    return cliente.account_id.presence || ref.account_id
+
+# por cada item de la factura debo tomar su cuenta si la tiene cargada...
+    [cuenta,importe] = detalle.asiento each do |item|
+      item.account_id.presence || ref.account_id 'ventas_factura_subtotal'
+      item.tasaiva.account_id.presence || ref.account_id 'ventas_factura_iva'
+    end
   end
 
   def save_pdf_to(filename)

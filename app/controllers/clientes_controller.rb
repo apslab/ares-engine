@@ -83,7 +83,8 @@ class ClientesController < AuthorizedController
   # DELETE /clientes/1.xml
   def destroy
     @cliente.destroy
-
+    flash[:error] = @cliente.errors.full_messages.join('<br />') unless @cliente.errors.empty?
+    
     respond_to do |format|
       format.html { redirect_to(clientes_url) }
       format.xml  { head :ok }

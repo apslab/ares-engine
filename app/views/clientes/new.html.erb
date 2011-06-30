@@ -1,5 +1,9 @@
 <h1>Nuevo cliente</h1>
 
-<%= render 'form' %>
+<% content_for(:controls) do %>
+<%= controls do |c|
+         c.item "Volver", clientes_path, :icon => "application_go"
+end %>
+<%end%>
 
-<%= link_to 'Volver', clientes_path %>
+<%= render 'form' %>
