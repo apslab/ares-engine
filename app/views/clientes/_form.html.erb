@@ -5,7 +5,7 @@
 	<%= f.input :codigo %>
 	<%= f.input :razonsocial %>
 	<%= f.input :cuit, :as => :numeric , :input_html => { :size => 11, :style => "text-align:left;" }%>
-	<%= f.input :condicioniva, :label => true, :as => :select, :collection => Condicioniva.all.map{|c| [c.detalle, c.id]}, :include_blank => false %>
+	<%= f.input :condicioniva, :label => true, :as => :select, :collection => current_company.condicionivas.all.map{|c| [c.detalle, c.id]}, :include_blank => false %>
 <% end %>
 
 <%= f.inputs(:class => :column_right ) do %>
