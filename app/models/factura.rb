@@ -49,8 +49,14 @@ class Factura < Comprobante
   #properties for entry 
   def ventas_factura_total(*args)
     entry,referencia = args
-    
-    self.importe
+
+    entry.details.build do |dt|
+      dt.account_id  = self.cliente.account_id.presence || referencia.account_id      
+      dt.description = __method__.to_s.humanize + ' fc' + self.numero.to_s
+
+      dt.credit      = referencia.debita? ? 0 : self.importe
+      dt.debit       = referencia.debita? ? self.importe : 0      
+    end
   end 
    
   def ventas_factura_subtotal(*args)
@@ -60,11 +66,11 @@ class Factura < Comprobante
     x = detalles.group_by{|detalle| detalle.product.account_id} 
 
     x.each do |account_id, detalles|
-      total = detalles.sum{|detalle| detalle.importe} 
+      total = detalles.sum{|detalle| detalle.totalnetoitem} 
 
       entry.details.build do |dt|
-        dt.account_id  = account_id  #referencia.account_id
-        dt.description = __method__ + ' fc' + self.numero.to_s
+        dt.account_id  = account_id || referencia.account_id
+        dt.description = __method__.to_s.humanize + ' fc' + self.numero.to_s
 
         dt.credit      = referencia.debita? ? 0 : total
         dt.debit       = referencia.debita? ? total : 0      
@@ -73,11 +79,29 @@ class Factura < Comprobante
     #self.importe - self.total_iva_factura
   end
   
-  def ventas_factura_iva(entry)
-    self.total_iva_factura
+  def ventas_factura_iva(*args)
+    entry,referencia = args
+    x = detalles.reject{|detalle| detalle.totalivaitem.zero?}.group_by{|detalle| detalle.product.tasaiva.account_id} 
+
+    x.each do |account_id, detalles|
+      total = detalles.sum{|detalle| detalle.totalivaitem} 
+      # description = detalles.product.tasaiva.
+      
+      #unless total.zero? 
+        entry.details.build do |dt|
+          dt.account_id  = account_id || referencia.account_id
+          dt.description = __method__.to_s.humanize + ' fc' + self.numero.to_s
+          dt.credit      = referencia.debita? ? 0 : total
+          dt.debit       = referencia.debita? ? total : 0      
+        end
+      #end
+
+    end 
+    
+    #self.total_iva_factura
   end
 
-  def ventas_factura_iibb(entry)
+  def ventas_factura_iibb(*args)
     0.0
   end  
   #end properties for entry
@@ -99,7 +123,7 @@ class Factura < Comprobante
     end
   end
 
-
+=begin
   def account_for_reference(ref)
     if ref = 'ventas_factura_subtotal'
        return details.account_id.presence || ref.account_id
@@ -116,6 +140,7 @@ ventas_factura_iva
       item.tasaiva.account_id.presence || ref.account_id 'ventas_factura_iva'
     end
   end
+=end
 
   def save_pdf_to(filename)
      Prawn::Document.generate(filename) do |pdf|

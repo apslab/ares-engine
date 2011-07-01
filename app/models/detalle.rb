@@ -26,6 +26,14 @@ class Detalle < ActiveRecord::Base
   validates :descripcion, :presence => true
   validates :tasaiva, :presence => true, :numericality => true
   
+  
+  def totalnetoitem
+    self.preciounitario = 0 if self.preciounitario.nil?
+    self.cantidad = 0 if self.cantidad.nil?
+
+    self.preciounitario * self.cantidad
+  end
+  
   def totalivaitem
     self.tasaiva = 0 if self.tasaiva.nil?
     self.preciounitario = 0 if self.preciounitario.nil?
@@ -36,9 +44,7 @@ class Detalle < ActiveRecord::Base
 
   def totalitem
     self.tasaiva = 0 if self.tasaiva.nil?
-    self.preciounitario = 0 if self.preciounitario.nil?
-    self.cantidad = 0 if self.cantidad.nil?
     
-    self.preciounitario * self.cantidad * (1 + (self.tasaiva/100))
+    self.totalnetoitem * (1 + (self.tasaiva/100))
   end  
 end
