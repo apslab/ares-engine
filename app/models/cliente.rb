@@ -43,7 +43,7 @@ class Cliente < ActiveRecord::Base
 
   validates_numericality_of :cuit, :only_integer => true, :message => "solo numeros", :allow_nil => true, :allow_blank => true
   
-  validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
+  validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :allow_nil => true, :allow_blank => true
 
   attr_accessible :razonsocial, :condicioniva_id, 
               :codigo, :cuit, :telefono, :direccion,
