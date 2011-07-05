@@ -18,7 +18,6 @@ class FacturasController < AuthorizedController
   # GET /facturas/1
   # GET /facturas/1.xml
   def show
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @factura }
@@ -40,7 +39,6 @@ class FacturasController < AuthorizedController
         File.delete(dump_tmp_filename)
       end
     end
-
   end
 
   # GET /facturas/new
@@ -77,7 +75,6 @@ class FacturasController < AuthorizedController
   # PUT /facturas/1
   # PUT /facturas/1.xml
   def update
-
     respond_to do |format|
       if @factura.update_attributes(params[:factura])
         format.html { redirect_to([@cliente, @factura], :notice => 'Factura was successfully updated.') }

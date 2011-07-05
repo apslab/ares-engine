@@ -37,12 +37,18 @@ class Cliente < ActiveRecord::Base
   validates :codigo, :presence => true
   validates_uniqueness_of :codigo, :scope => [:empresa_id]
   
-  validates :cuit, :allow_nil => true,:length => { :maximum => 11 }
-  validates_uniqueness_of :cuit, :scope => [:empresa_id], :allow_nil => true
-  validates_numericality_of :cuit, :only_integer => true, :message => "solo numeros", :allow_nil => true
-  # validates_inclusion_of :cuit, :in => 20000000000..38000000000, :message => "solo puede ingresar numeros entre 20 y 38."
+  validates :cuit,:length => { :maximum => 11, :minimum => 11 }, :allow_nil => true, :allow_blank => true
+  
+  validates_uniqueness_of :cuit, :scope => [:empresa_id], :message => "existe otra cuenta con el mismo cuit", :allow_nil => true
 
-  attr_accessible :razonsocial, :condicioniva_id, :codigo, :cuit, :telefono, :direccion, :contacto, :empresa_id, :account_id
+  validates_numericality_of :cuit, :only_integer => true, :message => "solo numeros", :allow_nil => true, :allow_blank => true
+  
+  validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
+
+  attr_accessible :razonsocial, :condicioniva_id, 
+              :codigo, :cuit, :telefono, :direccion,
+              :contacto, :empresa_id, :account_id,
+              :email, :fantasyname
 
   scope :sin_telefono, where("clientes.telefono = '' ")
   scope :no_actualizados, where("updated_at IS NULL" )

@@ -123,24 +123,6 @@ class Factura < Comprobante
     end
   end
 
-=begin
-  def account_for_reference(ref)
-    if ref = 'ventas_factura_subtotal'
-       return details.account_id.presence || ref.account_id
-    else  
-detalles.asiento_patial
-ventas_factura_iva
-
-    return ref.account_id unless ref.referencename.include?('ventas_factura_total')
-    return cliente.account_id.presence || ref.account_id
-
-# por cada item de la factura debo tomar su cuenta si la tiene cargada...
-    [cuenta,importe] = detalle.asiento each do |item|
-      item.account_id.presence || ref.account_id 'ventas_factura_subtotal'
-      item.tasaiva.account_id.presence || ref.account_id 'ventas_factura_iva'
-    end
-  end
-=end
 
   def save_pdf_to(filename)
      Prawn::Document.generate(filename) do |pdf|

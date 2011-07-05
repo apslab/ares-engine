@@ -17,16 +17,17 @@ end %>
 
 <%= semantic_attributes_for @cliente do |attr| %>
   <%= attr.attributes do %>
-	<%= attr.attribute :razonsocial , :label => "Razón social"%>
+	<%= attr.attribute :razonsocial %>
+	<%= attr.attribute :fantasyname %>
 	<%= attr.attribute :cuit %>
    	<%= attr.attribute :telefono %>
    	<%= attr.attribute :direccion %>
-  	<%= attr.attribute :contacto , :label => "Contacto", :display_empty => true %>
+   	<%= attr.attribute :email %>
+  	<%= attr.attribute :contacto , :display_empty => true %>
    	<%= attr.attribute :condicioniva_id, :display_empty => true, :value => @cliente.condicioniva.try('detalle') %>
    	<%= attr.attribute :account_id, :display_empty => true, :value => @cliente.account.try('name') %>
   <% end %>
 <% end %>
-<hr>
 <p>
   <b>Facturas</b>
 </p>
@@ -81,9 +82,7 @@ end %>
     <th>Importe</th>
   </tr>
 
-<% #raise @cliente.recibos.inspect %>
 <% @cliente.recibos.each do |cpbte| %>
-
   <tr>
     <td><%= cpbte.numero %></td>
     <td><%= cpbte.fecha %></td>

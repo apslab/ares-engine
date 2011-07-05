@@ -4,6 +4,7 @@
 <%= f.inputs(:class => :column_left ) do %>
 	<%= f.input :codigo %>
 	<%= f.input :razonsocial %>
+	<%= f.input :fantasyname %>	
 	<%= f.input :cuit, :as => :numeric , :input_html => { :size => 11, :style => "text-align:left;" }%>
 	<%= f.input :condicioniva, :label => true, :as => :select, :collection => current_company.condicionivas.all.map{|c| [c.detalle, c.id]}, :include_blank => false %>
 <% end %>
@@ -11,6 +12,7 @@
 <%= f.inputs(:class => :column_right ) do %>
 	  <%= f.input :telefono %>
 	  <%= f.input :direccion %>
+	  <%= f.input :email, :as => :string %>
 	  <%= f.input :contacto %>
 	  <%= f.input :account, :label => true, :as => :select, :collection => 
 	current_company.accounts.leaves.map{|a|[[a.code, a.name].compact.join(' &raquo; ').html_safe, a.id]} , :include_blank => true %>
