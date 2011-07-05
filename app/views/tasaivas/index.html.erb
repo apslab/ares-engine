@@ -32,7 +32,7 @@ end %>
     <td><%= tasaiva.porcentaje %></td>
     <td><%= tasaiva.since %></td>
     <td><%= tasaiva.until %></td>
-    <td><%= tasaiva.account.name %></td>
+    <td><%= tasaiva.try(:account).try(:name) %></td>
 
     <td><%= link_to icon('application_go', :small, :title => 'ver'), tasaiva %></td>
     <td><%= link_to icon('application_edit', :small, :title => 'editar'), edit_tasaiva_path(tasaiva) %></td>
