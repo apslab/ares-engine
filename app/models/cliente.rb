@@ -32,13 +32,15 @@ class Cliente < ActiveRecord::Base
   belongs_to :condicioniva
   belongs_to :account
   belongs_to :company, :class_name => "Company", :foreign_key => "empresa_id"
+  belongs_to :province
 
   validates :razonsocial, :presence => true
   validates :codigo, :presence => true
   validates_uniqueness_of :codigo, :scope => [:empresa_id]
   
   validates :cuit,:length => { :maximum => 11, :minimum => 11 }, :allow_nil => true, :allow_blank => true
-  
+  validates :codigopostal,  :length => { :maximum => 7, :minimum => 4 }, :allow_nil => true, :allow_blank => true
+  validates :localidad, :presence => true
   validates_uniqueness_of :cuit, :scope => [:empresa_id], :message => "existe otra cuenta con el mismo cuit", :allow_nil => true
 
   validates_numericality_of :cuit, :only_integer => true, :message => "solo numeros", :allow_nil => true, :allow_blank => true
@@ -48,7 +50,8 @@ class Cliente < ActiveRecord::Base
   attr_accessible :razonsocial, :condicioniva_id, 
               :codigo, :cuit, :telefono, :direccion,
               :contacto, :empresa_id, :account_id,
-              :email, :fantasyname
+              :email, :fantasyname, :codigopostal, :localidad,
+              :province_id, :observation, :date_and_time_attention
 
   scope :sin_telefono, where("clientes.telefono = '' ")
   scope :no_actualizados, where("updated_at IS NULL" )

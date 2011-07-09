@@ -7,13 +7,18 @@
 	<%= f.input :fantasyname %>	
 	<%= f.input :cuit, :as => :numeric , :input_html => { :size => 11, :style => "text-align:left;" }%>
 	<%= f.input :condicioniva, :label => true, :as => :select, :collection => current_company.condicionivas.all.map{|c| [c.detalle, c.id]}, :include_blank => false %>
+	<%= f.input :observation %>
 <% end %>
 
 <%= f.inputs(:class => :column_right ) do %>
 	  <%= f.input :telefono %>
 	  <%= f.input :direccion %>
+	  <%= f.input :localidad %>		
+	  <%= f.input :province, :label => true, :as => :select, :collection => Province.all.map{|c| [c.name, c.id]}, :include_blank => false %>
+	  <%= f.input :codigopostal %>	
 	  <%= f.input :email, :as => :string %>
 	  <%= f.input :contacto %>
+	  <%= f.input :date_and_time_attention %>
 	  <%= f.input :account, :label => true, :as => :select, :collection => 
 	current_company.accounts.leaves.map{|a|[[a.code, a.name].compact.join(' &raquo; ').html_safe, a.id]} , :include_blank => true %>
 <% end %>

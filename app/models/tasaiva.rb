@@ -17,14 +17,14 @@
 class Tasaiva < ActiveRecord::Base
   belongs_to :account
   belongs_to :company
-  #has_many :detalles
+  has_many :detalles
   
   validates :porcentaje, :presence => true
   
   scope :by_company, lambda {|company| where(:company_id => company.id) }
 
   # control para 
-  before_destroy :control_sin_items_comprobantes
+  #before_destroy :control_sin_items_comprobantes
     
   def control_sin_items_comprobantes
    if [detalles].any? {|detalle| detalle.any? }

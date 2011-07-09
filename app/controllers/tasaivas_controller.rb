@@ -2,8 +2,7 @@ class TasaivasController < AuthorizedController
   # GET /tasaivas
   # GET /tasaivas.xml
   before_filter :filter_tasaiva, :only => [:show,:edit,:update,:destroy]
-
-
+  
   def index
     @tasaivas = Tasaiva.by_company(current_company).all()
     
