@@ -27,6 +27,7 @@ end %>
    	<%= attr.attribute :codigopostal %>
    	<%= attr.attribute :email %>
   	<%= attr.attribute :contacto %>
+  	<%= attr.attribute :envelope, :value => (@cliente.envelope) ? 'Si' : 'No' %>
   	<%= attr.attribute :date_and_time_attention %>
    	<%= attr.attribute :condicioniva_id, :display_empty => true, :value => @cliente.condicioniva.try('detalle') %>
    	<%= attr.attribute :account_id, :display_empty => true, :value => @cliente.account.try('name') %>

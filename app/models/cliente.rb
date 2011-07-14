@@ -51,7 +51,8 @@ class Cliente < ActiveRecord::Base
               :codigo, :cuit, :telefono, :direccion,
               :contacto, :empresa_id, :account_id,
               :email, :fantasyname, :codigopostal, :localidad,
-              :province_id, :observation, :date_and_time_attention
+              :province_id, :observation, :date_and_time_attention,
+              :envelope
 
   scope :sin_telefono, where("clientes.telefono = '' ")
   scope :no_actualizados, where("updated_at IS NULL" )

@@ -19,6 +19,7 @@
 	  <%= f.input :email, :as => :string %>
 	  <%= f.input :contacto %>
 	  <%= f.input :date_and_time_attention %>
+	  <%= f.input :envelope, :label => true %>	
 	  <%= f.input :account, :label => true, :as => :select, :collection => 
 	current_company.accounts.leaves.map{|a|[[a.code, a.name].compact.join(' &raquo; ').html_safe, a.id]} , :include_blank => true %>
 <% end %>

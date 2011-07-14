@@ -1,3 +1,10 @@
+<% content_for(:controls) do %>
+<%= controls do |c|
+         c.item "Editar", edit_cliente_notacredito_path(@notacredito.cliente.id,@notacredito), :icon => "application_form_edit"
+         c.item "Volver", cliente_notacreditos_path(@notacredito.cliente.id), :icon => "application_go"
+end %>
+<%end%>
+
 <%= semantic_attributes_for @notacredito do |attr| %>
   <%= attr.attributes "Cabecera" do %>
 
