@@ -49,10 +49,10 @@ end %>
   <td align="right"></td>
   <td align="right"></td>
   <td align="right"></td>
-  <td align="right"><%= number_to_currency(@notacredito.total_factura) %></td>
+  <td align="right"><%= number_to_currency(@notacredito.total_notacredito) %></td>
 </tr>
 </table>
 </br>
 
-<%= link_to 'Edit', edit_notacredito_path(@notacredito) %> |
+<%= link_to 'Edit', edit_cliente_notacredito_path(@cliente,@notacredito) %> |
 <%= link_to 'Back', notacreditos_path %>

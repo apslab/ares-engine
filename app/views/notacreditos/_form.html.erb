@@ -9,7 +9,7 @@
   <% end %>
 <% end %>
 
-<%= semantic_form_for @notacredito do |f| %>
+<%= semantic_form_for [@cliente, @notacredito] do |f| %>
  <%= f.semantic_errors %>
 
  <%= f.inputs do %>

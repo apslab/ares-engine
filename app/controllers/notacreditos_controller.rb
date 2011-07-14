@@ -43,7 +43,8 @@ class NotacreditosController < AuthorizedController
   # GET /notacreditos/new
   # GET /notacreditos/new.xml
   def new
-    @notacredito = @cliente.notacreditos.build    
+    @notacredito = @cliente.notacreditos.build
+        
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @notacredito }
@@ -102,6 +103,6 @@ class NotacreditosController < AuthorizedController
   end
 
   def find_nc
-    @factura = @cliente.notacredito.find(params[:id])
+    @notacredito = @cliente.notacreditos.find(params[:id])
   end  
 end
