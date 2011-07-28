@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ares}
-  s.version = "0.4.7"
+  s.version = "0.4.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["AP System"]
-  s.date = %q{2011-07-14}
+  s.date = %q{2011-07-28}
   s.description = %q{Adminsitracion de Ventas}
   s.email = %q{info@ap-sys.com.ar}
   s.extra_rdoc_files = [
@@ -105,6 +105,7 @@ Gem::Specification.new do |s|
     "app/views/facturas/new.html.erb",
     "app/views/facturas/show.html.erb",
     "app/views/notacreditos/_detalle_fields.html.erb",
+    "app/views/notacreditos/_filtros.html.erb",
     "app/views/notacreditos/_form.html.erb",
     "app/views/notacreditos/edit.html.erb",
     "app/views/notacreditos/index.html.erb",
