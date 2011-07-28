@@ -1,4 +1,4 @@
-<h1>Listing notacreditos</h1>
+<h1>Listado nota de creditos</h1>
 
 <%= render 'filtros' %>
 
@@ -22,6 +22,9 @@ end %>
     <th>Fecha</th>
     <th>Importe</th>
     <th>Numero</th>
+    <th>Vencimiento</th>
+    <th>Cantidad items</th>
+    <th></th>
     <th></th>
     <th></th>
     <th></th>
@@ -36,8 +39,14 @@ end %>
 	    <td><%= cpbte.fechavto %></td>
 	    <td><%= cpbte.count_items %></td>
 	    <td><%= link_to icon('application_go', :small, :title => 'ver'), cpbte %></td>
-	    <td><%= link_to icon('application_edit', :small, :title => 'editar'), edit_cliente_notacredito_path(cpbte.cliente,cpbte) %></td>
-	    <td><%= link_to icon('application_delete', :small, :title => 'borrar'), cpbte, :confirm => 'Esta ud. seguro?', :method => :delete %></td>
+		<% if cpbte.isprinted? %>
+			<td></td>
+			<td></td>
+		<% else %>
+		    <td><%= link_to icon('application_edit', :small, :title => 'editar'), edit_cliente_notacredito_path(cpbte.cliente, cpbte) %></td>
+		    <td><%= link_to icon('application_delete', :small, :title => 'borrar'), [cpbte.cliente, cpbte], :confirm => 'Esta ud. seguro?', :method => :delete %></td>
+		<% end %>
+      <%= link_to icon('printer', :small, :title => 'Imprimir'), cliente_notacredito_path(cpbte.cliente, cpbte, :format => 'pdf') %>
 	  </tr>
 	<% end %>
 </table>

@@ -114,7 +114,7 @@ class Notacredito < Comprobante
       entry.exercise_id = self.cliente.company.exercises.where('started_on <= :fecha and finished_on >= :fecha',:fecha => self.fecha).first.try(:id)
       
       # cada referencia es mapeada al asiento
-      ref = self.cliente.company.refenciacontables.where('referencename like "ventas_factura_%"')
+      ref = self.cliente.company.refenciacontables.where('referencename like "ventas_nc_%"')
       
       ref.each do |referencia|
         raise "falta metodo #{referencia.referencename}" unless self.respond_to?(referencia.referencename)
@@ -190,7 +190,7 @@ class Notacredito < Comprobante
           pdf.stroke_bounds          
        end
        
-       pdf.draw_text "%9.02f" % self.total_iva_factura.to_s, :at => [350,25], :size => 12, :style => :bold
+       pdf.draw_text "%9.02f" % self.total_iva_notacredito.to_s, :at => [350,25], :size => 12, :style => :bold
        pdf.draw_text "%9.02f" % self.importe.to_s, :at => [400,25], :size => 12, :style => :bold
 
        pdf.line_width = 1

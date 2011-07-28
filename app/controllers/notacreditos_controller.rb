@@ -26,7 +26,7 @@ class NotacreditosController < AuthorizedController
            @entry = @notacredito.to_entry
            unless @entry.save
              flash[:error] = @entry.errors.full_messages.join("\n")
-             redirect_to [@notacredito.cliente,:facturas]
+             redirect_to [@notacredito.cliente,:notacredito]
              return
            end
         #end
