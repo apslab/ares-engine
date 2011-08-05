@@ -3,9 +3,9 @@
 
 <%= f.inputs do %>
   <%= f.input :detalle %>
-  <%= f.input :porcentaje %>
-  <%= f.input :since, :as => :date %>
-  <%= f.input :until, :as => :date %>
+  <%= f.input :porcentaje, :as => :numeric %>
+  <%= f.input :since, :as => :datepicker %>
+  <%= f.input :until, :as => :datepicker %>
   <%= f.input :account, :label => true, :as => :select, :collection => 
 current_company.accounts.leaves.map{|a|[a.self_and_ancestors.map(&:name).join(' &raquo; ').html_safe, a.id]} , :include_blank => true %>
 <% end %> 

@@ -29,7 +29,7 @@ end %>
 <% @tasaivas.each do |tasaiva| %>
   <tr>
     <td><%= tasaiva.detalle %></td>
-    <td><%= tasaiva.porcentaje %></td>
+    <td align=right><%= tasaiva.porcentaje %></td>
     <td><%= tasaiva.since %></td>
     <td><%= tasaiva.until %></td>
     <td><%= tasaiva.try(:account).try(:name) %></td>

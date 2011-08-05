@@ -9,6 +9,27 @@ class TasaivasController < AuthorizedController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @tasaivas }
+      format.pdf do
+
+        dump_tmp_filename = Rails.root.join('tmp',@tasaivas.first.cache_key)
+        
+         Dir.mkdir(dump_tmp_filename.dirname) unless File.directory?(dump_tmp_filename.dirname)
+         
+         Prawn::Document.generate(dump_tmp_filename) do |pdf|
+           pdf.draw_text "original", :at => [-4,400], :size => 8, :rotate => 90
+           offset = 800
+         @tasaivas.each do |item|
+           item.attributes.each do |member|
+             offset -= 20
+             pdf.draw_text member[0], :at => [0,offset], :size => 10
+             pdf.draw_text member[1], :at => [100,offset], :size => 12
+           end
+         end 
+         end        
+         send_file(dump_tmp_filename, :type => :pdf, :disposition => 'attachment', :filename => "tasaivas.pdf")
+         File.delete(dump_tmp_filename)
+             
+      end
     end
   end
 
@@ -18,6 +39,13 @@ class TasaivasController < AuthorizedController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @tasaiva }
+      format.pdf do
+        dump_tmp_filename = Rails.root.join('tmp',@tasaiva.cache_key)
+         Dir.mkdir(dump_tmp_filename.dirname) unless File.directory?(dump_tmp_filename.dirname)
+         @tasaiva.save_pdf_to(dump_tmp_filename)
+         send_file(dump_tmp_filename, :type => :pdf, :disposition => 'attachment', :filename => "#{@tasaiva.detalle}.pdf")
+         File.delete(dump_tmp_filename)
+      end
     end
   end
 
