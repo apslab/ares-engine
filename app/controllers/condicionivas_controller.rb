@@ -12,6 +12,13 @@ class CondicionivasController < AuthorizedController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @condicionivas }
+      format.pdf do
+         dump_tmp_filename = Rails.root.join('tmp',@condicionivas.first.cache_key)
+         Dir.mkdir(dump_tmp_filename.dirname) unless File.directory?(dump_tmp_filename.dirname)
+         save_list_pdf_to(dump_tmp_filename,@condicionivas) 
+         send_file(dump_tmp_filename, :type => :pdf, :disposition => 'attachment', :filename => "condicionivas.pdf")
+         File.delete(dump_tmp_filename)           
+      end      
     end
   end
 
@@ -21,6 +28,13 @@ class CondicionivasController < AuthorizedController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @condicioniva }
+      format.pdf do
+        dump_tmp_filename = Rails.root.join('tmp',@condicioniva.cache_key)
+        Dir.mkdir(dump_tmp_filename.dirname) unless File.directory?(dump_tmp_filename.dirname)
+        save_pdf_to(dump_tmp_filename,@condicioniva)
+        send_file(dump_tmp_filename, :type => :pdf, :disposition => 'attachment', :filename => "#{@condicioniva.detalle}.pdf")
+        File.delete(dump_tmp_filename)
+      end
     end
   end
 

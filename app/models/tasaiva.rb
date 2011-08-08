@@ -23,6 +23,8 @@ class Tasaiva < ActiveRecord::Base
   
   scope :by_company, lambda {|company| where(:company_id => company.id) }
 
+  attr_accessible :detalle, :porcentaje, :since, :until
+
   # control para 
   #before_destroy :control_sin_items_comprobantes
     
@@ -32,19 +34,7 @@ class Tasaiva < ActiveRecord::Base
      return false
    end   
   end
-  
-  def save_pdf_to(filename)
-    Prawn::Document.generate(filename) do |pdf|
-      pdf.draw_text "original", :at => [-4,400], :size => 8, :rotate => 90
-      offset = 800
-      self.attributes.each do |member|
-        offset -= 20
-        pdf.draw_text member[0], :at => [0,offset], :size => 10
-        pdf.draw_text member[1], :at => [100,offset], :size => 12
-      end
-    end
-  end  
-  
+    
   def _account_id
     _read_attribute(:account_id) || Refenciacontable.find_by_referencename_and_company_id('ventas_factura_iva',read_attribute(:company_id)).try(:account_id)
   end

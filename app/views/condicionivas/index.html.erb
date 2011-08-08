@@ -1,9 +1,7 @@
-<h1>Listado de condiciones de iva</h1>
-
 <% content_for(:controls) do %>
 <%= controls do |c|
          c.item "Nuevo", new_condicioniva_path, :icon => "add"
-         c.item "Exportar PDF", root_path, :icon => "report_go", :method => :delete
+         c.item "Exportar PDF", condicionivas_path( :format => 'pdf'), :icon => "report_go"
 end %>
 <%end%>
 

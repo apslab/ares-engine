@@ -10,6 +10,13 @@ class ClientesController < AuthorizedController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @clientes }
+      format.pdf do
+         dump_tmp_filename = Rails.root.join('tmp',@clientes.first.cache_key)
+         Dir.mkdir(dump_tmp_filename.dirname) unless File.directory?(dump_tmp_filename.dirname)
+         save_list_pdf_to(dump_tmp_filename,@clientes) 
+         send_file(dump_tmp_filename, :type => :pdf, :disposition => 'attachment', :filename => "clientes.pdf")
+         File.delete(dump_tmp_filename)           
+      end
     end
   end
 
@@ -19,14 +26,22 @@ class ClientesController < AuthorizedController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @cliente }
-      format.pdf { render :pdf => "cta"+@cliente.razonsocial,
-                       :template => 'clientes/show.html.erb',
-                       :show_as_html => params[:debug].present?,      # allow debuging based on url param
-                       :layout => 'pdf.html.erb',
-                       :footer => {
-                          :right => "Reporte generado el #{l DateTime.current}"
-                       }
-                 }
+      format.pdf do
+        dump_tmp_filename = Rails.root.join('tmp',@cliente.cache_key)
+        Dir.mkdir(dump_tmp_filename.dirname) unless File.directory?(dump_tmp_filename.dirname)
+        save_pdf_to(dump_tmp_filename,@cliente)
+        send_file(dump_tmp_filename, :type => :pdf, :disposition => 'attachment', :filename => "#{@cliente.razonsocial}.pdf")
+        File.delete(dump_tmp_filename)
+      end
+
+#      format.pdf { render :pdf => "cta"+@cliente.razonsocial,
+#                       :template => 'clientes/show.html.erb',
+#                       :show_as_html => params[:debug].present?,      # allow debuging based on url param
+#                       :layout => 'pdf.html.erb',
+#                       :footer => {
+#                          :right => "Reporte generado el #{l DateTime.current}"
+#                       }
+#                 }
     end
   end
 

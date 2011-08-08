@@ -11,6 +11,13 @@ class NotacreditosController < AuthorizedController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @notacreditos }
+      format.pdf do
+         dump_tmp_filename = Rails.root.join('tmp',@notacreditos.first.cache_key)
+         Dir.mkdir(dump_tmp_filename.dirname) unless File.directory?(dump_tmp_filename.dirname)
+         save_list_pdf_to(dump_tmp_filename,@notacreditos) 
+         send_file(dump_tmp_filename, :type => :pdf, :disposition => 'attachment', :filename => "notacreditos.pdf")
+         File.delete(dump_tmp_filename)           
+      end      
     end
   end
 

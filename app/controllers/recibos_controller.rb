@@ -9,6 +9,13 @@ class RecibosController < AuthorizedController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @recibos }
+      format.pdf do
+         dump_tmp_filename = Rails.root.join('tmp',@recibos.first.cache_key)
+         Dir.mkdir(dump_tmp_filename.dirname) unless File.directory?(dump_tmp_filename.dirname)
+         save_list_pdf_to(dump_tmp_filename,@recibos) 
+         send_file(dump_tmp_filename, :type => :pdf, :disposition => 'attachment', :filename => "recibos.pdf")
+         File.delete(dump_tmp_filename)           
+      end      
     end
   end
 

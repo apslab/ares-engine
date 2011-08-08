@@ -8,6 +8,7 @@ end %>
 
 <% content_for(:controls) do %>
 <%= controls do |c|
+         c.item "Exportar PDF", cliente_path( :format => 'pdf'), :icon => "report_go"
          c.item "Editar", edit_cliente_path(@cliente), :icon => "application_form_edit"
          c.item "Volver", clientes_path, :icon => "application_go"
 end %>

@@ -49,7 +49,7 @@ class Cliente < ActiveRecord::Base
 
   attr_accessible :razonsocial, :condicioniva_id, 
               :codigo, :cuit, :telefono, :direccion,
-              :contacto, :empresa_id, :account_id,
+              :contacto, :account_id,
               :email, :fantasyname, :codigopostal, :localidad,
               :province_id, :observation, :date_and_time_attention,
               :envelope
@@ -76,6 +76,5 @@ class Cliente < ActiveRecord::Base
   
   def _account_id
     _read_attribute(:account_id) || Refenciacontable.find_by_referencename_and_company_id('ventas_factura_total',read_attribute(:empresa_id)).try(:account_id)
-  end
-    
+  end    
 end

@@ -1,14 +1,15 @@
 <%= semantic_form_for(@tasaiva) do |f| %>
 <%= f.semantic_errors %>
 
-<%= f.inputs do %>
-  <%= f.input :detalle %>
-  <%= f.input :porcentaje, :as => :numeric %>
-  <%= f.input :since, :as => :datepicker %>
-  <%= f.input :until, :as => :datepicker %>
-  <%= f.input :account, :label => true, :as => :select, :collection => 
-current_company.accounts.leaves.map{|a|[a.self_and_ancestors.map(&:name).join(' &raquo; ').html_safe, a.id]} , :include_blank => true %>
-<% end %> 
+	<%= f.inputs do %>
+	  <%= f.input :detalle %>
+	  <%= f.input :porcentaje, :as => :numeric %>
+	  <%= f.input :since, :as => :datepicker %>
+	  <%= f.input :until, :as => :datepicker %>
+	  <%= f.input :account, :label => true, :as => :select, :collection => 
+	current_company.accounts.leaves.map{|a|[a.self_and_ancestors.map(&:name).join(' &raquo; ').html_safe, a.id]} , :include_blank => true %>
+	<% end %> 
 
-<%= f.buttons %>
+	<%= render('shared/common_form_buttons') %>
+
 <% end %>

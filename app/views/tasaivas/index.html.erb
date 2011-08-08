@@ -3,7 +3,7 @@
 <% content_for(:controls) do %>
 <%= controls do |c|
          c.item "Nuevo", new_tasaiva_path, :icon => "add"
-         c.item "Exportar PDF", root_path, :icon => "report_go", :method => :delete
+         c.item "Exportar PDF", tasaivas_path( :format => 'pdf'), :icon => "report_go"
 end %>
 <%end%>
 

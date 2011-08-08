@@ -19,4 +19,6 @@ class Condicioniva < ActiveRecord::Base
   
   validates :detalle, :presence => true
   validates :letra, :presence => true
+
+  attr_accessible :detalle, :letra  
 end

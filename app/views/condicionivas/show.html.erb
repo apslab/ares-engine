@@ -1,10 +1,24 @@
-<p id="notice"><%= notice %></p>
+<% content_for(:breadcrumbs) do %>
+<%= breadcrumbs do |b|
+	b.item "Principal", root_path
+    b.item "Condiciones frente al IVA", condicionivas_path
+    b.item @condicioniva.detalle, root_path, :active => true
+end %>
+<%end%>
 
-<p>
-  <b>Detalle:</b>
-  <%= @condicioniva.detalle %>
-</p>
+<% content_for(:controls) do %>
+<%= controls do |c|
+         c.item "Exportar PDF", condicioniva_path( :format => 'pdf'), :icon => "report_go"
+         c.item "Editar", edit_condicioniva_path(@condicioniva), :icon => "application_form_edit"
+         c.item "Volver", condicionivas_path, :icon => "application_go"
+end %>
+<%end%>
 
+<%= semantic_attributes_for @condicioniva do |attr| %>
+  <%= attr.attributes do %>
+	<%= attr.attribute :detalle %>
+	<%= attr.attribute :letra %>
+  <% end %>
+<% end %>
 
-<%= link_to 'Edit', edit_condicioniva_path(@condicioniva) %> |
-<%= link_to 'Back', condicionivas_path %>
+<div class="clear"></div>
