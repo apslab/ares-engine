@@ -23,7 +23,7 @@ class Tasaiva < ActiveRecord::Base
   
   scope :by_company, lambda {|company| where(:company_id => company.id) }
 
-  attr_accessible :detalle, :porcentaje, :since, :until
+  attr_accessible :detalle, :porcentaje, :since, :until, :company_id, :account_id
 
   # control para 
   #before_destroy :control_sin_items_comprobantes

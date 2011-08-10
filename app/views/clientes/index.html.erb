@@ -2,8 +2,8 @@
 
 <% content_for(:controls) do %>
 <%= controls do |c|
-         c.item "Nuevo", new_cliente_path, :icon => "add"
-         c.item "Exportar PDF", clientes_path( :format => 'pdf'), :icon => "report_go"
+         c.item t('scaffold.actions.new', :item => Cliente.model_name.human).titlecase, new_cliente_path, :icon => "add"
+         c.item t('scaffold.actions.export').titlecase, clientes_path( :format => 'pdf'), :icon => "report_go"
 end %>
 <%end%>
 

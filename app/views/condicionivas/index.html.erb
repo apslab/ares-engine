@@ -1,7 +1,7 @@
 <% content_for(:controls) do %>
 <%= controls do |c|
-         c.item "Nuevo", new_condicioniva_path, :icon => "add"
-         c.item "Exportar PDF", condicionivas_path( :format => 'pdf'), :icon => "report_go"
+         c.item t('scaffold.actions.new', :item => Condicioniva.model_name.human).titlecase, new_condicioniva_path, :icon => "add"
+         c.item t('scaffold.actions.export').titlecase, condicionivas_path( :format => 'pdf'), :icon => "report_go"
 end %>
 <%end%>
 

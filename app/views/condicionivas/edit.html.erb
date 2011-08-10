@@ -1,6 +1,17 @@
-<h1>Editing condicioniva</h1>
+<h1>Editando condiciones de iva</h1>
+
+<% content_for(:controls) do %>
+<%= controls do |c|
+         c.item "Ver", condicioniva_path(@condicioniva), :icon => "application_go"
+end %>
+<%end%>
+
+<% content_for(:breadcrumbs) do %>
+<%= breadcrumbs do |b|
+	b.item "Principal", root_path
+    b.item "Condiciones de IVA", condicionivas_path
+    b.item @condicioniva.detalle, root_path, :active => true
+end %>
+<%end%>
 
 <%= render 'form' %>
-
-<%= link_to 'Show', @condicioniva %> |
-<%= link_to 'Back', condicionivas_path %>

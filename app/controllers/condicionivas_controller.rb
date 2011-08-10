@@ -4,8 +4,6 @@ class CondicionivasController < AuthorizedController
   before_filter :filter_condicioniva, :only => [:show,:edit,:update,:destroy]
   
   def index
-    #@condicionivas = Condicioniva.all
-
     @search = Condicioniva.by_company(current_company).search(params[:search])
     @condicionivas = @search.order("detalle").page(params[ :page ]).per(10)
 

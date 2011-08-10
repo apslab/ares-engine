@@ -49,7 +49,7 @@ class Cliente < ActiveRecord::Base
 
   attr_accessible :razonsocial, :condicioniva_id, 
               :codigo, :cuit, :telefono, :direccion,
-              :contacto, :account_id,
+              :contacto, :account_id, :empresa_id,
               :email, :fantasyname, :codigopostal, :localidad,
               :province_id, :observation, :date_and_time_attention,
               :envelope

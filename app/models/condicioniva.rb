@@ -20,5 +20,5 @@ class Condicioniva < ActiveRecord::Base
   validates :detalle, :presence => true
   validates :letra, :presence => true
 
-  attr_accessible :detalle, :letra  
+  attr_accessible :detalle, :letra, :empresa_id  
 end
