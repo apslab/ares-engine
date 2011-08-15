@@ -1,0 +1,52 @@
+- content_for(:breadcrumbs) do
+  = breadcrumbs do |breadcrumb|
+    - breadcrumb.item current_company.name.titlecase, root_path
+    - breadcrumb.item Cliente.model_name.human, clientes_path
+
+- if can?(:create, Cliente)
+  - content_for(:controls) do
+    = controls do |control|
+      - control.item t('scaffold.actions.new', :item => Cliente.model_name.human).titlecase, new_cliente_path, :icon => 'add'
+      - control.item t('scaffold.actions.export').titlecase, clientes_path( :format => 'pdf'), :icon => 'report_go'
+
+#filters.accordion
+  %h3
+    %a{:href => "#"} Filtros
+  .filters-content
+    = semantic_form_for @search do |f|
+      = f.inputs do
+        = f.input :razonsocial_contains, :label => Cliente.human_attribute_name('razonsocial')
+        = f.input :cuit_contains, :label => Cliente.human_attribute_name('cuit')
+      = f.buttons do
+        = f.commit_button :search
+
+.block
+  - if @clientes.any?
+    .clear
+    .block{:style => 'margin:20px;'}= paginate(@clientes)
+    .clear
+    %table.table
+      %tr
+        %th= Cliente.human_attribute_name('razonsocial')
+        %th= Cliente.human_attribute_name('cuit')
+        %th.last= Cliente.human_attribute_name('telefono')
+        %th.last= Cliente.human_attribute_name('direccion')
+        %th.last= Cliente.human_attribute_name('contacto')
+        %th
+
+      - @clientes.each do |cliente|
+        %tr
+          %td= cliente.razonsocial
+          %td= cliente.cuit
+          %td.last= cliente.telefono
+          %td.last= cliente.direccion
+          %td.last= cliente.contacto
+          %td.last
+            = link_to icon('application_get', :small, :title => t('scaffold.actions.show').titlecase), cliente
+            = link_to icon('application_edit', :small, :title => t('scaffold.actions.edit').titlecase), edit_cliente_path(cliente)
+            = link_to icon('application_delete', :small, :title => t('scaffold.actions.destroy').titlecase), cliente, :confirm => t('scaffold.actions.destroy_confirm').titlecase, :method => :delete
+    .clear
+    .block{:style => 'margin:20px;'}= paginate(@clientes)
+    %br
+    .clear
+.clear

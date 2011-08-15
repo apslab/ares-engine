@@ -6,7 +6,8 @@ class TasaivasController < AuthorizedController
   respond_to :html, :xml, :json
   
   def index
-    @tasaivas = Tasaiva.by_company(current_company).all()
+    @search = Tasaiva.by_company(current_company).search(params[:search])
+    @tasaivas = @search.order("detalle").page(params[ :page ]).per(10)
     
     respond_to do |format|
       format.html # index.html.erb

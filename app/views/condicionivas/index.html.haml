@@ -1,0 +1,46 @@
+- content_for(:breadcrumbs) do
+  = breadcrumbs do |breadcrumb|
+    - breadcrumb.item current_company.name.titlecase, root_path
+    - breadcrumb.item Condicioniva.model_name.human, condicionivas_path
+
+- if can?(:create, Condicioniva)
+  - content_for(:controls) do
+    = controls do |control|
+      - control.item t('scaffold.actions.new', :item => Condicioniva.model_name.human).titlecase, new_condicioniva_path, :icon => 'add'
+      - control.item t('scaffold.actions.export').titlecase, condicionivas_path( :format => 'pdf'), :icon => 'report_go'
+
+#filters.accordion
+  %h3
+    %a{:href => "#"} Filtros
+  .filters-content
+    = semantic_form_for @search do |f|
+      = f.inputs do
+        = f.input :detalle_contains, :label => Condicioniva.human_attribute_name('detalle')
+        = f.input :letra_contains, :label => Cliente.human_attribute_name('letra')
+      = f.buttons do
+        = f.commit_button :search
+
+.block
+  - if @condicionivas.any?
+    .clear
+    .block{:style => 'margin:20px;'}= paginate(@condicionivas)
+    .clear
+    %table.table
+      %tr
+        %th= Condicioniva.human_attribute_name('detalle')
+        %th.last= Condicioniva.human_attribute_name('letra')
+        %th
+
+      - @condicionivas.each do |condicioniva|
+        %tr
+          %td= condicioniva.detalle
+          %td.last= condicioniva.letra
+          %td.last
+            = link_to icon('application_get', :small, :title => t('scaffold.actions.show').titlecase), condicioniva
+            = link_to icon('application_edit', :small, :title => t('scaffold.actions.edit').titlecase), edit_condicioniva_path(condicioniva)
+            = link_to icon('application_delete', :small, :title => t('scaffold.actions.destroy').titlecase), condicioniva, :confirm => t('scaffold.actions.destroy_confirm').titlecase, :method => :delete
+    .clear
+    .block{:style => 'margin:20px;'}= paginate(@condicionivas)
+    %br
+    .clear
+.clear

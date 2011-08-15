@@ -1,0 +1,51 @@
+- content_for(:breadcrumbs) do
+  = breadcrumbs do |breadcrumb|
+    - breadcrumb.item current_company.name.titlecase, root_path
+    - breadcrumb.item Tasaiva.model_name.human, tasaivas_path
+
+- if can?(:create, Tasaiva)
+  - content_for(:controls) do
+    = controls do |control|
+      - control.item t('scaffold.actions.new', :item => Tasaiva.model_name.human).titlecase, new_tasaiva_path, :icon => 'add'
+      - control.item t('scaffold.actions.export').titlecase, tasaivas_path( :format => 'pdf'), :icon => 'report_go'
+
+#filters.accordion
+  %h3
+    %a{:href => "#"} Filtros
+  .filters-content
+    = semantic_form_for @search do |f|
+      = f.inputs do
+        = f.input :detalle_contains, :label => Tasaiva.human_attribute_name('detalle')
+      = f.buttons do
+        = f.commit_button :search
+
+.block
+  - if @tasaivas.any?
+    .clear
+    .block{:style => 'margin:20px;'}= paginate(@tasaivas)
+    .clear
+    %table.table
+      %tr
+        %th= Tasaiva.human_attribute_name('detalle')
+        %th= Tasaiva.human_attribute_name('porcentaje')
+        %th.last= Tasaiva.human_attribute_name('since')
+        %th.last= Tasaiva.human_attribute_name('until')
+        %th.last= Tasaiva.human_attribute_name('account_id')
+        %th
+
+      - @tasaivas.each do |tasaiva|
+        %tr
+          %td= tasaiva.detalle
+          %td= tasaiva.porcentaje
+          %td.last= tasaiva.since
+          %td.last= tasaiva.until
+          %td.last= tasaiva.try(:account).try(:name)
+          %td.last
+            = link_to icon('application_get', :small, :title => t('scaffold.actions.show').titlecase), tasaiva
+            = link_to icon('application_edit', :small, :title => t('scaffold.actions.edit').titlecase), edit_tasaiva_path(tasaiva)
+            = link_to icon('application_delete', :small, :title => t('scaffold.actions.destroy').titlecase), tasaiva, :confirm => t('scaffold.actions.destroy_confirm').titlecase, :method => :delete
+    .clear
+    .block{:style => 'margin:20px;'}= paginate(@tasaivas)
+    %br
+    .clear
+.clear
