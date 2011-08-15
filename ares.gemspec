@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ares}
-  s.version = "0.4.10"
+  s.version = "0.4.11"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["AP System"]
-  s.date = %q{2011-08-09}
+  s.date = %q{2011-08-14}
   s.description = %q{Adminsitracion de Ventas}
   s.email = %q{info@ap-sys.com.ar}
   s.extra_rdoc_files = [
@@ -76,13 +76,13 @@ Gem::Specification.new do |s|
     "app/views/clientes/cuentacorriente.html.erb",
     "app/views/clientes/cuentacorriente.pdf.erb",
     "app/views/clientes/edit.html.erb",
-    "app/views/clientes/index.html.erb",
+    "app/views/clientes/index.html.haml",
     "app/views/clientes/list_account.html.erb",
     "app/views/clientes/new.html.erb",
     "app/views/clientes/show.html.erb",
     "app/views/condicionivas/_form.html.erb",
     "app/views/condicionivas/edit.html.erb",
-    "app/views/condicionivas/index.html.erb",
+    "app/views/condicionivas/index.html.haml",
     "app/views/condicionivas/new.html.erb",
     "app/views/condicionivas/show.html.erb",
     "app/views/facturadetalles/edit.html.erb",
@@ -125,7 +125,7 @@ Gem::Specification.new do |s|
     "app/views/recibos/show.html.erb",
     "app/views/tasaivas/_form.html.erb",
     "app/views/tasaivas/edit.html.erb",
-    "app/views/tasaivas/index.html.erb",
+    "app/views/tasaivas/index.html.haml",
     "app/views/tasaivas/new.html.erb",
     "app/views/tasaivas/show.html.erb",
     "ares.gemspec",
