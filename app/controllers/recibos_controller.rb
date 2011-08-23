@@ -53,7 +53,7 @@ class RecibosController < AuthorizedController
 
     respond_to do |format|
       if @recibo.save
-        format.html { redirect_to(@recibo, :notice => 'Recibo was successfully created.') }
+        format.html { redirect_to(@recibo, :notice => t('flash.actions.create.notice', :resource_name => Recibo.model_name.human)) }
         format.xml  { render :xml => @recibo, :status => :created, :location => @recibo }
       else
         format.html { render :action => "new" }
@@ -69,7 +69,7 @@ class RecibosController < AuthorizedController
 
     respond_to do |format|
       if @recibo.update_attributes(params[:recibo])
-        format.html { redirect_to(@recibo, :notice => 'Recibo was successfully updated.') }
+        format.html { redirect_to(@recibo, :notice => t('flash.actions.update.notice', :resource_name => Recibo.model_name.human)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

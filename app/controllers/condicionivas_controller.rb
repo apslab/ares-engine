@@ -58,7 +58,7 @@ class CondicionivasController < AuthorizedController
 
     respond_to do |format|
       if @condicioniva.save
-        format.html { redirect_to(@condicioniva, :notice => 'Condicioniva was successfully created.') }
+        format.html { redirect_to(@condicioniva, :notice => t('flash.actions.create.notice', :resource_name => Condicioniva.model_name.human)) }
         format.xml  { render :xml => @condicioniva, :status => :created, :location => @condicioniva }
       else
         format.html { render :action => "new" }
@@ -72,7 +72,7 @@ class CondicionivasController < AuthorizedController
   def update
     respond_to do |format|
       if @condicioniva.update_attributes(params[:condicioniva])
-        format.html { redirect_to(@condicioniva, :notice => 'Condicioniva was successfully updated.') }
+        format.html { redirect_to(@condicioniva, :notice => t('flash.actions.update.notice', :resource_name => Condicioniva.model_name.human)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

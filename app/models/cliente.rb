@@ -13,7 +13,7 @@
 #  created_at      :datetime
 #  updated_at      :datetime
 #  condicioniva_id :integer
-#  empresa_id      :integer
+#  company_id      :integer
 #
 
 class Cliente < ActiveRecord::Base
@@ -31,17 +31,17 @@ class Cliente < ActiveRecord::Base
    
   belongs_to :condicioniva
   belongs_to :account
-  belongs_to :company, :class_name => "Company", :foreign_key => "empresa_id"
+  belongs_to :company
   belongs_to :province
 
   validates :razonsocial, :presence => true
   validates :codigo, :presence => true
-  validates_uniqueness_of :codigo, :scope => [:empresa_id]
+  validates_uniqueness_of :codigo, :scope => [:company_id]
   
   validates :cuit,:length => { :maximum => 11, :minimum => 11 }, :allow_nil => true, :allow_blank => true
   validates :codigopostal,  :length => { :maximum => 7, :minimum => 4 }, :allow_nil => true, :allow_blank => true
   validates :localidad, :presence => true
-  validates_uniqueness_of :cuit, :scope => [:empresa_id], :message => "existe otra cuenta con el mismo cuit", :allow_nil => true
+  validates_uniqueness_of :cuit, :scope => [:company_id], :message => "existe otra cuenta con el mismo cuit", :allow_nil => true
 
   validates_numericality_of :cuit, :only_integer => true, :message => "solo numeros", :allow_nil => true, :allow_blank => true
   
@@ -49,7 +49,7 @@ class Cliente < ActiveRecord::Base
 
   attr_accessible :razonsocial, :condicioniva_id, 
               :codigo, :cuit, :telefono, :direccion,
-              :contacto, :account_id, :empresa_id,
+              :contacto, :account_id, :company_id,
               :email, :fantasyname, :codigopostal, :localidad,
               :province_id, :observation, :date_and_time_attention,
               :envelope
@@ -57,7 +57,7 @@ class Cliente < ActiveRecord::Base
   scope :sin_telefono, where("clientes.telefono = '' ")
   scope :no_actualizados, where("updated_at IS NULL" )
   scope :orden_alfabetico, order("clientes.razonsocial")  
-  scope :by_company, lambda {|company| where(:empresa_id => company.id) }
+  scope :by_company, lambda {|company| where(:company_id => company.id) }
   
   delegate :saldo , :to => :comprobantes
   
@@ -75,6 +75,6 @@ class Cliente < ActiveRecord::Base
   end
   
   def _account_id
-    _read_attribute(:account_id) || Refenciacontable.find_by_referencename_and_company_id('ventas_factura_total',read_attribute(:empresa_id)).try(:account_id)
+    _read_attribute(:account_id) || Refenciacontable.find_by_referencename_and_company_id('ventas_factura_total',read_attribute(:company_id)).try(:account_id)
   end    
 end

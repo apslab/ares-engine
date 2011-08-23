@@ -44,7 +44,7 @@ class FacturarecibosController < AuthorizedController
 
     respond_to do |format|
       if @facturarecibo.save
-        format.html { redirect_to(@facturarecibo, :notice => 'Facturarecibo was successfully created.') }
+        format.html { redirect_to(@facturarecibo, :notice => t('flash.actions.create.notice', :resource_name => Facturarecibo.model_name.human)) }
         format.xml  { render :xml => @facturarecibo, :status => :created, :location => @facturarecibo }
       else
         format.html { render :action => "new" }
@@ -60,7 +60,7 @@ class FacturarecibosController < AuthorizedController
 
     respond_to do |format|
       if @facturarecibo.update_attributes(params[:facturarecibo])
-        format.html { redirect_to(@facturarecibo, :notice => 'Facturarecibo was successfully updated.') }
+        format.html { redirect_to(@facturarecibo, :notice => t('flash.actions.update.notice', :resource_name => Facturarecibo.model_name.human)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

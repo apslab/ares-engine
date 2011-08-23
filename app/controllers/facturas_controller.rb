@@ -70,7 +70,7 @@ class FacturasController < AuthorizedController
 
     respond_to do |format|
       if @factura.save
-        format.html { redirect_to([@cliente, @factura], :notice => 'Factura was successfully created.') }
+        format.html { redirect_to([@cliente, @factura], :notice => t('flash.actions.create.notice', :resource_name => Factura.model_name.human)) }
         format.xml  { render :xml => @factura, :status => :created, :location => [@cliente, @factura] }
       else
         format.html { render :action => "new" }
@@ -84,7 +84,7 @@ class FacturasController < AuthorizedController
   def update
     respond_to do |format|
       if @factura.update_attributes(params[:factura])
-        format.html { redirect_to([@cliente, @factura], :notice => 'Factura was successfully updated.') }
+        format.html { redirect_to([@cliente, @factura], :notice => t('flash.actions.update.notice', :resource_name => Factura.model_name.human)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

@@ -69,7 +69,7 @@ class NotacreditosController < AuthorizedController
 
     respond_to do |format|
       if @notacredito.save
-        format.html { redirect_to([@cliente, @notacredito], :notice => 'nota de credito was successfully created.') }
+        format.html { redirect_to([@cliente, @notacredito], :notice => t('flash.actions.create.notice', :resource_name => Notacredito.model_name.human)) }
         format.xml  { render :xml => @notacredito, :status => :created, :location => [@cliente, @notacredito] }
       else
         format.html { render :action => "new" }
@@ -83,7 +83,7 @@ class NotacreditosController < AuthorizedController
   def update
     respond_to do |format|
       if @notacredito.update_attributes(params[:notacredito])
-        format.html { redirect_to([@cliente, @notacredito], :notice => 'Factura was successfully updated.') }
+        format.html { redirect_to([@cliente, @notacredito], :notice => t('flash.actions.update.notice', :resource_name => Notacredito.model_name.human)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

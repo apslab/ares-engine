@@ -33,25 +33,12 @@ class ClientesController < AuthorizedController
         send_file(dump_tmp_filename, :type => :pdf, :disposition => 'attachment', :filename => "#{@cliente.razonsocial}.pdf")
         File.delete(dump_tmp_filename)
       end
-
-#      format.pdf { render :pdf => "cta"+@cliente.razonsocial,
-#                       :template => 'clientes/show.html.erb',
-#                       :show_as_html => params[:debug].present?,      # allow debuging based on url param
-#                       :layout => 'pdf.html.erb',
-#                       :footer => {
-#                          :right => "Reporte generado el #{l DateTime.current}"
-#                       }
-#                 }
     end
   end
 
   # GET /clientes/new
   # GET /clientes/new.xml
   def new
-#    @cliente = Cliente.new
-#    @cliente.empresa_id = current_company.id
-# esto reemplaza las dos lineas anteriores
-
     @cliente = current_company.clientes.build
     
     respond_to do |format|
@@ -67,11 +54,11 @@ class ClientesController < AuthorizedController
   # POST /clientes
   # POST /clientes.xml
   def create
-    @cliente = Cliente.new(params[:cliente].update(:empresa_id => current_company.id))
+    @cliente = Cliente.new(params[:cliente].update(:company_id => current_company.id))
 
     respond_to do |format|
       if @cliente.save
-        format.html { redirect_to(@cliente, :notice => 'Cliente was successfully created.') }
+        format.html { redirect_to(@cliente, :notice => t('flash.actions.create.notice', :resource_name => Cliente.model_name.human)) }
         format.xml  { render :xml => @cliente, :status => :created, :location => @cliente }
       else
         format.html { render :action => "new" }
@@ -85,7 +72,7 @@ class ClientesController < AuthorizedController
   def update
     respond_to do |format|
       if @cliente.update_attributes(params[:cliente])
-        format.html { redirect_to(@cliente, :notice => 'Cliente was successfully updated.') }
+        format.html { redirect_to(@cliente, :notice => t('flash.actions.update.notice', :resource_name => Cliente.model_name.human)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -123,19 +110,12 @@ def cuentacorriente
 end
 
 def list_accounts
-  #begin
-    @accounts = Account.all()
+  @accounts = Account.all()
 
-    respond_to do |format|
-      format.html { redirect_to( clientes_url ) }
-      format.xml  { head :ok }
-    end
-  #rescue ActiveResource::ResourceNotFound, ActiveResource::Redirection, ActiveResource::ResourceInvalid
-  #  redirect_to("404.html")
-  #ensure
-    # redirect_to("404.html")
-    # paso siempre por aca
-  #end
+  respond_to do |format|
+    format.html { redirect_to( clientes_url ) }
+    format.xml  { head :ok }
+  end
 end
 
 protected 
