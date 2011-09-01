@@ -1,5 +1,10 @@
 <h1>Nueva factura</h1>
 
-<%= render 'form' %>
+<% content_for(:controls) do %>
+<%= controls do |c|
+         c.item "Volver", cliente_facturas_path(@factura.cliente), :icon => "application_go"
+end %>
+<%end%>
 
-<%= link_to 'Back', facturas_path %>
+
+<%= render 'form' %>
