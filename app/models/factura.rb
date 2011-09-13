@@ -89,7 +89,8 @@ class Factura < Comprobante
       
       #unless total.zero? 
         entry.details.build do |dt|
-          dt.account_id  = account_id || referencia.account_id
+          dt.account_id  = account_id.blank? ? referencia.account_id : account_id
+          # dt.account_id  = account_id || referencia.account_id
           dt.description = __method__.to_s.humanize + ' fc' + self.numero.to_s
           dt.credit      = referencia.debita? ? 0 : total
           dt.debit       = referencia.debita? ? total : 0      
@@ -100,7 +101,7 @@ class Factura < Comprobante
     
     #self.total_iva_factura
   end
-
+  
   def ventas_factura_iibb(*args)
     0.0
   end  
@@ -113,7 +114,7 @@ class Factura < Comprobante
       entry.exercise_id = self.cliente.company.exercises.where('started_on <= :fecha and finished_on >= :fecha',:fecha => self.fecha).first.try(:id)
       
       # cada referencia es mapeada al asiento
-      ref = self.cliente.company.refenciacontables.where('referencename like "ventas_factura_%"')
+      ref = self.cliente.company.refenciacontables.where('referencename like ?',"ventas_factura_%")
       
       ref.each do |referencia|
         raise "falta metodo #{referencia.referencename}" unless self.respond_to?(referencia.referencename)
@@ -122,7 +123,6 @@ class Factura < Comprobante
       end
     end
   end
-
 
   def save_pdf_to(filename)
      Prawn::Document.generate(filename) do |pdf|

@@ -24,7 +24,10 @@ class FacturanotacreditosController < AuthorizedController
   # GET /facturanotacreditos/new
   # GET /facturanotacreditos/new.xml
   def new
-    @facturanotacredito = Facturanotacredito.new
+    @notacredito = @cliente.notacreditos.build
+    @facturanotacredito = @notacredito.facturanotacreditos.build
+        
+    # @facturanotacredito = Facturanotacredito.new
 
     respond_to do |format|
       format.html # new.html.erb
