@@ -1,25 +1,47 @@
 <% content_for(:head) do %>
   <%= javascript_tag do %>
     function calcula_total(input){
-      var total = parseFloat($($(input).closest('tr').find('input.para_calcula')[0]).val()) * 	parseFloat($($(input).closest('tr').find('input.para_calcula')[1]).val()) * 
-(1 + (parseFloat($($(input).closest('tr').find('input.para_calcula')[2]).val())/100));
+      var total = parseFloat($($(input).closest('tr').find('input.para_calcula')[0]).val());
 
       $($(input).closest('tr').find('.calcula_total')[0]).html(total.toFixed(2));
+
+      var total_total=0.0;
+      $('.calcula_total').each(function(i,data){
+	    total_total+=parseFloat($(data).html());
+      });
+      $('.total_total').html(total_total.toFixed(2));
     }
   <% end %>
 <% end %>
 
-<%= semantic_form_for @recibo do |f| %>
+<%= semantic_form_for [@cliente, @recibo] do |f| %>
  <%= f.semantic_errors %>
+ <%= f.semantic_errors(:importe) %>
 
-<%= f.inputs do %>
-  <%= f.input :fecha %>
-  <%= f.input :cliente, :label => true, :as => :select, :collection => Cliente.all.map{|c| [c.razonsocial, c.id]} %>
-  <%= f.input :numero %>
+<%= f.inputs(:class => :column_left ) do %>
+  <%= f.input :fecha , :as => :datepicker %>
+  <%= f.input :cliente, :label => true, :as => :select, :collection => current_company.clientes.map{|c| [c.razonsocial, c.id]}, :include_blank => false %>
 <% end %>
 
+<%= f.inputs(:class => :column_right ) do %>
+  <%= f.input :numero , :as => :numeric, :input_html => { :size => 10, :style => "text-align:right;" } %>
+<% end %>
+
+<hr class="clear" />
+
+<%= f.inputs do %>
+<table width="80%" style="margin-top:15px">
+	<tr>
+		<th>Descripción</th>
+		<th>Monto</th>
+		<th>Total <%= content_tag(:span, f.object.importe.presence || 0.0, :class => 'total_total') %></th>		
+	</tr>
+</table>
+<% end %>
+
+<hr class="clear">
 <div class="links">
-	<%= link_to_add_association 'agrega detalle', f, :detalles,'data-association-insertion-position' => :after %>
+	<%= link_to_add_association icon('add', :small, :style => 'vertical-align:middle;')+'Agrega detalle', f, :detalles,'data-association-insertion-position' => :after , :class => 'global_button button'%>
 </div>
 
 <div class='detalles'>

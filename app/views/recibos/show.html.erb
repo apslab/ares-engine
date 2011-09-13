@@ -1,25 +1,45 @@
-<p id="notice"><%= notice %></p>
+<% content_for(:controls) do %>
+<%= controls do |c|
+         c.item "Editar", edit_cliente_recibo_path(@recibo.cliente.id,@recibo), :icon => "application_form_edit"
+         c.item "Volver", clientes_path, :icon => "application_go"
+end %>
+<%end%>
 
-<p>
-  <b>Cliente:</b>
-  <%= @recibo.cliente.razonsocial %>
-</p>
-
-<p>
-  <b>Fecha:</b>
-  <%= @recibo.fecha %>
-</p>
-
-<p>
-  <b>Importe:</b>
-  <%= @recibo.importe %>
-</p>
-
-<p>
-  <b>Numero:</b>
-  <%= @recibo.numero %>
-</p>
-
-
-<%= link_to 'Editar', edit_recibo_path(@recibo) %> |
-<%= link_to 'Volver', recibos_path %>
+<table width="80%">
+	<thead>
+		<tr>
+	    <td align="left" width="5%">Cuenta</td>
+	    <td align="left" width="20%"><div style="font-size: large;"><%= @recibo.cliente.razonsocial %></div></td>
+	    <td align="left" width="5%">Fecha</td>
+	    <td align="left" width="20%"><div style="font-size: large;"><%= @recibo.fecha %></div></td>
+	    <td align="left" width="5%">Numero</td>
+	    <td align="left" width="20%"><div style="font-size: large;"><%= @recibo.numero %></div></td>
+		</tr>		
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+<table class="table">
+	<thead>
+		<tr>
+	    <td align="left" >Detalle</td>
+	    <td align="right">Monto</td>
+	    <td align="right">Total</td>
+		</tr>		
+	</thead>
+	<tbody>
+		<% @recibo.detalles.each do |item| %>
+		<tr>
+	    <td align="left" ><%= item.descripcion %></td>
+	    <td align="right"><%= number_to_currency(item.preciounitario) %></td>
+	    <td align="right"><%= number_to_currency(item.totalitem) %></td>
+		</tr>
+		<% end %>
+		<tr>
+	    <td align="left" ><b>Total</b></td>
+	    <td align="center"><b><%= "-" * 40 %></b></td>
+	    <td align="right"><b><%= number_to_currency(@recibo.importe) %></b></td>
+		</tr>
+	</tbody>		
+</table>
+<div class="clear"></div>

@@ -1,22 +1,15 @@
 <h1>Listado nota de creditos</h1>
 
-<%= render 'filtros' %>
 
 <% content_for(:breadcrumbs) do %>
 <%= breadcrumbs do |b|
-	b.item "Principal", root_path
-    b.item "Clientes", clientes_path, :active => true
+    b.item "Principal", root_path
+    b.item "Clientes", clientes_path
+    b.item @cliente.razonsocial, cliente_path(@cliente), :active => true
 end %>
 <%end%>
 
-<% content_for(:controls) do %>
-<%= controls do |c|
-         c.item "Nuevo", new_cliente_notacredito_path(@cliente), :icon => "add"
-         c.item "Exportar PDF", root_path, :icon => "report_go", :method => :delete
-end %>
-<%end%>
-
-<table>
+<table class='table'>
   <tr>
     <th>Cliente</th>
     <th>Fecha</th>
@@ -38,7 +31,7 @@ end %>
 	    <td align="right"><%= cpbte.numero %></td>
 	    <td><%= cpbte.fechavto %></td>
 	    <td><%= cpbte.count_items %></td>
-	    <td><%= link_to icon('application_go', :small, :title => 'ver'), cpbte %></td>
+	    <td><%= link_to icon('application_go',:small, :title => 'ver'), cliente_notacredito_path(cpbte.cliente, cpbte) %></td>
 		<% if cpbte.isprinted? %>
 			<td></td>
 			<td></td>
@@ -46,10 +39,11 @@ end %>
 		    <td><%= link_to icon('application_edit', :small, :title => 'editar'), edit_cliente_notacredito_path(cpbte.cliente, cpbte) %></td>
 		    <td><%= link_to icon('application_delete', :small, :title => 'borrar'), [cpbte.cliente, cpbte], :confirm => 'Esta ud. seguro?', :method => :delete %></td>
 		<% end %>
-      <%= link_to icon('printer', :small, :title => 'Imprimir'), cliente_notacredito_path(cpbte.cliente, cpbte, :format => 'pdf') %>
+      <td><%= link_to icon('printer', :small, :title => 'Imprimir'), cliente_notacredito_path(cpbte.cliente, cpbte, :format => 'pdf') %></td>
 	  </tr>
 	<% end %>
 </table>
+
 <br />
 <br />
 <%= paginate @notacreditos %>

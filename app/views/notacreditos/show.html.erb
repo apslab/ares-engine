@@ -1,7 +1,7 @@
 <% content_for(:controls) do %>
 <%= controls do |c|
          c.item "Editar", edit_cliente_notacredito_path(@notacredito.cliente.id,@notacredito), :icon => "application_form_edit"
-         c.item "Volver", cliente_notacreditos_path(@notacredito.cliente.id), :icon => "application_go"
+         c.item "Volver", clientes_path, :icon => "application_go"
 end %>
 <%end%>
 
@@ -22,7 +22,8 @@ end %>
 
   	<%= attr.attribute :count_items, :label => "Cantidad de items" %>
   <% end %>
-<% end %>
+
+<hr class="clear" />
 
 <table>
   <tr>
@@ -53,6 +54,6 @@ end %>
 </tr>
 </table>
 </br>
+<% end %>
 
-<%= link_to 'Edit', edit_cliente_notacredito_path(@cliente,@notacredito) %> |
-<%= link_to 'Back', notacreditos_path %>
+<div class="clear"></div>

@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  resources :empresas
-
   resources :tasaivas
 
   resources :condicionivas
@@ -21,17 +19,9 @@ Rails.application.routes.draw do
   
   get "pages/config"
 
-  resources :facturanotacreditos
-
-  resources :facturarecibos
-
-  resources :notacreditos
-
-  resources :recibos
-
-  #devise_for :users
-
   resources :clientes do 
+    resources :facturanotacreditos
+    resources :facturarecibos
     resources :facturas
     resources :recibos
     resources :notacreditos

@@ -1,4 +1,4 @@
-<%= semantic_form_for @facturarecibo do |f| %>
+<%= semantic_form_for [@cliente,@facturarecibo] do |f| %>
   <% if @facturarecibo.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@facturarecibo.errors.count, "error") %> prohibited this factura recibo from being saved:</h2>

@@ -30,8 +30,8 @@
         %th= Cliente.human_attribute_name('razonsocial')
         %th= Cliente.human_attribute_name('cuit')
         %th.last= Cliente.human_attribute_name('telefono')
-        %th.last= Cliente.human_attribute_name('direccion')
-        %th.last= Cliente.human_attribute_name('contacto')
+        %th= Cliente.human_attribute_name('direccion')
+        %th= Cliente.human_attribute_name('contacto')
         %th
 
       - @clientes.each do |cliente|
@@ -39,9 +39,9 @@
           %td= cliente.razonsocial
           %td= cliente.cuit
           %td.last= cliente.telefono
-          %td.last= cliente.direccion
-          %td.last= cliente.contacto
-          %td.last
+          %td= cliente.direccion
+          %td= cliente.contacto
+          %td.last.actions
             = link_to icon('application_get', :small, :title => t('scaffold.actions.show').titlecase), cliente
             = link_to icon('application_edit', :small, :title => t('scaffold.actions.edit').titlecase), edit_cliente_path(cliente)
             = link_to icon('application_delete', :small, :title => t('scaffold.actions.destroy').titlecase), cliente, :confirm => t('scaffold.actions.destroy_confirm').titlecase, :method => :delete

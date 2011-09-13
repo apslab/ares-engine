@@ -24,7 +24,8 @@ class FacturarecibosController < AuthorizedController
   # GET /facturarecibos/new
   # GET /facturarecibos/new.xml
   def new
-    @facturarecibo = Facturarecibo.new
+    @factura = @cliente.facturas.build
+    @facturarecibo = @factura.facturarecibos.build
 
     respond_to do |format|
       format.html # new.html.erb

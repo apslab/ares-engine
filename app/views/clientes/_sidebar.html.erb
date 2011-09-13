@@ -3,10 +3,10 @@
   <ul class='navigation'>    
     <li><%= link_to("Nueva Factura", new_cliente_factura_path(@cliente))%></li>
     <li><%= link_to("Nuevo Recibo", new_cliente_recibo_path(@cliente))%></li>
-    <li><%= link_to("Nueva Nota de credito", new_cliente_notacredito_path(@cliente))%></li>
+    <li><%= link_to("Nueva Nota de credito", new_cliente_notacredito_path(@cliente) )%></li>
 	
-    <li><%= link_to("Facturas vs Recibos", facturarecibos_path)%></li>
-    <li><%= link_to("Facturas vs Notas de credito", facturanotacreditos_path)%></li>
+    <li><%= link_to("Facturas vs Recibos", new_cliente_facturarecibo_path(@cliente) )%></li>
+    <li><%= link_to("Facturas vs Notas de credito", new_cliente_facturanotacredito_path(@cliente) )%></li>
 	<li><%= link_to("Cuenta corriente", cuentacorriente_cliente_path(@cliente) )%></li>
   </ul>
 </div>

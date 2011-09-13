@@ -1,5 +1,9 @@
 <h1>Nuevo recibo</h1>
 
-<%= render 'form' %>
+<% content_for(:controls) do %>
+<%= controls do |c|
+         c.item t('scaffold.actions.back', :item => Recibo.model_name.human).titlecase,  cliente_recibos_path(@recibo.cliente), :icon => "application_go"
+end %>
+<%end%>
 
-<%= link_to 'Volver', recibos_path %>
+<%= render 'form' %>

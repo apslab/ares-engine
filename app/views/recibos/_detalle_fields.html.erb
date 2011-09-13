@@ -1,17 +1,16 @@
 <div class="nested-fields">
 	<%= f.inputs do %>
-	<table>
+	<table width="80%">
 		<tr>
 			<td><%= f.input :descripcion , :label => false, :as => :text, :input_html => {:style => "text-align:left; width:250px;height:30px"} %></td>
-	        <td><%= f.input :cantidad, :label => false, :as => :numeric, :input_html => { :class => :para_calcula, :onblur => 'calcula_total(this);', :size => 10, :style => "text-align:right;"} %></td>
 
 			<td><%= f.input :preciounitario, :label => false, :as => :numeric,:input_html => {:onblur => 'calcula_total(this);', :class => :para_calcula, :size => 10, :style => "text-align:right;"} %></td>
 
-			<td><%= f.input :tasaiva, :label => false, :as => :numeric,:input_html => {:onblur => 'calcula_total(this);', :class => :para_calcula, :size => 10, :style => "text-align:right;"} %></td>
+	        <td><%= f.input :cantidad, :label => false, :as => :hidden, :input_html => { :value => 1, :as => :numeric, :class => ['para_calcula','cantidad'], :size => 10, :style => "text-align:right;"} %></td>
 
 			<td align='right'><%= content_tag(:span, f.object.totalitem, :class => 'calcula_total') %></td>					
 
-			<td><%= link_to_remove_association "borrar", f %></td>
+			<td><%= link_to_remove_association icon('cross', :small, :title => 'eliminar detalle'), f %></td>			
 		</tr>
 	</table>
 	<% end %>		

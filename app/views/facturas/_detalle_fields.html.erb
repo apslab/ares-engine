@@ -13,7 +13,7 @@
 
 			<td align='right'><%= content_tag(:span, (f.object.new_record?) ? '0.00' : "%0.2f"%f.object.tasaiva, :class => 'labeltasaiva') %></td>					
 
-			<td align='right'><%= content_tag(:span, f.object.totalitem, :class => 'calcula_total') %></td>					
+			<td align='right'><%= content_tag(:span, f.object.totalitem, :class => 'calcula_total', :size => 10) %></td>					
 
 			<td><%= link_to_remove_association icon('cross', :small, :title => 'eliminar detalle'), f %></td>
 		</tr>

@@ -26,7 +26,6 @@ class Detalle < ActiveRecord::Base
   validates :descripcion, :presence => true
   validates :tasaiva, :presence => true, :numericality => true
   
-  
   def totalnetoitem
     self.preciounitario = 0 if self.preciounitario.nil?
     self.cantidad = 0 if self.cantidad.nil?

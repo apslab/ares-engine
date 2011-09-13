@@ -1,8 +1,9 @@
 class NotacreditosController < AuthorizedController
-  # GET /notacreditos
-  # GET /notacreditos.xml
   before_filter :find_cliente
   before_filter :find_nc, :except => [:index, :new, :create]
+
+  # GET /notacreditos
+  # GET /notacreditos.xml
   
   def index
     @search = @cliente.notacreditos.search(params[:search])
