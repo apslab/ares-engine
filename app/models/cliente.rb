@@ -66,7 +66,46 @@ class Cliente < ActiveRecord::Base
   
   # funcionalidad: accesible_by(current_ability)) 
   # 1) rails g cancan:ability
-  
+ 
+#
+ 
+def save_ctacte_pdf_to(filename,entity)
+  require 'prawn'
+  pdf = Prawn::Document.new(:left_margin => 35, :top_margin => 35,:page_size   => "LETTER",
+                            :page_layout => :portrait)
+  offset = 0
+
+  pdf.repeat(:all, :dynamic => true) do
+    pdf.draw_text ("Cuenta corriente de " + entity.first.cliente.razonsocial + " impreso el " + Date.today.strftime("%d/%m/%Y")) , :at => [5,745],:style => :bold, :size => 10
+    pdf.draw_text "Hoja Nro.: " + pdf.page_number.to_s.rjust(4,"0"), :at => [300, 745],:style => :bold, :size => 8
+  end
+  data = [["Fecha","Tipo Cp","Numero","Importe","Fecha Vto","impreso"],[] ]
+  saldo = 0
+  entity.each do |r|
+     data << [r.fecha.blank? ? '' : r.fecha.strftime("%d/%m/%Y"),
+              r.type,
+              r.numero,
+              r.total_comprobante,
+              r.fechavto.blank? ? '' : r.fechavto.strftime("%d/%m/%Y"),
+              r.printed_at.blank? ? '' : r.printed_at.strftime("%d/%m/%Y")]
+      saldo += r.total_comprobante       
+  end
+  data << ["" ,"Totales","",saldo.to_s,"",""  ]
+
+  pdf.table(data, :column_widths => [65, 100, 60, 65, 65, 65],
+           :cell_style => { :font => "Times-Roman",
+                            :size => 10,:padding => [2,3,4,2],
+                            :align =>  :left,
+                            :valign => :center },
+           :header => true ,
+           :row_colors => ["F0F0F0", "FFFFCC"]
+            ) do
+    column(2...3).align = :right
+    row(0).column(0..6).align = :center
+  end
+  pdf.render_file(filename)
+end
+#
   def control_sin_comprobantes
    if [comprobantes].any? {|cpbte| cpbte.any? }
      errors.add(:base,"La cuenta posee " + comprobantes.count.to_s() + " comprobantes asociado.")

@@ -16,7 +16,7 @@ end %>
 
 <%= render 'sidebar' %>
 
-<%= semantic_attributes_for @cliente do |attr| %>
+<%= semantic_attributes_for(@cliente, options = {:class => :column_right}) do |attr| %>
   <%= attr.attributes do %>
 	  <%= attr.attribute :razonsocial %>
 	  <%= attr.attribute :fantasyname %>
@@ -25,8 +25,6 @@ end %>
    	<%= attr.attribute :direccion %>
    	<%= attr.attribute :localidad %>
    	<%= attr.attribute :province_id, :display_empty => true, :value => @cliente.province.try('name') %>
-	<% end %>
-	<%= attr.attributes do %>
    	<%= attr.attribute :codigopostal %>
    	<%= attr.attribute :email %>
   	<%= attr.attribute :contacto %>
@@ -53,9 +51,9 @@ end %>
   </tr>
 <% @cliente.facturas.each do |cpbte| %>
   <tr>
-    <td><%= cpbte.numero %></td>
+    <td class="last"><%= cpbte.numero %></td>
     <td><%= cpbte.fecha %></td>
-    <td><%= cpbte.importe %></td>
+    <td class="last"><%= cpbte.importe %></td>
     <td><%= cpbte.fechavto %></td>
     <td><%= link_to icon('application_go', :small, :title => 'ver'), [cpbte.cliente, cpbte] %></td>
     <td><%= link_to icon('printer', :small, :title => 'Imprimir'), cliente_factura_path(cpbte.cliente, cpbte, :format => 'pdf') %></td>
@@ -64,9 +62,9 @@ end %>
   		<tr>
     		<td>recibo -------></td>
     		<td><%= cpbteafectado.fecha %></td>
-    		<td><%= cpbteafectado.importe %></td>
-	  		<td><%= cpbteafectado.recibo.numero %></td>
-	  		<td><%= cpbteafectado.recibo.importe %></td>
+    		<td class="last"><%= cpbteafectado.importe %></td>
+	  		<td class="last"><%= cpbteafectado.recibo.numero %></td>
+	  		<td class="last"><%= cpbteafectado.recibo.importe %></td>
   		</tr>
 	<% end %>
 	
@@ -74,9 +72,9 @@ end %>
 		<tr>
   		<td>nota credito --></td>
   		<td><%= cpbteafectado.fecha %></td>
-  		<td><%= cpbteafectado.importe %></td>
-  		<td><%= cpbteafectado.factura.numero %></td>
-  		<td><%= cpbteafectado.factura.totalfactura %></td>
+  		<td class="last"><%= cpbteafectado.importe %></td>
+  		<td class="last"><%= cpbteafectado.factura.numero %></td>
+  		<td class="last"><%= cpbteafectado.factura.totalfactura %></td>
 		</tr>
 	<% end %>	
 <% end %>
@@ -98,9 +96,9 @@ end %>
 
 <% @cliente.recibos.each do |cpbte| %>
   <tr>
-    <td><%= cpbte.numero %></td>
+    <td class="last"><%= cpbte.numero %></td>
     <td><%= cpbte.fecha %></td>
-    <td><%= cpbte.importe %></td>
+    <td class="last"><%= cpbte.importe %></td>
     <td><%= cpbte.fechavto %></td>
     <td><%= link_to icon('application_go', :small, :title => 'ver'), [cpbte.cliente, cpbte] %></td>
     <td><%= link_to icon('printer', :small, :title => 'Imprimir'), cliente_recibo_path(cpbte.cliente, cpbte, :format => 'pdf') %></td>
@@ -109,8 +107,8 @@ end %>
 		<tr>
   		<td>factura -------></td>
   		<td><%= cpbteafectado.fecha %></td>
-  		<td><%= cpbteafectado.importe %></td>
-  		<td><%= cpbteafectado.factura.numero %></td>
+  		<td class="last"><%= cpbteafectado.importe %></td>
+  		<td class="last"><%= cpbteafectado.factura.numero %></td>
   		<td><%= cpbteafectado.factura.totalfactura %></td>
 		</tr>
 	<% end %>	
@@ -132,19 +130,19 @@ end %>
   </tr>
 <% @cliente.notacreditos.each do |cpbte| %>
   <tr>
-    <td><%= cpbte.numero %></td>
+    <td class="last"><%= cpbte.numero %></td>
     <td><%= cpbte.fecha %></td>
-    <td><%= cpbte.importe %></td>
+    <td class="last"><%= cpbte.importe %></td>
     <td><%= cpbte.fechavto %></td>
     <td><%= link_to icon('application_go', :small, :title => 'ver'), [cpbte.cliente, cpbte] %></td>
     <td><%= link_to icon('printer', :small, :title => 'Imprimir'), cliente_notacredito_path(cpbte.cliente, cpbte, :format => 'pdf') %></td>
   </tr>
 	<% cpbte.facturanotacreditos.each do |cpbteafectado| %>
 		<tr>
-		<td>factura -------></td>
-		<td><%= cpbteafectado.fecha %></td>
-		<td><%= cpbteafectado.importe %></td>
-  		<td><%= cpbteafectado.factura.numero %></td>
+		  <td>factura -------></td>
+		  <td><%= cpbteafectado.fecha %></td>
+		  <td class="last"><%= cpbteafectado.importe %></td>
+  		<td class="last"><%= cpbteafectado.factura.numero %></td>
   		<td><%= cpbteafectado.factura.totalfactura %></td>
 		</tr>
 	<% end %>

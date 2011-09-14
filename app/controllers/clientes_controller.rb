@@ -100,12 +100,13 @@ def cuentacorriente
   respond_to do |format|
     format.html # .html.erb
     format.xml  { render :xml => @cliente }
-    format.pdf { render :pdf => "cc_#{@cliente.id}",
-                     :template => 'clientes/cuentacorriente.html.erb',
-                     :show_as_html => params[:debug].present?,      # allow debuging based on url param
-                     :layout => 'pdf.html.erb',
-                     :footer => { :right => "Reporte generado el #{l DateTime.current}" }
-               }
+    format.pdf do      
+      dump_tmp_filename = Rails.root.join('tmp',@cliente.cache_key)
+      Dir.mkdir(dump_tmp_filename.dirname) unless File.directory?(dump_tmp_filename.dirname)
+      @cliente.save_ctacte_pdf_to(dump_tmp_filename,@cuentacorriente)
+      send_file(dump_tmp_filename, :type => :pdf, :disposition => 'attachment', :filename => "#{@cliente.razonsocial}-ctacte.pdf")
+      File.delete(dump_tmp_filename)
+    end
   end
 end
 
