@@ -18,13 +18,15 @@ end %>
 
 <%= semantic_attributes_for @cliente do |attr| %>
   <%= attr.attributes do %>
-	<%= attr.attribute :razonsocial %>
-	<%= attr.attribute :fantasyname %>
-	<%= attr.attribute :cuit %>
+	  <%= attr.attribute :razonsocial %>
+	  <%= attr.attribute :fantasyname %>
+	  <%= attr.attribute :cuit %>
    	<%= attr.attribute :telefono %>
    	<%= attr.attribute :direccion %>
    	<%= attr.attribute :localidad %>
    	<%= attr.attribute :province_id, :display_empty => true, :value => @cliente.province.try('name') %>
+	<% end %>
+	<%= attr.attributes do %>
    	<%= attr.attribute :codigopostal %>
    	<%= attr.attribute :email %>
   	<%= attr.attribute :contacto %>
@@ -35,10 +37,12 @@ end %>
    	<%= attr.attribute :observation %>
   <% end %>
 <% end %>
+
+<hr class="clear">
 <p>
   <b>Facturas</b>
 </p>
-<table>
+<table class="table">
  <tr>
     <th>Numero</th>
     <th>Fecha</th>
@@ -78,15 +82,18 @@ end %>
 <% end %>
 </table>
 
-<hr>
+<hr class="clear">
 <p>
   <b>Recibos</b>
 </p>
-<table>
+<table class="table">
  <tr>
-    <th>Numero - </th>
-    <th>Fecha - </th>
+    <th>Numero</th>
+    <th>Fecha</th>
     <th>Importe</th>
+    <th>Fecha Vto</th>
+    <th></th>
+    <th></th>
   </tr>
 
 <% @cliente.recibos.each do |cpbte| %>
@@ -94,6 +101,9 @@ end %>
     <td><%= cpbte.numero %></td>
     <td><%= cpbte.fecha %></td>
     <td><%= cpbte.importe %></td>
+    <td><%= cpbte.fechavto %></td>
+    <td><%= link_to icon('application_go', :small, :title => 'ver'), [cpbte.cliente, cpbte] %></td>
+    <td><%= link_to icon('printer', :small, :title => 'Imprimir'), cliente_recibo_path(cpbte.cliente, cpbte, :format => 'pdf') %></td>
   </tr>
 	<% cpbte.facturarecibos.each do |cpbteafectado| %>
 		<tr>
@@ -107,21 +117,27 @@ end %>
 <% end %>
 </table>
 
-<hr>
+<hr class="clear">
 <p>
   <b>Nota de credito</b>
 </p>
-<table>
+<table class="table">
  <tr>
     <th>Numero</th>
     <th>Fecha</th>
     <th>Importe</th>
+    <th>Fecha Vto</th>
+    <th></th>
+    <th></th>
   </tr>
 <% @cliente.notacreditos.each do |cpbte| %>
   <tr>
     <td><%= cpbte.numero %></td>
     <td><%= cpbte.fecha %></td>
     <td><%= cpbte.importe %></td>
+    <td><%= cpbte.fechavto %></td>
+    <td><%= link_to icon('application_go', :small, :title => 'ver'), [cpbte.cliente, cpbte] %></td>
+    <td><%= link_to icon('printer', :small, :title => 'Imprimir'), cliente_notacredito_path(cpbte.cliente, cpbte, :format => 'pdf') %></td>
   </tr>
 	<% cpbte.facturanotacreditos.each do |cpbteafectado| %>
 		<tr>

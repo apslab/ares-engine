@@ -7,7 +7,6 @@ end %>
 
 <%= semantic_attributes_for @factura do |attr| %>
   <%= attr.attributes "Cabecera" do %>
-
   	<%= attr.attribute :fecha %>
   	<%= attr.attribute :numero , :label => "Numero de factura"%>
   	<%= attr.attribute :total, :label => "Total de factura" %>
@@ -16,8 +15,8 @@ end %>
 	<%= attr.attributes :for => :cliente do |cliente| %>
 		<%= cliente.attribute :razonsocial , :label => "Razón social"%>
 	 	<%= cliente.attribute :cuit %>
-   	  	<%= cliente.attribute :telefono %>
-   	  	<%= cliente.attribute :direccion %>
+   	<%= cliente.attribute :telefono %>
+   	<%= cliente.attribute :direccion %>
 	<% end.html_safe %>
 
   	<%= attr.attribute :count_items, :label => "Cantidad de items en la factura" %>

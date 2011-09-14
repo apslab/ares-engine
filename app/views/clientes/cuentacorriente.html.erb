@@ -1,5 +1,21 @@
+<% content_for(:breadcrumbs) do %>
+<%= breadcrumbs do |b|
+	b.item "Principal", root_path
+    b.item "Clientes", clientes_path
+    b.item @cliente.razonsocial, root_path, :active => true
+end %>
+<%end%>
+
+<% content_for(:controls) do %>
+<%= controls do |c|
+    c.item "Exportar PDF", cuentacorriente_cliente_path(@cliente, :format => 'pdf'), :icon => "report_go"
+    c.item "Volver", clientes_path, :icon => "application_go"
+end %>
+<%end%>
+
 <h1>Listado de cuenta corriente del cliente <%= @cliente.razonsocial %></h1>
-<table>
+
+<table class="table">
  <tr>
     <th>T.C.</th>	
     <th>Numero</th>
@@ -7,24 +23,24 @@
     <th>Importe</th>
     <th>Fecha Vto</th>
     <th>Fecha Registro</th>
+    <th></th>
   </tr>
-<% @cuentacorriente.each do |cpbte| %>
+<% @cuentacorriente.order('fecha').each do |cpbte| %>
   <tr>
     <td><%= cpbte.type %></td>	
     <td align="right"><%= cpbte.numero %></td>
     <td><%= cpbte.fecha %></td>
     <td align="right"><%= cpbte.total %></td>
     <td><%= cpbte.fechavto %></td>
-	<td><%= cpbte.created_at %></td>
+	  <td><%= cpbte.created_at %></td>
+    <td class="actions"><%= link_to icon('application_go', :small, :title => 'ver'), [cpbte.cliente, cpbte] %></td>
   </tr>
 <% end %>
 <tr>
-  <td>Saldo</td>	
+  <td><b>Saldo</b></td>	
   <td></td>
   <td></td>
-  <td align="right"><%= @cliente.saldo %></td>
+  <td align="right"><b><%= @cliente.saldo %></b></td>
   <td></td>
 </tr>
 </table>
-
-<%= link_to 'Volver', cliente_path(@cliente) %>
