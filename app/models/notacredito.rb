@@ -130,8 +130,8 @@ class Notacredito < Comprobante
        pdf.draw_text "original", :at => [-4,400], :size => 8, :rotate => 90
 
        pdf.draw_text self.cliente.condicioniva.letra.to_s, :at => [243,710], :size => 16
-       pdf.draw_text "Factura numero: 0000-" + self.numero.to_s, :at => [300,710], :size => 14
-       pdf.draw_text "Fecha de emision: " + self.fecha.to_s, :at => [300,695], :size => 14
+       pdf.draw_text "Nota de credito numero: 0000-" + self.numero.to_s, :at => [275,710], :size => 14
+       pdf.draw_text "Fecha de emision: " + self.fecha.to_s, :at => [275,695], :size => 14
        
        empresa = "public/images/clinicA.jpg" 
        pdf.image empresa, :at => [0,729], :width => 100

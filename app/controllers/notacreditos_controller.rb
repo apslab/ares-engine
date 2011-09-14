@@ -34,7 +34,7 @@ class NotacreditosController < AuthorizedController
            @entry = @notacredito.to_entry
            unless @entry.save
              flash[:error] = @entry.errors.full_messages.join("\n")
-             redirect_to [@notacredito.cliente,:notacredito]
+             redirect_to [@notacredito.cliente,:notacreditos]
              return
            end
         #end
@@ -42,7 +42,7 @@ class NotacreditosController < AuthorizedController
         dump_tmp_filename = Rails.root.join('tmp',@notacredito.cache_key)
         Dir.mkdir(dump_tmp_filename.dirname) unless File.directory?(dump_tmp_filename.dirname)
         @notacredito.save_pdf_to(dump_tmp_filename)
-        send_file(dump_tmp_filename, :type => :pdf, :disposition => 'attachment', :filename => "#{@notacredito.razonsocial}-factura-#{@notacredito.numero}.pdf")
+        send_file(dump_tmp_filename, :type => :pdf, :disposition => 'attachment', :filename => "#{@cliente.razonsocial}-notacredito-#{@notacredito.numero}.pdf")
         File.delete(dump_tmp_filename)
       end
     end

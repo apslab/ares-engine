@@ -29,6 +29,32 @@ class Recibo < Comprobante
     (self.importe * -1)
   end
 
+  def ventas_recibo_total(*args)
+    entry,referencia = args
+
+    entry.details.build do |dt|
+      dt.account_id  = self.cliente.account_id.presence || referencia.account_id      
+      dt.description = __method__.to_s.humanize + ' rc' + self.numero.to_s
+
+      dt.credit      = referencia.debita? ? 0 : self.importe
+      dt.debit       = referencia.debita? ? self.importe : 0      
+    end    
+  end
+
+  #TODO cambiar por imputacion contable por moneda
+  def ventas_recibo_subtotal(*args)
+    entry,referencia = args
+    
+    entry.details.build do |dt|
+      dt.account_id  = referencia.account_id      
+      dt.description = __method__.to_s.humanize + ' rc' + self.numero.to_s
+
+      dt.credit      = referencia.debita? ? 0 : self.importe
+      dt.debit       = referencia.debita? ? self.importe : 0      
+    end    
+  
+  end
+
   def to_entry
     Entry.new do |entry|
       entry.date_on     = self.fecha
@@ -36,7 +62,7 @@ class Recibo < Comprobante
       entry.exercise_id = self.cliente.company.exercises.where('started_on <= :fecha and finished_on >= :fecha',:fecha => self.fecha).first.try(:id)
       
       # cada referencia es mapeada al asiento
-      ref = self.cliente.company.refenciacontables.where('referencename like "ventas_factura_%"')
+      ref = self.cliente.company.refenciacontables.where('referencename like ?',"ventas_recibo_%")
       
       ref.each do |referencia|
         raise "falta metodo #{referencia.referencename}" unless self.respond_to?(referencia.referencename)

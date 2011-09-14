@@ -34,7 +34,7 @@ class RecibosController < AuthorizedController
            @entry = @recibo.to_entry
            unless @entry.save
              flash[:error] = @entry.errors.full_messages.join("\n")
-             redirect_to [@recibo.cliente,:facturas]
+             redirect_to [@recibo.cliente,:recibos]
              return
            end
         #end
