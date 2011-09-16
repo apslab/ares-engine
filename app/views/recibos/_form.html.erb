@@ -20,7 +20,7 @@
 
 <%= f.inputs(:class => :column_left ) do %>
   <%= f.input :fecha , :as => :datepicker %>
-  <%= f.input :cliente, :label => true, :as => :select, :collection => current_company.clientes.map{|c| [c.razonsocial, c.id]}, :include_blank => false %>
+  <%= @cliente.razonsocial %>
 <% end %>
 
 <%= f.inputs(:class => :column_right ) do %>
