@@ -96,7 +96,6 @@ class ClientesController < AuthorizedController
 
 def cuentacorriente
   @cuentacorriente = @cliente.comprobantes.order("fecha")
-  
   respond_to do |format|
     format.html # .html.erb
     format.xml  { render :xml => @cliente }

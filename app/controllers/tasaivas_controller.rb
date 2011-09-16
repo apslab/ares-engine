@@ -61,7 +61,7 @@ class TasaivasController < AuthorizedController
   # PUT /tasaivas/1.xml
   def update
     flash[:notice] = t('scaffold.notice.updated', :item => Tasaiva.model_name.human) if @tasaiva.update_attributes(params[:tasaiva])
-    respond_with(@tasaiva, :location => products_path)
+    respond_with(@tasaiva, :location => tasaivas_path)
   end
 
   # DELETE /tasaivas/1

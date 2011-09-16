@@ -20,11 +20,12 @@ Rails.application.routes.draw do
   get "pages/config"
 
   resources :clientes do 
-    resources :facturanotacreditos
-    resources :facturarecibos
     resources :facturas
     resources :recibos
     resources :notacreditos
+
+    resources :facturarecibos
+    resources :facturanotacreditos
     member do
       get 'list_accounts', :action => :list_accounts
 

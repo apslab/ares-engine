@@ -1,6 +1,9 @@
 class FacturarecibosController < AuthorizedController
   # GET /facturarecibos
   # GET /facturarecibos.xml
+  before_filter :find_cliente
+  before_filter :find_facturarecibo, :except => [:index, :new, :create]
+
   def index
     @facturarecibos = Facturarecibo.all
 
@@ -13,8 +16,6 @@ class FacturarecibosController < AuthorizedController
   # GET /facturarecibos/1
   # GET /facturarecibos/1.xml
   def show
-    @facturarecibo = Facturarecibo.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @facturarecibo }
@@ -24,8 +25,8 @@ class FacturarecibosController < AuthorizedController
   # GET /facturarecibos/new
   # GET /facturarecibos/new.xml
   def new
-    @factura = @cliente.facturas.build
-    @facturarecibo = @factura.facturarecibos.build
+    @facturarecibo = Facturarecibo.new
+    @cliente = Cliente.find(params[:cliente_id])
 
     respond_to do |format|
       format.html # new.html.erb
@@ -35,18 +36,17 @@ class FacturarecibosController < AuthorizedController
 
   # GET /facturarecibos/1/edit
   def edit
-    @facturarecibo = Facturarecibo.find(params[:id])
   end
 
   # POST /facturarecibos
   # POST /facturarecibos.xml
   def create
-    @facturarecibo = Facturarecibo.new(params[:facturarecibo])
+    @facturarecibo = @cliente.facturas.facturarecibo.build(params[:facturarecibo])
 
     respond_to do |format|
       if @facturarecibo.save
-        format.html { redirect_to(@facturarecibo, :notice => t('flash.actions.create.notice', :resource_name => Facturarecibo.model_name.human)) }
-        format.xml  { render :xml => @facturarecibo, :status => :created, :location => @facturarecibo }
+        format.html { redirect_to([@cliente, @facturarecibo], :notice => t('flash.actions.create.notice', :resource_name => Facturarecibo.model_name.human)) }
+        format.xml  { render :xml => @facturarecibo, :status => :created, :location => [@cliente,@facturarecibo] }
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @facturarecibo.errors, :status => :unprocessable_entity }
@@ -57,11 +57,9 @@ class FacturarecibosController < AuthorizedController
   # PUT /facturarecibos/1
   # PUT /facturarecibos/1.xml
   def update
-    @facturarecibo = Facturarecibo.find(params[:id])
-
     respond_to do |format|
       if @facturarecibo.update_attributes(params[:facturarecibo])
-        format.html { redirect_to(@facturarecibo, :notice => t('flash.actions.update.notice', :resource_name => Facturarecibo.model_name.human)) }
+        format.html { redirect_to([@cliente,@facturarecibo], :notice => t('flash.actions.update.notice', :resource_name => Facturarecibo.model_name.human)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -80,5 +78,15 @@ class FacturarecibosController < AuthorizedController
       format.html { redirect_to(facturarecibos_url) }
       format.xml  { head :ok }
     end
+  end
+
+  protected 
+
+  def find_cliente
+    @cliente = Cliente.find(params[:cliente_id])
+  end
+
+  def find_facturarecibo
+    @facturarecibo = Facturarecibo.find(params[:id])
   end
 end

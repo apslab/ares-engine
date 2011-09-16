@@ -102,6 +102,7 @@ class Recibo < Comprobante
            pdf.stroke_bounds
        end
 
+       pdf.draw_text self.observation, :at => [1,585], :size => 10
        pdf.draw_text " ",   :at => [  1,565], :size => 10
        pdf.draw_text "Detalle" ,   :at => [100,565], :size => 10
        pdf.draw_text "Monto"  ,   :at => [250,565], :size => 10
@@ -112,7 +113,8 @@ class Recibo < Comprobante
         pdf.bounding_box [-2, 580], :width => 500, :height => 20 do
           pdf.stroke_bounds          
         end
-       @banda = 550   
+       @banda = 550
+       
        self.detalles.each do |item|  
           pdf.draw_text item.descripcion.to_s(), :at => [100,@banda], :size => 10
           pdf.draw_text item.preciounitario.to_s(), :at => [250,@banda], :size => 10

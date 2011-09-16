@@ -71,12 +71,13 @@ class Cliente < ActiveRecord::Base
  
 def save_ctacte_pdf_to(filename,entity)
   require 'prawn'
+    
   pdf = Prawn::Document.new(:left_margin => 35, :top_margin => 35,:page_size   => "LETTER",
                             :page_layout => :portrait)
   offset = 0
 
   pdf.repeat(:all, :dynamic => true) do
-    pdf.draw_text ("Cuenta corriente de " + entity.first.cliente.razonsocial + " impreso el " + Date.today.strftime("%d/%m/%Y")) , :at => [5,745],:style => :bold, :size => 10
+    pdf.draw_text ("Cuenta corriente de " + entity.first.try(:cliente).razonsocial + " impreso el " + Date.today.strftime("%d/%m/%Y")) , :at => [5,745],:style => :bold, :size => 10
     pdf.draw_text "Hoja Nro.: " + pdf.page_number.to_s.rjust(4,"0"), :at => [300, 745],:style => :bold, :size => 8
   end
   data = [["Fecha","Tipo Cp","Numero","Importe","Fecha Vto","impreso"],[] ]

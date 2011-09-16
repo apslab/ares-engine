@@ -6,8 +6,7 @@
 	  <%= f.input :porcentaje, :as => :numeric %>
 	  <%= f.input :since, :as => :datepicker %>
 	  <%= f.input :until, :as => :datepicker %>
-	  <%= f.input :account, :label => true, :as => :select, :collection => 
-	current_company.accounts.leaves.map{|a|[a.self_and_ancestors.map(&:name).join(' &raquo; ').html_safe, a.id]} , :include_blank => true %>
+	  <%= f.input :account, :label => true, :as => :select, :collection => current_company.accounts.leaves.map{|a|[[a.code, a.name].compact.join(' &raquo; ').html_safe, a.id]}, :include_blank => true ,:prompt => '-- seleccione una cuenta --', :wrapper_html => {:style => 'width:41%'} %>
 	<% end %> 
 
 	<%= render('shared/common_form_buttons') %>
