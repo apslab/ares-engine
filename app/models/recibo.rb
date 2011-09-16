@@ -51,8 +51,7 @@ class Recibo < Comprobante
 
       dt.credit      = referencia.debita? ? 0 : self.importe
       dt.debit       = referencia.debita? ? self.importe : 0      
-    end    
-  
+    end
   end
 
   def to_entry
@@ -71,7 +70,6 @@ class Recibo < Comprobante
       end
     end
   end
-
 
   def save_pdf_to(filename)
      Prawn::Document.generate(filename) do |pdf|
