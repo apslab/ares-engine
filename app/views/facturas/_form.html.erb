@@ -38,7 +38,7 @@
 
 <%= f.inputs(:class => :column_left ) do %>
   <%= f.input :fecha , :as => :datepicker %>
-  <%= @cliente.razonsocial %>
+  <%= t('activerecord.attributes.cliente.razonsocial') + ' : ' + @cliente.razonsocial %>
 <% end %>
 
 <%= f.inputs(:class => :column_right ) do %>
