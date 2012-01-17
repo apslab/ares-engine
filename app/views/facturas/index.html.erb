@@ -14,9 +14,10 @@ end %>
     <th>Cliente</th>
     <th>Fecha</th>
     <th align="center">Importe Total</th>
+    <th align="center">Pto.Vta</th>
     <th align="center">Numero</th>
     <th>Fecha vencimiento</th>
-	<th>Items Totales</th>
+    <th>Items Totales</th>
     <th></th>
     <th></th>
     <th></th>
@@ -26,6 +27,7 @@ end %>
     <td><%= factura.cliente.try(:razonsocial) %></td>
     <td><%= factura.fecha %></td>
     <td align="right"><%= factura.total %></td>
+    <td align="right"><%= factura.sale_point %></td>
     <td align="right"><%= factura.numero %></td>
     <td><%= factura.fechavto %></td>
     <td><%= factura.count_items %></td>

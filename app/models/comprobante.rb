@@ -28,12 +28,14 @@ class Comprobante < ActiveRecord::Base
   accepts_nested_attributes_for :detalles, :allow_destroy => true, :reject_if => :all_blank  
   
   validates :fecha, :presence => true
-  validates :numero, :presence => true, :length => { :maximum => 10 }, :numericality => true
 
-  #TODO para ventas el unique funciona, para compras deber sumar la cuenta del proveedor
-  validates_uniqueness_of :numero, :scope => :type
-  
-  validates_numericality_of :importe, :greater_than => 0
+  #TODO para ventas el unique funciona, para compras deber sumar la cuenta del proveedor  
+  validates :sale_point, :presence => true, :length => { :maximum => 4 }, :numericality => true
+  validates :numero, :presence => true, :length => { :maximum => 8 }, :numericality => true, :uniqueness => {:scope => [:type, :sale_point]}
+
+  validates :importe, :numericality => {:greater_than => 0}
+
+  #validates_numericality_of :importe, :greater_than => 0
 
   #TODO importe debe ser la suma de los totales de los items
   #validates :importe, :presence => true, :numericality => true

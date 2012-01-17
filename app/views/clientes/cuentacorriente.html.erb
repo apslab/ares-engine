@@ -1,7 +1,7 @@
 <% content_for(:breadcrumbs) do %>
 <%= breadcrumbs do |b|
-	b.item "Principal", root_path
-    b.item "Clientes", clientes_path
+    b.item t('scaffold.actions.main'), root_path
+    b.item t('activerecord.models.clientes'), clientes_path
     b.item @cliente.razonsocial, root_path, :active => true
 end %>
 <%end%>
@@ -13,7 +13,7 @@ end %>
 end %>
 <%end%>
 
-<h1>Listado de cuenta corriente del cliente <%= @cliente.razonsocial %></h1>
+<h1>Listado de cuenta corriente del <%= @cliente.razonsocial %></h1>
 
 <table class="table">
  <tr>

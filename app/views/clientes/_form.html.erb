@@ -1,6 +1,8 @@
 <%= semantic_form_for(@cliente) do |f| %>
 <%= f.semantic_errors %>
 
+<%= render('shared/common_form_buttons') %>
+
 <%= f.inputs(:class => :column_left ) do %>
 	<%= f.input :codigo %>
 	<%= f.input :razonsocial %>
@@ -24,6 +26,4 @@
 	current_company.accounts.leaves.map{|a|[[a.code, a.name].compact.join(' &raquo; ').html_safe, a.id]} , :include_blank => true %>
 <% end %>
 <hr class="clear">
-
-<%= render('shared/common_form_buttons') %>
 <% end %>

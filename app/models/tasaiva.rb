@@ -17,7 +17,7 @@
 class Tasaiva < ActiveRecord::Base
   belongs_to :account
   belongs_to :company
-  has_many :detalles
+  has_many :detalles, :dependent => :restrict
   
   validates :porcentaje, :presence => true
   

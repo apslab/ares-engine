@@ -154,6 +154,7 @@ class Factura < Comprobante
        end
 
        pdf.draw_text "Cantidad",   :at => [  1,565], :size => 10
+       pdf.draw_text "U.Medida",   :at => [ 50,565], :size => 10
        pdf.draw_text "Detalle" ,   :at => [100,565], :size => 10
        pdf.draw_text "Precio"  ,   :at => [250,565], :size => 10
        pdf.draw_text "% IVA"   ,   :at => [300,565], :size => 10       
@@ -166,8 +167,9 @@ class Factura < Comprobante
           pdf.stroke_bounds          
         end
        @banda = 550   
-       self.detalles.each do |item|  
+       self.detalles.each do |item|
           pdf.draw_text format("%5d" % item.cantidad).to_s(), :at => [1,@banda], :size => 10
+          pdf.draw_text item.unitmeasure.try(:name).to_s(), :at => [50,@banda], :size => 10          
           pdf.draw_text item.descripcion.to_s(), :at => [100,@banda], :size => 10
           pdf.draw_text item.preciounitario.to_s(), :at => [250,@banda], :size => 10
           pdf.draw_text item.tasaiva.to_s(), :at => [300,@banda], :size => 10          

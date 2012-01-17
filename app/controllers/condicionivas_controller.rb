@@ -2,6 +2,8 @@ class CondicionivasController < AuthorizedController
   # GET /condicionivas
   # GET /condicionivas.xml
   before_filter :filter_condicioniva, :only => [:show,:edit,:update,:destroy]
+
+  respond_to :html, :xml, :json
   
   def index
     @search = Condicioniva.by_company(current_company).search(params[:search])
@@ -84,12 +86,21 @@ class CondicionivasController < AuthorizedController
   # DELETE /condicionivas/1
   # DELETE /condicionivas/1.xml
   def destroy
-    @condicioniva.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(condicionivas_url) }
-      format.xml  { head :ok }
+#    flash[:notice] = t('flash.actions.destroy.notice', :resource_name => Condicioniva.model_name.human) if @condicioniva.destroy
+    #respond_with(@condicioniva)
+#=begin    
+    begin
+         @condicioniva.destroy
+         flash[:success] = "successfully destroyed."
+       rescue ActiveRecord::DeleteRestrictionError => e
+         @condicioniva.errors.add(:base, e)
+         flash[:error] = "#{e}"
+       ensure
+         redirect_to condicioniva_url
     end
+#=end
+#    respond_with(@condicioniva)          
+
   end
   
 protected 

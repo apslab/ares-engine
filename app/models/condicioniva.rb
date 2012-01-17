@@ -12,7 +12,7 @@
 #
 
 class Condicioniva < ActiveRecord::Base
-  has_many :clientes
+  has_many :clientes, :dependent => :restrict
   belongs_to :company, :class_name => "Company", :foreign_key => "empresa_id"
 
   scope :by_company, lambda {|company| where(:empresa_id => company.id) } 
