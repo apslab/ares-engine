@@ -26,6 +26,7 @@ class FacturarecibosController < AuthorizedController
   # GET /facturarecibos/new.xml
   def new
     @facturarecibo = Facturarecibo.new
+    @facturarecibo.fecha = Date.today
     @cliente = Cliente.find(params[:cliente_id])
 
     respond_to do |format|
@@ -41,8 +42,9 @@ class FacturarecibosController < AuthorizedController
   # POST /facturarecibos
   # POST /facturarecibos.xml
   def create
-    @facturarecibo = @cliente.facturas.facturarecibo.build(params[:facturarecibo])
-
+    @factura = @cliente.facturas.find(@facturarecibo.factura_id)
+    @facturarecibo = @factura.facturarecibos.build(params[:facturarecibo])
+    
     respond_to do |format|
       if @facturarecibo.save
         format.html { redirect_to([@cliente, @facturarecibo], :notice => t('flash.actions.create.notice', :resource_name => Facturarecibo.model_name.human)) }
@@ -75,7 +77,7 @@ class FacturarecibosController < AuthorizedController
     @facturarecibo.destroy
 
     respond_to do |format|
-      format.html { redirect_to(facturarecibos_url) }
+      format.html { redirect_to(cliente_factura(@cliente,@facturarecibo.factura)) }
       format.xml  { head :ok }
     end
   end

@@ -16,7 +16,9 @@
 #
 
 class Comprobante < ActiveRecord::Base
-  belongs_to :cliente  
+  belongs_to :cliente
+  belongs_to :formapago
+  
   has_many :detalles, :as => :detallable do
     def calculo_total_items
       map(&:totalitem).sum

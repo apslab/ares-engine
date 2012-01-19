@@ -28,7 +28,7 @@ class Cliente < ActiveRecord::Base
       fc - nc - rc
     end
   end
-   
+  
   belongs_to :condicioniva
   belongs_to :account
   belongs_to :company

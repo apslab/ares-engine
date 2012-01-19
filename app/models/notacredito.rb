@@ -13,12 +13,12 @@
 #  printed_at :date
 #  created_at :datetime
 #  updated_at :datetime
-#
 
 class Notacredito < Comprobante    
   belongs_to :cliente
-  has_many :facturarecibos
+  #has_many :facturarecibos
   has_many :facturanotacreditos
+  #has_many :facturas
   
   scope :no_actualizados, where("updated_at IS NULL" )
   scope :por_cliente, lambda {|cliente| where(:cliente_id => cliente) }
@@ -40,11 +40,19 @@ class Notacredito < Comprobante
   end
   
   def total_monto_cancelado
-    self.facturarecibos.all.sum(&:importe) + self.facturanotacreditos.sum(&:importe)
+    self.facturanotacreditos.all.sum(&:importe)
   end
   
   def total_monto_adeudado
     self.importe - self.total_monto_cancelado
+  end
+
+  def sin_deuda?
+    total_monto_adeudado == 0
+  end
+
+  def con_deuda?
+    total_monto_adeudado > 0
   end
    
   #properties for entry 

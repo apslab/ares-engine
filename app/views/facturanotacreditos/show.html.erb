@@ -1,8 +1,15 @@
-<p id="notice"><%= notice %></p>
+<% content_for(:breadcrumbs) do %>
+<%= breadcrumbs do |b|
+	  b.item "Principal", root_path
+    b.item "Clientes", clientes_path
+    b.item  @facturanotacredito.factura.cliente.razonsocial , cliente_path(@facturanotacredito.factura.cliente)
+
+end %>
+<%end%>
 
 <p>
   <b>Factura:</b>
-  <%= @facturanotacredito.factura.numero %> <%= @facturanotacredito.factura.cliente.razonsocial %> <%= @facturanotacredito.factura.fecha %>
+  <%= @facturanotacredito.factura.sale_point %> <%= @facturanotacredito.factura.numero %> <%= @facturanotacredito.factura.fecha %>
 </p>
 
 <p>
@@ -17,9 +24,5 @@
 
 <p>
   <b>Nota de credito:</b>
-  <%= @facturanotacredito.notacredito.numero %> <%= @facturanotacredito.notacredito.cliente.razonsocial %> <%= @facturanotacredito.notacredito.fecha %>
+  <%= @facturanotacredito.notacredito.sale_point %> <%= @facturanotacredito.notacredito.numero %> <%= @facturanotacredito.notacredito.fecha %>
 </p>
-
-
-<%= link_to 'Editar', edit_facturanotacredito_path(@facturanotacredito) %> |
-<%= link_to 'Volver', facturanotacreditos_path %>

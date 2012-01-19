@@ -8,6 +8,7 @@ end %>
 <%= semantic_attributes_for @factura do |attr| %>
   <%= attr.attributes "Cabecera" do %>
   	<%= attr.attribute :fecha %>
+  	<%= attr.attribute :sale_point , :label => "Punto de venta"%>
   	<%= attr.attribute :numero , :label => "Numero de factura"%>
   	<%= attr.attribute :total, :label => "Total de factura" %>
   	<%= attr.attribute :fechavto %>
@@ -29,6 +30,7 @@ end %>
 	  <tr>
 		 <th>Descripcion</th>
 		 <th align="center">Cantidad</th>
+		 <th>Unidad de medida</th>		
 		 <th align="center">Precio unitario</th>
 		 <th align="center">IVA</th>
 		 <th align="center">Precio total</th>
@@ -40,6 +42,7 @@ end %>
 	  <tr>
 	    <td align="left" ><%= item.descripcion %></td>
 	    <td align="right"><%= item.cantidad %></td>
+	    <td align="right"><%= item.product.unitmeasure.name %></td>
 	    <td align="right"><%= number_to_currency(item.preciounitario) %></td>
 	    <td align="right"><%= number_to_percentage(item.tasaiva, :precision => 2) %></td>
 	    <td align="right"><%= number_to_currency(item.totalitem) %></td>
@@ -54,8 +57,27 @@ end %>
 	</tr>
 	</table>
 	</br>
-   <% end %>
+  <% end %>
 
+  <h3>Recibos</h3>
+	<% @factura.facturarecibos.each do |item| %>
+		<%= item.fecha %>
+		<%= item.recibo.sale_point %>
+		<%= item.recibo.numero %>
+		<%= item.importe %>
+    <%= link_to 'Borrar', [@factura.cliente,item], :confirm => 'Esta ud. seguro?', :method => :delete %>
+		</br>
+  <% end %>
+
+  <h3>Notas de credito</h3>
+	<% @factura.facturanotacreditos.each do |item| %>
+		<%= item.fecha %>
+		<%= item.notacredito.sale_point %>
+		<%= item.notacredito.numero %>
+		<%= item.importe %>
+    <%= link_to 'Borrar', [@factura.cliente,item], :confirm => 'Esta ud. seguro?', :method => :delete %>
+		</br>
+  <% end %>
 <% end %>
 
 <div class="clear"></div>

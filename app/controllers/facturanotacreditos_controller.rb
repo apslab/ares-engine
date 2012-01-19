@@ -1,6 +1,9 @@
 class FacturanotacreditosController < AuthorizedController
   # GET /facturanotacreditos
   # GET /facturanotacreditos.xml
+  before_filter :find_cliente
+  before_filter :find_facturanotacredito, :except => [:index, :new, :create]
+
   def index
     @facturanotacreditos = Facturanotacredito.all
 
@@ -24,11 +27,10 @@ class FacturanotacreditosController < AuthorizedController
   # GET /facturanotacreditos/new
   # GET /facturanotacreditos/new.xml
   def new
-    @notacredito = @cliente.notacreditos.build
-    @facturanotacredito = @notacredito.facturanotacreditos.build
+    @facturanotacredito = Facturanotacredito.new 
+    @facturanotacredito.fecha = Date.today
+    @cliente = Cliente.find(params[:cliente_id])
         
-    # @facturanotacredito = Facturanotacredito.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @facturanotacredito }
@@ -43,12 +45,13 @@ class FacturanotacreditosController < AuthorizedController
   # POST /facturanotacreditos
   # POST /facturanotacreditos.xml
   def create
-    @facturanotacredito = Facturanotacredito.new(params[:facturanotacredito])
-
+    @factura = @cliente.facturas.find(@facturanotacredito.factura_id)
+    @facturanotacredito = @factura.facturanotacreditos.build(params[:facturanotacredito])
+        
     respond_to do |format|
       if @facturanotacredito.save
-        format.html { redirect_to(@facturanotacredito, :notice => t('flash.actions.create.notice', :resource_name => Facturanotacredito.model_name.human)) }
-        format.xml  { render :xml => @facturanotacredito, :status => :created, :location => @facturanotacredito }
+        format.html { redirect_to([@cliente, @facturanotacredito], :notice => t('flash.actions.create.notice', :resource_name => Facturanotacredito.model_name.human)) }
+        format.xml  { render :xml => @facturanotacredito, :status => :created, :location => [@cliente,@facturanotacredito] }
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @facturanotacredito.errors, :status => :unprocessable_entity }
@@ -79,8 +82,18 @@ class FacturanotacreditosController < AuthorizedController
     @facturanotacredito.destroy
 
     respond_to do |format|
-      format.html { redirect_to(facturanotacreditos_url) }
+      format.html { redirect_to(cliente_factura(@cliente,@facturarecibo.factura)) }
       format.xml  { head :ok }
     end
+  end
+  
+  protected 
+
+  def find_cliente
+    @cliente = Cliente.find(params[:cliente_id])
+  end
+
+  def find_facturanotacredito
+    @facturanotacredito = Facturanotacredito.find(params[:id])
   end
 end

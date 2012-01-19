@@ -39,11 +39,19 @@ class Factura < Comprobante
   end
   
   def total_monto_cancelado
-    self.facturarecibos.all.sum(&:importe) + self.facturanotacreditos.sum(&:importe)
+    self.facturarecibos.all.sum(&:importe) + self.facturanotacreditos.all.sum(&:importe)
   end
   
   def total_monto_adeudado
     self.importe - self.total_monto_cancelado
+  end
+
+  def sin_deuda?
+    total_monto_adeudado == 0
+  end
+
+  def con_deuda?
+    total_monto_adeudado > 0
   end
    
   #properties for entry 
@@ -129,11 +137,26 @@ class Factura < Comprobante
        pdf.draw_text "original", :at => [-4,400], :size => 8, :rotate => 90
 
        pdf.draw_text self.cliente.condicioniva.letra.to_s, :at => [243,710], :size => 16
-       pdf.draw_text "Factura numero: 0000-" + self.numero.to_s, :at => [300,710], :size => 14
-       pdf.draw_text "Fecha de emision: " + self.fecha.to_s, :at => [300,695], :size => 14
+       pdf.draw_text "Punto de venta: " + format("%04d" % self.sale_point).to_s + " Comp.Numero: " + format("%08d" % self.numero).to_s, :at => [280,710], :size => 10
+       pdf.draw_text "Fecha de emision: " + self.fecha.to_s, :at => [280,695], :size => 10
        
-       empresa = "public/images/clinicA.jpg" 
+       empresa = "public/images/logo.png" 
        pdf.image empresa, :at => [0,729], :width => 100
+
+       pdf.draw_text "Razon Social : " + self.cliente.company.name.to_s, :at => [10,685], :size => 10
+       pdf.draw_text "CUIT : " + self.cliente.company.cuit.to_s, :at => [280,685], :size => 10
+       pdf.draw_text "Direccion : " + self.cliente.company.address.to_s, :at => [10,675], :size => 10
+       pdf.draw_text "IIBB : " + self.cliente.company.iibb.to_s, :at => [280,675], :size => 10
+       pdf.draw_text "Condicion frente al IVA : " + self.cliente.company.condicioniva.detalle.to_s, :at => [10,665], :size => 10
+       pdf.draw_text "Inicio actividad : " + self.cliente.company.date_since.to_s, :at => [280,665], :size => 10
+       
+       # pdf.draw_text self.cliente.company.address.to_s, :at => [300,675], :size => 10
+
+       # recuadro de los datos del cliente       
+       pdf.line_width = 1
+       pdf.bounding_box [-2, 730], :width => 500, :height => 70 do
+           pdf.stroke_bounds
+       end
 
        # recuadro de la letra
        pdf.line_width = 1
@@ -141,11 +164,11 @@ class Factura < Comprobante
            pdf.stroke_bounds
        end
 
-       pdf.draw_text "Cliente", :at => [10,650], :size => 10, :style => :bold
-       pdf.draw_text "Razon social : " + self.cliente.razonsocial, :at => [10,640], :size => 10
-       pdf.draw_text "CUIT : " + self.cliente.cuit, :at => [10,630], :size => 10
-       pdf.draw_text "Condicion de IVA:" + self.cliente.condicioniva.detalle, :at => [10,620], :size => 10
-       pdf.draw_text "Direccion : " + self.cliente.direccion, :at => [10,610], :size => 10
+       pdf.draw_text "Razon social : " + self.cliente.razonsocial, :at => [10,650], :size => 10
+       pdf.draw_text "CUIT : " + self.cliente.cuit, :at => [10,640], :size => 10
+       pdf.draw_text "Condicion de IVA:" + self.cliente.condicioniva.detalle, :at => [10,630], :size => 10
+       pdf.draw_text "Direccion : " + self.cliente.direccion, :at => [10,620], :size => 10
+       pdf.draw_text "Forma de pago : " + self.formapago.try(:name), :at => [10,610], :size => 10
        
        # recuadro de los datos del cliente       
        pdf.line_width = 1
@@ -163,14 +186,18 @@ class Factura < Comprobante
        
        # recuadro 
        pdf.line_width = 1
-        pdf.bounding_box [-2, 580], :width => 500, :height => 20 do
+       pdf.bounding_box [-2, 580], :width => 500, :height => 20 do
           pdf.stroke_bounds          
-        end
+       end
+
        @banda = 550   
        self.detalles.each do |item|
-          pdf.draw_text format("%5d" % item.cantidad).to_s(), :at => [1,@banda], :size => 10
-          pdf.draw_text item.unitmeasure.try(:name).to_s(), :at => [50,@banda], :size => 10          
-          pdf.draw_text item.descripcion.to_s(), :at => [100,@banda], :size => 10
+          pdf.draw_text format("%5d" % item.cantidad).to_s, :at => [1,@banda], :size => 10
+          pdf.draw_text item.product.unitmeasure.try(:name).to_s, :at => [50,@banda], :size => 10 
+                   
+          #pdf.draw_text item.descripcion.to_s(), :at => [100,@banda], :size => 10
+          pdf.text_box item.descripcion.to_s(), :at => [100,@banda], :size => 10, :width => 150, :height => 100, :single_line => false
+          
           pdf.draw_text item.preciounitario.to_s(), :at => [250,@banda], :size => 10
           pdf.draw_text item.tasaiva.to_s(), :at => [300,@banda], :size => 10          
           pdf.draw_text item.totalivaitem.to_s(), :at => [350,@banda], :size => 10
@@ -193,6 +220,8 @@ class Factura < Comprobante
        
        pdf.draw_text "%9.02f" % self.total_iva_factura.to_s, :at => [350,25], :size => 12, :style => :bold
        pdf.draw_text "%9.02f" % self.importe.to_s, :at => [400,25], :size => 12, :style => :bold
+
+       #pdf.draw_text current_user.email , :at => [0,5], :size => 12, :style => :bold
 
        pdf.line_width = 1
        pdf.bounding_box [-2, 40], :width => 500, :height => 20 do

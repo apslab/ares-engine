@@ -43,6 +43,7 @@
 
 <%= f.inputs(:class => :column_right ) do %>
   <%= f.input :fechavto , :as => :datepicker %>
+  <%= f.input :sale_point , :as => :numeric, :input_html => { :size => 4, :style => "text-align:right;" } %>
   <%= f.input :numero , :as => :numeric, :input_html => { :size => 10, :style => "text-align:right;" } %>
 <% end %>
 

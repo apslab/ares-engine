@@ -1,3 +1,10 @@
+<% content_for(:breadcrumbs) do %>
+<%= breadcrumbs do |b|
+	b.item "Principal", root_path
+  b.item "Clientes", clientes_path
+end %>
+<%end%>
+
 <%= semantic_form_for [@cliente,@facturanotacredito] do |f| %>
   <% if @facturanotacredito.errors.any? %>
     <div id="error_explanation">
@@ -12,9 +19,9 @@
   <% end %>
 
 <%= f.inputs do %>
-  <%= f.input :fecha %>
-  <%= f.input :factura, :label => true, :as => :select, :collection => Factura.all.map{|c| [c.numero, c.id]} %>
-  <%= f.input :notacredito, :label => true, :as => :select, :collection => Notacredito.all.map{|c| [c.numero, c.id]} %>
+  <%= f.input :fecha , :as => :datepicker%>
+  <%= f.input :factura, :label => true, :as => :select, :collection => @cliente.facturas.select {|fc| fc.con_deuda? }.map{|c| [c.numero.to_s + ' ' + c.fecha.to_s + ' ' + c.importe.to_s + ' ' + c.total_monto_adeudado.to_s, c.id]} %>
+  <%= f.input :notacredito, :label => true, :as => :select, :collection => @cliente.notacreditos.select {|nc| nc.con_deuda? }.map{|c| [c.numero.to_s + ' ' + c.fecha.to_s + ' ' + c.importe.to_s + ' ' + c.total_monto_adeudado.to_s, c.id]} %>
   <%= f.input :importe %>
 <% end %>
 <%= f.buttons %>

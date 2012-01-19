@@ -54,6 +54,18 @@ end %>
 </tr>
 </table>
 </br>
+
+<h3>Facturas</h3>
+<% @notacredito.facturanotacreditos.each do |item| %>
+	<%= item.fecha %>
+	<%= item.factura.sale_point %>
+	<%= item.factura.numero %>
+	<%= item.importe %>
+  <%= link_to 'Borrar', [@notacredito.cliente,item], :confirm => 'Esta ud. seguro?', :method => :delete %>
+	</br>
+<% end %>
+
+
 <% end %>
 
 <div class="clear"></div>

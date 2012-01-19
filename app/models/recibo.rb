@@ -29,6 +29,22 @@ class Recibo < Comprobante
     (self.importe * -1)
   end
 
+  def total_monto_cancelado
+    self.facturarecibos.all.sum(&:importe)
+  end
+  
+  def total_monto_adeudado
+    self.importe - self.total_monto_cancelado
+  end
+  
+  def con_deuda?
+    total_monto_adeudado > 0
+  end
+  
+  def sin_deuda?
+    total_monto_adeudado == 0
+  end
+
   def ventas_recibo_total(*args)
     entry,referencia = args
 
