@@ -32,7 +32,7 @@
     <td><%= facturanotacredito.notacredito.cliente.razonsocial %></td>
 
     <td><%= link_to 'Ver', facturanotacredito %></td>
-    <td><%= link_to 'Editar', edit_facturanotacredito_path(facturanotacredito) %></td>
+    <td><%= link_to 'Editar', edit_cliente_facturanotacredito_path(facturanotacredito.factura.cliente,facturanotacredito) %></td>
     <td><%= link_to 'Borrar', facturanotacredito, :confirm => 'Esta ud. seguro?', :method => :delete %></td>
   </tr>
 <% end %>
@@ -40,4 +40,4 @@
 
 <br />
 
-<%= link_to 'Nueva Factura vs Nota de credito', new_facturanotacredito_path %>
+<%= link_to 'Nueva Factura vs Nota de credito', new_cliente_facturanotacredito_path %>

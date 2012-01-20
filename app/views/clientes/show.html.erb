@@ -51,9 +51,9 @@ end %>
   </tr>
 <% @cliente.facturas.each do |cpbte| %>
   <tr>
-    <td class="last"><%= cpbte.numero %></td>
+    <td class="last"><%= format("%04d" % cpbte.sale_point).to_s + '-' + format("%08d" % cpbte.numero).to_s %></td>
     <td><%= cpbte.fecha %></td>
-    <td class="last"><%= cpbte.importe %></td>
+    <td class="last"><%= format("%.2f" % cpbte.importe).to_s %></td>
     <td><%= cpbte.fechavto %></td>
     <td><%= link_to icon('application_go', :small, :title => 'ver'), [cpbte.cliente, cpbte] %></td>
     <td><%= link_to icon('printer', :small, :title => 'Imprimir'), cliente_factura_path(cpbte.cliente, cpbte, :format => 'pdf') %></td>
@@ -62,9 +62,9 @@ end %>
   		<tr>
     		<td>recibo -------></td>
     		<td><%= cpbteafectado.fecha %></td>
-    		<td class="last"><%= cpbteafectado.importe %></td>
-	  		<td class="last"><%= cpbteafectado.recibo.numero %></td>
-	  		<td class="last"><%= cpbteafectado.recibo.importe %></td>
+    		<td class="last"><%= format("%.2f" % cpbteafectado.importe).to_s %></td>
+        <td class="last"><%= format("%04d" % cpbteafectado.recibo.sale_point).to_s + '-' + format("%08d" % cpbteafectado.recibo.numero).to_s %></td>
+	  		<td class="last"><%= format("%.2f" % cpbteafectado.recibo.importe).to_s %></td>
   		</tr>
 	<% end %>
 	
@@ -72,9 +72,9 @@ end %>
 		<tr>
   		<td>nota credito --></td>
   		<td><%= cpbteafectado.fecha %></td>
-  		<td class="last"><%= cpbteafectado.importe %></td>
-  		<td class="last"><%= cpbteafectado.factura.numero %></td>
-  		<td class="last"><%= cpbteafectado.factura.importe %></td>
+  		<td class="last"><%= format("%.2f" % cpbteafectado.importe).to_s %></td>
+      <td class="last"><%= format("%04d" % cpbteafectado.factura.sale_point).to_s +'-'+format("%08d" % cpbteafectado.factura.numero).to_s %></td>
+  		<td class="last"><%= format("%.2f" % cpbteafectado.factura.importe).to_s %></td>
 		</tr>
 	<% end %>	
 <% end %>
@@ -96,9 +96,9 @@ end %>
 
 <% @cliente.recibos.each do |cpbte| %>
   <tr>
-    <td class="last"><%= cpbte.numero %></td>
+    <td class="last"><%= format("%04d" % cpbte.sale_point).to_s + '-' + format("%08d" % cpbte.numero).to_s %></td>
     <td><%= cpbte.fecha %></td>
-    <td class="last"><%= cpbte.importe %></td>
+		<td class="last"><%= format("%.2f" % cpbte.importe).to_s %></td>
     <td><%= cpbte.fechavto %></td>
     <td><%= link_to icon('application_go', :small, :title => 'ver'), [cpbte.cliente, cpbte] %></td>
     <td><%= link_to icon('printer', :small, :title => 'Imprimir'), cliente_recibo_path(cpbte.cliente, cpbte, :format => 'pdf') %></td>
@@ -107,9 +107,9 @@ end %>
 		<tr>
   		<td>factura -------></td>
   		<td><%= cpbteafectado.fecha %></td>
-  		<td class="last"><%= cpbteafectado.importe %></td>
-  		<td class="last"><%= cpbteafectado.factura.numero %></td>
-  		<td><%= cpbteafectado.factura.importe %></td>
+  		<td class="last"><%= format("%.2f" % cpbteafectado.importe).to_s %></td>
+	    <td class="last"><%= format("%04d" % cpbteafectado.factura.sale_point).to_s + '-' + format("%08d" % cpbteafectado.factura.numero).to_s %></td>
+  		<td><%= format("%.2f" % cpbteafectado.factura.importe).to_s %></td>
 		</tr>
 	<% end %>	
 <% end %>
@@ -130,9 +130,9 @@ end %>
   </tr>
 <% @cliente.notacreditos.each do |cpbte| %>
   <tr>
-    <td class="last"><%= cpbte.numero %></td>
+    <td class="last"><%= format("%04d" % cpbte.sale_point).to_s + '-' + format("%08d" % cpbte.numero).to_s %></td>
     <td><%= cpbte.fecha %></td>
-    <td class="last"><%= cpbte.importe %></td>
+		<td class="last"><%= format("%.2f" % cpbte.importe).to_s %></td>
     <td><%= cpbte.fechavto %></td>
     <td><%= link_to icon('application_go', :small, :title => 'ver'), [cpbte.cliente, cpbte] %></td>
     <td><%= link_to icon('printer', :small, :title => 'Imprimir'), cliente_notacredito_path(cpbte.cliente, cpbte, :format => 'pdf') %></td>
@@ -141,9 +141,9 @@ end %>
 		<tr>
 		  <td>factura -------></td>
 		  <td><%= cpbteafectado.fecha %></td>
-		  <td class="last"><%= cpbteafectado.importe %></td>
-  		<td class="last"><%= cpbteafectado.factura.numero %></td>
-  		<td><%= cpbteafectado.factura.importe %></td>
+		  <td class="last"><%= format("%.2f" % cpbteafectado.importe).to_s %></td>
+	    <td class="last"><%= format("%04d" % cpbteafectado.factura.sale_point).to_s + '-' + format("%08d" % cpbteafectado.factura.numero).to_s %></td>
+  		<td><%= format("%.2f" % cpbteafectado.factura.importe).to_s %></td>
 		</tr>
 	<% end %>
 <% end %>
