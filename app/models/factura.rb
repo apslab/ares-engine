@@ -148,10 +148,9 @@ class Factura < Comprobante
        
        # pdf.draw_text self.cliente.company.address.to_s, :at => [300,675], :size => 10
 
-       pdf.draw_text self.cliente.razonsocial, :at => [0,600], :size => 12
-       pdf.draw_text "Leg. : " + self.cliente.codigo + " - CUIT : " + self.cliente.cuit, :at => [0,590], :size => 12
+       pdf.draw_text self.cliente.razonsocial, :at => [0,610], :size => 12
+       pdf.draw_text "Leg. : " + self.cliente.codigo + " - cuit : " + self.cliente.cuit, :at => [0,595], :size => 12
        pdf.draw_text self.cliente.condicioniva.detalle, :at => [0,580], :size => 12
-
        pdf.draw_text self.cliente.direccion, :at => [0,570], :size => 12
        
        pdf.draw_text self.formapago.try(:name), :at => [50,550], :size => 12
@@ -199,7 +198,7 @@ class Factura < Comprobante
       # end
        #pdf.draw_text "Total", :at => [400,45], :size => 10
 
-       pdf.draw_text "%9.02f" % self.importe.to_s, :at => [500,45], :size => 12, :style => :bold
+       pdf.draw_text "%9.02f" % self.importe.to_s, :at => [490,45], :size => 12, :style => :bold
 
        pdf.text_box Apslabs::Numlet.new.numero_a_palabras( self.importe ) + '.-', :at => [0,45], :size => 10, :width => 350, :height => 100, :single_line => false
 
