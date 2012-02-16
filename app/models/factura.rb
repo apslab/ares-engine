@@ -162,7 +162,7 @@ class Factura < Comprobante
 
 
       # inicion de tabla
-      pdf.move_down 210
+      pdf.move_down 220
 
       data = []
       data << []
