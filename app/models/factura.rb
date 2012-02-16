@@ -133,7 +133,7 @@ class Factura < Comprobante
 
   def cnsp_factura_print(filename)
     Prawn::Document.generate(filename) do |pdf|
-       pdf.draw_text "original " + self.type + " " + format("%04d" % self.sale_point).to_s + "-" + format("%08d" % self.numero).to_s, :at => [-34,400], :size => 8, :rotate => 90
+       pdf.draw_text "original " + self.type + " " + format("%04d" % self.sale_point).to_s + "-" + format("%08d" % self.numero).to_s, :at => [-24,400], :size => 8, :rotate => 90
 
        #pdf.draw_text self.cliente.condicioniva.letra.to_s, :at => [243,710], :size => 16
        #pdf.draw_text self.type + "Pto de venta:" + format("%04d" % self.sale_point).to_s + " Comp.Numero:" + format("%08d" % self.numero).to_s, :at => [270,710], :size => 10
@@ -148,18 +148,18 @@ class Factura < Comprobante
        
        # pdf.draw_text self.cliente.company.address.to_s, :at => [300,675], :size => 10
 
-       pdf.draw_text self.cliente.razonsocial, :at => [0,600], :size => 10
-       pdf.draw_text "Leg. : " + self.cliente.codigo + " - CUIT : " + self.cliente.cuit, :at => [0,590], :size => 10
-       pdf.draw_text self.cliente.condicioniva.detalle, :at => [0,580], :size => 10
+       pdf.draw_text self.cliente.razonsocial, :at => [0,600], :size => 12
+       pdf.draw_text "Leg. : " + self.cliente.codigo + " - CUIT : " + self.cliente.cuit, :at => [0,590], :size => 12
+       pdf.draw_text self.cliente.condicioniva.detalle, :at => [0,580], :size => 12
 
-       pdf.draw_text self.cliente.direccion, :at => [0,570], :size => 10
+       pdf.draw_text self.cliente.direccion, :at => [0,570], :size => 12
        
-       pdf.draw_text self.formapago.try(:name), :at => [50,550], :size => 10
+       pdf.draw_text self.formapago.try(:name), :at => [50,550], :size => 12
        
-       pdf.draw_text "Descripcion" ,   :at => [1,515], :size => 10
-       pdf.draw_text "Precio"  ,   :at => [400,515], :size => 10
-       pdf.draw_text "Cant.",   :at => [450,515], :size => 10
-       pdf.draw_text "Total"   ,   :at => [500,515], :size => 10   
+       pdf.draw_text "Descripcion" ,   :at => [1,515], :size => 12
+       pdf.draw_text "Precio"  ,   :at => [400,515], :size => 12
+       pdf.draw_text "Cant.",   :at => [450,515], :size => 12
+       pdf.draw_text "Total"   ,   :at => [500,515], :size => 12  
 
 
       # inicion de tabla
@@ -180,8 +180,7 @@ class Factura < Comprobante
       
       pdf.table(data, :column_widths => [400, 50, 40, 50],
              :cell_style => { :borders => [],
-                              :font => "Times-Roman",
-                              :size => 10,:padding => [0,3,4,2],
+                              :size => 12,:padding => [0,3,4,2],
                               :align =>  :left,
                               :valign => :center } ) do
                                 columns(1..3).align = :right
