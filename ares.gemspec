@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "ares"
-  s.version = "0.4.24"
+  s.version = "0.4.26"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["AP System"]
-  s.date = "2012-01-20"
+  s.date = "2012-02-16"
   s.description = "Adminsitracion de Ventas"
   s.email = "info@ap-sys.com.ar"
   s.extra_rdoc_files = [
@@ -24,6 +24,8 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "app/controllers/clientes_controller.rb",
+    "app/controllers/comprobantecreditos_controller.rb",
+    "app/controllers/comprobantedebitos_controller.rb",
     "app/controllers/condicionivas_controller.rb",
     "app/controllers/empresas_controller.rb",
     "app/controllers/facturanotacreditos_controller.rb",
@@ -46,6 +48,8 @@ Gem::Specification.new do |s|
     "app/helpers/tasaivas_helper.rb",
     "app/models/cliente.rb",
     "app/models/comprobante.rb",
+    "app/models/comprobantecredito.rb",
+    "app/models/comprobantedebito.rb",
     "app/models/condicioniva.rb",
     "app/models/detalle.rb",
     "app/models/factura.rb",
@@ -78,6 +82,20 @@ Gem::Specification.new do |s|
     "app/views/clientes/list_account.html.erb",
     "app/views/clientes/new.html.erb",
     "app/views/clientes/show.html.erb",
+    "app/views/comprobantecreditos/_detalle_fields.html.erb",
+    "app/views/comprobantecreditos/_filtros.html.erb",
+    "app/views/comprobantecreditos/_form.html.erb",
+    "app/views/comprobantecreditos/edit.html.erb",
+    "app/views/comprobantecreditos/index.html.erb",
+    "app/views/comprobantecreditos/new.html.erb",
+    "app/views/comprobantecreditos/show.html.erb",
+    "app/views/comprobantedebitos/_detalle_fields.html.erb",
+    "app/views/comprobantedebitos/_filtros.html.erb",
+    "app/views/comprobantedebitos/_form.html.erb",
+    "app/views/comprobantedebitos/edit.html.erb",
+    "app/views/comprobantedebitos/index.html.erb",
+    "app/views/comprobantedebitos/new.html.erb",
+    "app/views/comprobantedebitos/show.html.erb",
     "app/views/condicionivas/_form.html.erb",
     "app/views/condicionivas/edit.html.erb",
     "app/views/condicionivas/index.html.haml",
