@@ -133,11 +133,11 @@ class Factura < Comprobante
 
   def cnsp_factura_print(filename)
     Prawn::Document.generate(filename) do |pdf|
-       pdf.draw_text "original " + self.type + " " + format("%04d" % self.sale_point).to_s + "-" + format("%08d" % self.numero).to_s, :at => [-4,400], :size => 8, :rotate => 90
+       pdf.draw_text "original " + self.type + " " + format("%04d" % self.sale_point).to_s + "-" + format("%08d" % self.numero).to_s, :at => [-34,400], :size => 8, :rotate => 90
 
        #pdf.draw_text self.cliente.condicioniva.letra.to_s, :at => [243,710], :size => 16
        #pdf.draw_text self.type + "Pto de venta:" + format("%04d" % self.sale_point).to_s + " Comp.Numero:" + format("%08d" % self.numero).to_s, :at => [270,710], :size => 10
-       pdf.draw_text self.fecha.to_s, :at => [400,690], :size => 12
+       pdf.draw_text self.fecha.to_s, :at => [450,690], :size => 12
        
        #pdf.draw_text "Razon Social : " + self.cliente.company.name.to_s, :at => [10,685], :size => 10
        #pdf.draw_text "CUIT : " + self.cliente.company.cuit.to_s, :at => [280,685], :size => 10
@@ -148,11 +148,11 @@ class Factura < Comprobante
        
        # pdf.draw_text self.cliente.company.address.to_s, :at => [300,675], :size => 10
 
-       pdf.draw_text self.cliente.razonsocial, :at => [10,600], :size => 10
-       pdf.draw_text "Leg. : " + self.cliente.codigo + " - CUIT : " + self.cliente.cuit, :at => [10,590], :size => 10
-       pdf.draw_text self.cliente.condicioniva.detalle, :at => [10,580], :size => 10
+       pdf.draw_text self.cliente.razonsocial, :at => [0,600], :size => 10
+       pdf.draw_text "Leg. : " + self.cliente.codigo + " - CUIT : " + self.cliente.cuit, :at => [0,590], :size => 10
+       pdf.draw_text self.cliente.condicioniva.detalle, :at => [0,580], :size => 10
 
-       pdf.draw_text self.cliente.direccion, :at => [10,570], :size => 10
+       pdf.draw_text self.cliente.direccion, :at => [0,570], :size => 10
        
        pdf.draw_text self.formapago.try(:name), :at => [50,550], :size => 10
        
@@ -163,7 +163,7 @@ class Factura < Comprobante
 
 
       # inicion de tabla
-      pdf.move_down 230
+      pdf.move_down 210
 
       data = []
       data << []
@@ -202,9 +202,9 @@ class Factura < Comprobante
 
        pdf.draw_text "%9.02f" % self.importe.to_s, :at => [500,45], :size => 12, :style => :bold
 
-       pdf.text_box Apslabs::Numlet.new.numero_a_palabras( self.importe ) + '.-', :at => [10,45], :size => 10, :width => 350, :height => 100, :single_line => false
+       pdf.text_box Apslabs::Numlet.new.numero_a_palabras( self.importe ) + '.-', :at => [0,45], :size => 10, :width => 350, :height => 100, :single_line => false
 
-       pdf.text_box self.cliente.company.facturaobservation.to_s , :at => [10,30], :size => 10, :width => 350, :height => 100, :single_line => false
+       pdf.text_box self.cliente.company.facturaobservation.to_s , :at => [0,30], :size => 10, :width => 350, :height => 100, :single_line => false
 
        self.update_attributes(:printed_at => Date.today)
      end
