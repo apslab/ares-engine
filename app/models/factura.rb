@@ -132,12 +132,7 @@ class Factura < Comprobante
   end
 
   def cnsp_factura_print(filename)
-    self.save_pdf_to(filename)    
-  end
-
-
-  def xcnsp_factura_print(filename)
-         Prawn::Document.generate(filename) do |pdf|
+    Prawn::Document.generate(filename) do |pdf|
        pdf.draw_text "original " + self.type + " " + format("%04d" % self.sale_point).to_s + "-" + format("%08d" % self.numero).to_s, :at => [-4,400], :size => 8, :rotate => 90
 
        #pdf.draw_text self.cliente.condicioniva.letra.to_s, :at => [243,710], :size => 16
