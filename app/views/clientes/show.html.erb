@@ -16,32 +16,30 @@ end %>
 
 <%= render 'sidebar' %>
 
-<%= semantic_attributes_for(@cliente, options = {:class => :column_right}) do |attr| %>
-  <%= attr.attributes do %>
-	  <%= attr.attribute :razonsocial %>
-	  <%= attr.attribute :fantasyname %>
-	  <%= attr.attribute :cuit %>
-   	<%= attr.attribute :telefono %>
-   	<%= attr.attribute :direccion %>
-   	<%= attr.attribute :localidad %>
-   	<%= attr.attribute :province_id, :display_empty => true, :value => @cliente.province.try('name') %>
-   	<%= attr.attribute :codigopostal %>
-   	<%= attr.attribute :email %>
-  	<%= attr.attribute :contacto %>
-  	<%= attr.attribute :envelope, :value => (@cliente.envelope) ? 'Si' : 'No' %>
-  	<%= attr.attribute :date_and_time_attention %>
-   	<%= attr.attribute :condicioniva_id, :display_empty => true, :value => @cliente.condicioniva.try('detalle') %>
-   	<%= attr.attribute :account_id, :display_empty => true, :value => @cliente.account.try('name') %>
-   	<%= attr.attribute :observation %>
-  <% end %>
+<%= form_for(@cliente) do |f| %>
+  <%= f.label :razonsocial, :class => "apsLabel" %>: <%= @cliente.razonsocial %> <br/>
+  <%= f.label :fantasyname, :class => "apsLabel" %>: <%= @cliente.fantasyname %> <br/>
+  <%= f.label :cuit, :class => "apsLabel" %>: <%= @cliente.cuit %> <br/>
+  <%= f.label :telefono, :class => "apsLabel" %>: <%= @cliente.telefono %> <br/>
+  <%= f.label :direccion, :class => "apsLabel" %>: <%= @cliente.direccion %> <br/>
+  <%= f.label :localidad, :class => "apsLabel" %>: <%= @cliente.localidad %> <br/>
+  <%= f.label :province_id, :class => "apsLabel" %>: <%= @cliente.province.try('name') %> <br/>
+  <%= f.label :codigopostal, :class => "apsLabel" %>: <%= @cliente.codigopostal %> <br/>
+  <%= f.label :email, :class => "apsLabel" %>: <%= @cliente.email %> <br/>
+  <%= f.label :contacto, :class => "apsLabel" %>: <%= @cliente.contacto %> <br/>
+  <%= f.label :envelope, :class => "apsLabel" %>: <%= (@cliente.envelope) ? 'Si' : 'No' %> <br/>
+  <%= f.label :date_and_time_attention, :class => "apsLabel" %>: <%= @cliente.date_and_time_attention %> <br/>
+  <%= f.label :condicioniva_id, :class => "apsLabel" %>: <%= @cliente.condicioniva.try('detalle') %> <br/>
+  <%= f.label :account_id, :class => "apsLabel" %>: <%= @cliente.account.try('name') %> <br/>
+  <%= f.label :observation, :class => "apsLabel" %>: <%= @cliente.observation %> <br/>
 <% end %>
-
-<hr class="clear">
+<hr class="clear">  
 <p>
-  <b>Facturas</b>
+  <b>Cuenta corriente - Saldo : <%= format("%.2f" % @cliente.saldo).to_s %></b>
 </p>
 <table class="table">
  <tr>
+    <th>Tipo</th>
     <th>Numero</th>
     <th>Fecha</th>
     <th>Importe</th>
@@ -49,102 +47,15 @@ end %>
     <th></th>
     <th></th>
   </tr>
-<% @cliente.facturas.each do |cpbte| %>
+<% @cliente.comprobantes.order("fecha desc").each do |cpbte| %>
   <tr>
+    <td><%= cpbte.type %></td>
     <td class="last"><%= format("%04d" % cpbte.sale_point).to_s + '-' + format("%08d" % cpbte.numero).to_s %></td>
     <td><%= cpbte.fecha %></td>
-    <td class="last"><%= format("%.2f" % cpbte.importe).to_s %></td>
+    <td class="last"><%= format("%.2f" % cpbte.total_comprobante).to_s %></td>
     <td><%= cpbte.fechavto %></td>
     <td><%= link_to icon('application_go', :small, :title => 'ver'), [cpbte.cliente, cpbte] %></td>
-    <td><%= link_to icon('printer', :small, :title => 'Imprimir'), cliente_factura_path(cpbte.cliente, cpbte, :format => 'pdf') %></td>
+    <td><%= link_to icon('printer', :small, :title => 'Imprimir'), :controller => cpbte.type.pluralize.downcase, :action => 'show', :cliente_id => cpbte.cliente.id, :id => cpbte.id ,:format => 'pdf' %></td>
   </tr>
-	<% cpbte.facturarecibos.each do |cpbteafectado| %>
-  		<tr>
-    		<td>recibo -------></td>
-    		<td><%= cpbteafectado.fecha %></td>
-    		<td class="last"><%= format("%.2f" % cpbteafectado.importe).to_s %></td>
-        <td class="last"><%= format("%04d" % cpbteafectado.recibo.sale_point).to_s + '-' + format("%08d" % cpbteafectado.recibo.numero).to_s %></td>
-	  		<td class="last"><%= format("%.2f" % cpbteafectado.recibo.importe).to_s %></td>
-  		</tr>
-	<% end %>
-	
-	<% cpbte.facturanotacreditos.each do |cpbteafectado| %>
-		<tr>
-  		<td>nota credito --></td>
-  		<td><%= cpbteafectado.fecha %></td>
-  		<td class="last"><%= format("%.2f" % cpbteafectado.importe).to_s %></td>
-      <td class="last"><%= format("%04d" % cpbteafectado.factura.sale_point).to_s +'-'+format("%08d" % cpbteafectado.factura.numero).to_s %></td>
-  		<td class="last"><%= format("%.2f" % cpbteafectado.factura.importe).to_s %></td>
-		</tr>
-	<% end %>	
-<% end %>
-</table>
-
-<hr class="clear">
-<p>
-  <b>Recibos</b>
-</p>
-<table class="table">
- <tr>
-    <th>Numero</th>
-    <th>Fecha</th>
-    <th>Importe</th>
-    <th>Fecha Vto</th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @cliente.recibos.each do |cpbte| %>
-  <tr>
-    <td class="last"><%= format("%04d" % cpbte.sale_point).to_s + '-' + format("%08d" % cpbte.numero).to_s %></td>
-    <td><%= cpbte.fecha %></td>
-		<td class="last"><%= format("%.2f" % cpbte.importe).to_s %></td>
-    <td><%= cpbte.fechavto %></td>
-    <td><%= link_to icon('application_go', :small, :title => 'ver'), [cpbte.cliente, cpbte] %></td>
-    <td><%= link_to icon('printer', :small, :title => 'Imprimir'), cliente_recibo_path(cpbte.cliente, cpbte, :format => 'pdf') %></td>
-  </tr>
-	<% cpbte.facturarecibos.each do |cpbteafectado| %>
-		<tr>
-  		<td>factura -------></td>
-  		<td><%= cpbteafectado.fecha %></td>
-  		<td class="last"><%= format("%.2f" % cpbteafectado.importe).to_s %></td>
-	    <td class="last"><%= format("%04d" % cpbteafectado.factura.sale_point).to_s + '-' + format("%08d" % cpbteafectado.factura.numero).to_s %></td>
-  		<td><%= format("%.2f" % cpbteafectado.factura.importe).to_s %></td>
-		</tr>
-	<% end %>	
-<% end %>
-</table>
-
-<hr class="clear">
-<p>
-  <b>Nota de credito</b>
-</p>
-<table class="table">
- <tr>
-    <th>Numero</th>
-    <th>Fecha</th>
-    <th>Importe</th>
-    <th>Fecha Vto</th>
-    <th></th>
-    <th></th>
-  </tr>
-<% @cliente.notacreditos.each do |cpbte| %>
-  <tr>
-    <td class="last"><%= format("%04d" % cpbte.sale_point).to_s + '-' + format("%08d" % cpbte.numero).to_s %></td>
-    <td><%= cpbte.fecha %></td>
-		<td class="last"><%= format("%.2f" % cpbte.importe).to_s %></td>
-    <td><%= cpbte.fechavto %></td>
-    <td><%= link_to icon('application_go', :small, :title => 'ver'), [cpbte.cliente, cpbte] %></td>
-    <td><%= link_to icon('printer', :small, :title => 'Imprimir'), cliente_notacredito_path(cpbte.cliente, cpbte, :format => 'pdf') %></td>
-  </tr>
-	<% cpbte.facturanotacreditos.each do |cpbteafectado| %>
-		<tr>
-		  <td>factura -------></td>
-		  <td><%= cpbteafectado.fecha %></td>
-		  <td class="last"><%= format("%.2f" % cpbteafectado.importe).to_s %></td>
-	    <td class="last"><%= format("%04d" % cpbteafectado.factura.sale_point).to_s + '-' + format("%08d" % cpbteafectado.factura.numero).to_s %></td>
-  		<td><%= format("%.2f" % cpbteafectado.factura.importe).to_s %></td>
-		</tr>
-	<% end %>
 <% end %>
 </table>

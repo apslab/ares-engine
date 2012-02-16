@@ -20,12 +20,27 @@ class Cliente < ActiveRecord::Base
   has_many :facturas
   has_many :recibos
   has_many :notacreditos
+  #has_many :debitos, :class_name => "Comprobante" #, :foreign_key => "reference_id"
+  #scope :debitos, where("comprobantes.signo = 1 ")
+
+  has_many :comprobantedebitos
+  has_many :comprobantecreditos  
   has_many :comprobantes do 
     def saldo
       fc = where("Type = 'Factura'").sum(:importe)
       nc = where("Type = 'Notacredito'").sum(:importe)
       rc = where("Type = 'Recibo'").sum(:importe)
-      fc - nc - rc
+      cd = where("Type = 'Comprobantedebito'").sum(:importe)
+      cc = where("Type = 'Comprobantecredito'").sum(:importe)
+      fc + cd - nc - rc - cc
+    end
+
+    def debitos
+      where("Type = 'Factura' or Type = 'Comprobantedebito'")
+    end
+
+    def creditos
+      where("Type = 'Recibo' or Type = 'Notacredito' or Type = 'Comprobantecredito'")
     end
   end
   
@@ -60,14 +75,14 @@ class Cliente < ActiveRecord::Base
   scope :by_company, lambda {|company| where(:company_id => company.id) }
   
   delegate :saldo , :to => :comprobantes
-  
+  delegate :debitos , :to => :comprobantes
+  delegate :creditos , :to => :comprobantes
+
   # control para 
   before_destroy :control_sin_comprobantes
   
   # funcionalidad: accesible_by(current_ability)) 
   # 1) rails g cancan:ability
- 
-#
  
 def save_ctacte_pdf_to(filename,entity)
   require 'prawn'

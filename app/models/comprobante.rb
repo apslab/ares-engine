@@ -18,7 +18,11 @@
 class Comprobante < ActiveRecord::Base
   belongs_to :cliente
   belongs_to :formapago
-  
+#  has_many :afectaciones
+  has_many :debitoafectaciones, :class_name => "Afectacion", :foreign_key => :debito_id 
+  has_many :creditoafectaciones, :class_name => "Afectacion", :foreign_key => :credito_id 
+
+
   has_many :detalles, :as => :detallable do
     def calculo_total_items
       map(&:totalitem).sum
@@ -42,6 +46,10 @@ class Comprobante < ActiveRecord::Base
   #TODO importe debe ser la suma de los totales de los items
   #validates :importe, :presence => true, :numericality => true
   
+  def total_comprobante
+    (self.importe * self.signo)
+  end
+
   def count_items
     detalles.count
   end

@@ -30,14 +30,14 @@ class NotacreditosController < AuthorizedController
       format.xml  { render :xml => @notacredito }
       format.pdf do
        
-        #unless @factura.isprinted?
+        unless @notacredito.isprinted?
            @entry = @notacredito.to_entry
            unless @entry.save
              flash[:error] = @entry.errors.full_messages.join("\n")
-             redirect_to [@notacredito.cliente,:notacreditos]
+             redirect_to [@notacredito.cliente]
              return
            end
-        #end
+        end
         
         dump_tmp_filename = Rails.root.join('tmp',@notacredito.cache_key)
         Dir.mkdir(dump_tmp_filename.dirname) unless File.directory?(dump_tmp_filename.dirname)
@@ -52,6 +52,8 @@ class NotacreditosController < AuthorizedController
   # GET /notacreditos/new.xml
   def new
     @notacredito = @cliente.notacreditos.build
+    @notacredito.fecha = Date.today
+    @notacredito.fechavto = Date.today
         
     respond_to do |format|
       format.html # new.html.erb

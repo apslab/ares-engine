@@ -1,7 +1,7 @@
 <% content_for(:controls) do %>
 <%= controls do |c|
-         c.item "Editar", edit_cliente_recibo_path(@recibo.cliente.id,@recibo), :icon => "application_form_edit"
-         c.item "Volver", cliente_path(@recibo.cliente.id), :icon => "application_go"
+         c.item "Editar", edit_cliente_comprobantecredito_path(@comprobantecredito.cliente.id,@comprobantecredito), :icon => "application_form_edit"
+         c.item "Volver", clientes_path, :icon => "application_go"
 end %>
 <%end%>
 
@@ -9,14 +9,14 @@ end %>
 	<thead>
 		<tr>
 	    <td align="left" width="5%">Cuenta</td>
-	    <td align="left" width="20%"><div style="font-size: large;"><%= @recibo.cliente.razonsocial %></div></td>
+	    <td align="left" width="20%"><div style="font-size: large;"><%= @comprobantecredito.cliente.razonsocial %></div></td>
 	    <td align="left" width="5%">Fecha</td>
-	    <td align="left" width="20%"><div style="font-size: large;"><%= @recibo.fecha %></div></td>
+	    <td align="left" width="20%"><div style="font-size: large;"><%= @comprobantecredito.fecha %></div></td>
 	    <td align="left" width="5%">Numero</td>
-	    <td align="left" width="20%"><div style="font-size: large;"><%= @recibo.numero %></div></td>
+	    <td align="left" width="20%"><div style="font-size: large;"><%= @comprobantecredito.numero %></div></td>
 		</tr>
 		<tr>
-			<th>Observaciones</th><td colspan="6"><div style="font-size: large;"><%= @recibo.observation %></div></td>
+			<th>Observaciones</th><td colspan="6"><div style="font-size: large;"><%= @comprobantecredito.observation %></div></td>
 		</tr>
 	</thead>
 	<tbody>
@@ -31,7 +31,7 @@ end %>
 		</tr>		
 	</thead>
 	<tbody>
-		<% @recibo.detalles.each do |item| %>
+		<% @comprobantecredito.detalles.each do |item| %>
 		<tr>
 	    <td align="left" ><%= item.descripcion %></td>
 	    <td align="right"><%= number_to_currency(item.preciounitario) %></td>
@@ -41,7 +41,7 @@ end %>
 		<tr>
 	    <td align="left" ><b>Total</b></td>
 	    <td align="center"><b><%= "-" * 40 %></b></td>
-	    <td align="right"><b><%= number_to_currency(@recibo.importe) %></b></td>
+	    <td align="right"><b><%= number_to_currency(@comprobantecredito.importe) %></b></td>
 		</tr>
 	</tbody>		
 </table>

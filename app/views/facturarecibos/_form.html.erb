@@ -19,7 +19,7 @@ end %>
   <% end %>
 
 <%= f.inputs do %>
-  <%= f.input :fecha , :as => :datepicker%>
+  <%= f.input :fecha %>
   <%= f.input :factura, :label => true, :as => :select, :collection => @cliente.facturas.select {|fc| fc.con_deuda? }.map{|c| [c.numero.to_s + ' ' + c.fecha.to_s + ' ' + c.importe.to_s + ' ' + c.total_monto_adeudado.to_s, c.id]} %>
   <%= f.input :recibo, :label => true, :as => :select, :collection => @cliente.recibos.select {|rc| rc.con_deuda? }.map{|c| [c.numero.to_s + ' ' + c.fecha.to_s + ' ' + c.importe.to_s + ' ' + c.total_monto_adeudado.to_s, c.id]} %>
   <%= f.input :importe %>

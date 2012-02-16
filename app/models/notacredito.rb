@@ -14,12 +14,7 @@
 #  created_at :datetime
 #  updated_at :datetime
 
-class Notacredito < Comprobante    
-  belongs_to :cliente
-  #has_many :facturarecibos
-  has_many :facturanotacreditos
-  #has_many :facturas
-  
+class Notacredito < Comprobante  
   scope :no_actualizados, where("updated_at IS NULL" )
   scope :por_cliente, lambda {|cliente| where(:cliente_id => cliente) }
 
@@ -27,8 +22,8 @@ class Notacredito < Comprobante
     self.importe
   end
   
-  def total_comprobante
-    (self.importe * -1)
+  def signo
+    -1
   end
   
   def total_iva_notacredito
@@ -45,6 +40,10 @@ class Notacredito < Comprobante
   
   def total_monto_adeudado
     self.importe - self.total_monto_cancelado
+  end
+
+  def isprinted?
+    printed_at?
   end
 
   def sin_deuda?
@@ -138,10 +137,10 @@ class Notacredito < Comprobante
        pdf.draw_text "original", :at => [-4,400], :size => 8, :rotate => 90
 
        pdf.draw_text self.cliente.condicioniva.letra.to_s, :at => [243,710], :size => 16
-       pdf.draw_text "Nota de credito numero: 0000-" + self.numero.to_s, :at => [275,710], :size => 14
-       pdf.draw_text "Fecha de emision: " + self.fecha.to_s, :at => [275,695], :size => 14
+       pdf.draw_text self.type + "Pto de venta:" + format("%04d" % self.sale_point).to_s + " Comp.Numero:" + format("%08d" % self.numero).to_s, :at => [270,710], :size => 10
+       pdf.draw_text "Fecha de emision: " + self.fecha.to_s, :at => [280,695], :size => 10
        
-       empresa = "public/images/clinicA.jpg" 
+       empresa = "public/images/" + self.cliente.company.logo_filename # logo.png
        pdf.image empresa, :at => [0,729], :width => 100
 
        # recuadro de la letra
@@ -150,11 +149,32 @@ class Notacredito < Comprobante
            pdf.stroke_bounds
        end
 
-       pdf.draw_text "Cliente", :at => [10,650], :size => 10, :style => :bold
-       pdf.draw_text "Razon social : " + self.cliente.razonsocial, :at => [10,640], :size => 10
-       pdf.draw_text "CUIT : " + self.cliente.cuit, :at => [10,630], :size => 10
-       pdf.draw_text "Condicion de IVA:" + self.cliente.condicioniva.detalle, :at => [10,620], :size => 10
-       pdf.draw_text "Direccion : " + self.cliente.direccion, :at => [10,610], :size => 10
+       pdf.draw_text "Razon Social : " + self.cliente.company.name.to_s, :at => [10,685], :size => 10
+       pdf.draw_text "CUIT : " + self.cliente.company.cuit.to_s, :at => [280,685], :size => 10
+       pdf.draw_text "Direccion : " + self.cliente.company.address.to_s, :at => [10,675], :size => 10
+       pdf.draw_text "IIBB : " + self.cliente.company.iibb.to_s, :at => [280,675], :size => 10
+       pdf.draw_text "Condicion frente al IVA : " + self.cliente.company.condicioniva.detalle.to_s, :at => [10,665], :size => 10
+       pdf.draw_text "Inicio actividad : " + self.cliente.company.date_since.to_s, :at => [280,665], :size => 10
+       
+       # pdf.draw_text self.cliente.company.address.to_s, :at => [300,675], :size => 10
+
+       # recuadro de los datos del cliente       
+       pdf.line_width = 1
+       pdf.bounding_box [-2, 730], :width => 500, :height => 70 do
+           pdf.stroke_bounds
+       end
+
+       # recuadro de la letra
+       pdf.line_width = 1
+       pdf.bounding_box [233, 730], :width => 30, :height => 30 do
+           pdf.stroke_bounds
+       end
+
+       pdf.draw_text "Razon social : " + self.cliente.razonsocial, :at => [10,650], :size => 10
+       pdf.draw_text "CUIT : " + self.cliente.cuit, :at => [10,640], :size => 10
+       pdf.draw_text "Condicion de IVA:" + self.cliente.condicioniva.detalle, :at => [10,630], :size => 10
+       pdf.draw_text "Direccion : " + self.cliente.direccion, :at => [10,620], :size => 10
+       #pdf.draw_text "Forma de pago : " + self.try(:formapago).try(:name), :at => [10,610], :size => 10
        
        # recuadro de los datos del cliente       
        pdf.line_width = 1
@@ -163,6 +183,7 @@ class Notacredito < Comprobante
        end
 
        pdf.draw_text "Cantidad",   :at => [  1,565], :size => 10
+       pdf.draw_text "U.Medida",   :at => [ 50,565], :size => 10
        pdf.draw_text "Detalle" ,   :at => [100,565], :size => 10
        pdf.draw_text "Precio"  ,   :at => [250,565], :size => 10
        pdf.draw_text "% IVA"   ,   :at => [300,565], :size => 10       
@@ -176,13 +197,17 @@ class Notacredito < Comprobante
         end
        @banda = 550   
        self.detalles.each do |item|  
-          pdf.draw_text format("%5d" % item.cantidad).to_s(), :at => [1,@banda], :size => 10
-          pdf.draw_text item.descripcion.to_s(), :at => [100,@banda], :size => 10
-          pdf.draw_text item.preciounitario.to_s(), :at => [250,@banda], :size => 10
-          pdf.draw_text item.tasaiva.to_s(), :at => [300,@banda], :size => 10          
-          pdf.draw_text item.totalivaitem.to_s(), :at => [350,@banda], :size => 10
-          pdf.draw_text format("%.2f" % item.totalitem).to_s().rjust(10), :at => [400,@banda], :size => 10
-          @banda -= 15          
+         pdf.draw_text format("%5d" % item.cantidad).to_s, :at => [1,@banda], :size => 10
+         pdf.draw_text item.product.unitmeasure.try(:name).to_s, :at => [50,@banda], :size => 10 
+                  
+         #pdf.draw_text item.descripcion.to_s(), :at => [100,@banda], :size => 10
+         pdf.text_box item.descripcion.to_s(), :at => [100,@banda], :size => 10, :width => 150, :height => 100, :single_line => false
+         
+         pdf.draw_text item.preciounitario.to_s(), :at => [250,@banda], :size => 10
+         pdf.draw_text item.tasaiva.to_s(), :at => [300,@banda], :size => 10          
+         pdf.draw_text item.totalivaitem.to_s(), :at => [350,@banda], :size => 10
+         pdf.draw_text format("%.2f" % item.totalitem).to_s().rjust(10), :at => [400,@banda], :size => 10
+         @banda -= 15          
        end
 
        pdf.line_width = 1

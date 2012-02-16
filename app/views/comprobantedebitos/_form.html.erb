@@ -14,13 +14,13 @@
   <% end %>
 <% end %>
 
-<%= semantic_form_for [@cliente, @recibo] do |f| %>
+<%= semantic_form_for [@cliente, @comprobantedebito] do |f| %>
  <%= f.semantic_errors %>
  <%= f.semantic_errors(:importe) %>
 
 <%= f.inputs(:class => :column_left ) do %>
   <%= t('activerecord.attributes.cliente.razonsocial') + ' : ' + @cliente.razonsocial %>
-  <%= f.input :fecha , :as => :date, :start_year => Date.today.year - 1, :end_year => Date.today.year %>
+  <%= f.input :fecha , :as => :datepicker, :start_year => Date.today.year - 1, :end_year => Date.today.year %>
   <%= f.input :sale_point , :as => :numeric, :input_html => { :size => 4, :style => "text-align:right;" } %>
   <%= f.input :numero , :as => :numeric, :input_html => { :size => 8, :style => "text-align:right;" } %>
   <%= f.input :observation , :as => :text, :input_html => { :size => 10, :style => "text-align:left;height:35px" } %>

@@ -17,19 +17,14 @@
 require 'prawn'
 
 class Factura < Comprobante
-  
-  belongs_to :cliente
-  has_many :facturarecibos
-  has_many :facturanotacreditos
-  
   scope :no_actualizados, where("updated_at IS NULL" )
   scope :vencidas, where("fechavto < ?", Date.today)
   scope :por_cliente, lambda {|cliente| where(:cliente_id => cliente) }
 
-  def total_comprobante
-    self.importe
+  def signo
+    1
   end
-  
+
   def total_iva_factura
     detalles.all.sum(&:totalivaitem)
   end
@@ -39,7 +34,7 @@ class Factura < Comprobante
   end
   
   def total_monto_cancelado
-    self.facturarecibos.all.sum(&:importe) + self.facturanotacreditos.all.sum(&:importe)
+    self.creditoafectaciones.all.sum(&:importe) #+ self.facturanotacreditos.all.sum(&:importe)
   end
   
   def total_monto_adeudado
@@ -132,15 +127,98 @@ class Factura < Comprobante
     end
   end
 
+  def aps_factura_print(filename)
+    self.save_pdf_to(filename)    
+  end
+
+  def cnsp_factura_print(filename)
+         Prawn::Document.generate(filename) do |pdf|
+       pdf.draw_text "original " + self.type + " " + format("%04d" % self.sale_point).to_s + "-" + format("%08d" % self.numero).to_s, :at => [-4,400], :size => 8, :rotate => 90
+
+       #pdf.draw_text self.cliente.condicioniva.letra.to_s, :at => [243,710], :size => 16
+       #pdf.draw_text self.type + "Pto de venta:" + format("%04d" % self.sale_point).to_s + " Comp.Numero:" + format("%08d" % self.numero).to_s, :at => [270,710], :size => 10
+       pdf.draw_text self.fecha.to_s, :at => [380,695], :size => 12
+       
+       #pdf.draw_text "Razon Social : " + self.cliente.company.name.to_s, :at => [10,685], :size => 10
+       #pdf.draw_text "CUIT : " + self.cliente.company.cuit.to_s, :at => [280,685], :size => 10
+       #pdf.draw_text "Direccion : " + self.cliente.company.address.to_s, :at => [10,675], :size => 10
+       #pdf.draw_text "IIBB : " + self.cliente.company.iibb.to_s, :at => [280,675], :size => 10
+       #pdf.draw_text "Condicion frente al IVA : " + self.cliente.company.condicioniva.detalle.to_s, :at => [10,665], :size => 10
+       #pdf.draw_text "Inicio actividad : " + self.cliente.company.date_since.to_s, :at => [280,665], :size => 10
+       
+       # pdf.draw_text self.cliente.company.address.to_s, :at => [300,675], :size => 10
+
+       pdf.draw_text self.cliente.razonsocial, :at => [10,650], :size => 10
+       pdf.draw_text "Leg. : " + self.cliente.codigo + " - CUIT : " + self.cliente.cuit, :at => [10,640], :size => 10
+       pdf.draw_text self.cliente.condicioniva.detalle, :at => [10,630], :size => 10
+
+       pdf.draw_text self.cliente.direccion, :at => [10,620], :size => 10
+       
+       pdf.draw_text self.formapago.try(:name), :at => [50,600], :size => 10
+       
+       pdf.draw_text "Descripcion" ,   :at => [1,565], :size => 10
+       pdf.draw_text "Precio"  ,   :at => [400,565], :size => 10
+       pdf.draw_text "Cant.",   :at => [450,565], :size => 10
+       pdf.draw_text "Total"   ,   :at => [500,565], :size => 10   
+
+
+      # inicion de tabla
+      pdf.move_down 170
+
+      data = []
+      data << []
+
+      self.detalles.each do |reg|
+        line = []
+        line << reg.descripcion.to_s
+        line << format("%.2f" % reg.preciounitario).to_s
+        line << format("%5d" % reg.cantidad).to_s
+        line << format("%.2f" % reg.totalitem).to_s
+
+        data << line
+      end
+      
+      pdf.table(data, :column_widths => [400, 50, 40, 50],
+             :cell_style => { :borders => [],
+                              :font => "Times-Roman",
+                              :size => 10,:padding => [0,3,4,2],
+                              :align =>  :left,
+                              :valign => :center } ) do
+                                columns(1..3).align = :right
+                              end
+      # fin de tabla
+
+
+      # @banda = 550   
+      # self.detalles.each do |item|
+      #    pdf.text_box item.descripcion.to_s(), :at => [1,@banda], :size => 10, :width => 400, :height => 50, :single_line => false
+      #    
+      #    pdf.draw_text item.preciounitario.to_s, :at => [400,@banda], :size => 10
+      #    pdf.draw_text format("%5d" % item.cantidad).to_s, :at => [450,@banda], :size => 10
+      #    pdf.draw_text format("%.2f" % item.totalitem).to_s.rjust(10), :at => [500,@banda], :size => 10
+      #    @banda -= 15          
+      # end
+       #pdf.draw_text "Total", :at => [400,45], :size => 10
+
+       pdf.draw_text "%9.02f" % self.importe.to_s, :at => [500,25], :size => 12, :style => :bold
+
+       pdf.text_box Apslabs::Numlet.new.numero_a_palabras( self.importe ) + '.-', :at => [10,25], :size => 10, :width => 350, :height => 100, :single_line => false
+
+       pdf.text_box self.cliente.company.facturaobservation.to_s , :at => [10,10], :size => 10, :width => 350, :height => 100, :single_line => false
+
+       self.update_attributes(:printed_at => Date.today)
+     end
+  end
+
   def save_pdf_to(filename)
      Prawn::Document.generate(filename) do |pdf|
        pdf.draw_text "original", :at => [-4,400], :size => 8, :rotate => 90
 
        pdf.draw_text self.cliente.condicioniva.letra.to_s, :at => [243,710], :size => 16
-       pdf.draw_text "Punto de venta: " + format("%04d" % self.sale_point).to_s + " Comp.Numero: " + format("%08d" % self.numero).to_s, :at => [280,710], :size => 10
+       pdf.draw_text self.type + "Pto de venta:" + format("%04d" % self.sale_point).to_s + " Comp.Numero:" + format("%08d" % self.numero).to_s, :at => [270,710], :size => 10
        pdf.draw_text "Fecha de emision: " + self.fecha.to_s, :at => [280,695], :size => 10
        
-       empresa = "public/images/logo.png" 
+       empresa = "public/images/" + self.cliente.company.logo_filename # logo.png
        pdf.image empresa, :at => [0,729], :width => 100
 
        pdf.draw_text "Razon Social : " + self.cliente.company.name.to_s, :at => [10,685], :size => 10

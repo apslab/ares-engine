@@ -1,0 +1,17 @@
+<% content_for(:filtros) do %>
+<div id="filters" class="accordion">
+  <h3><a href="#">Filtros</a></h3>
+  <div class="filters-content">
+	<%= semantic_form_for @search do |f| %>
+	   <%= f.inputs do %>
+	   <%= f.input :numero_equals, :label => "Numero de recibo" %>
+	   <%= f.input :fecha_greater_than_or_equal_to, :label => "Desde fecha" %>	
+	   <%= f.input :fecha_less_than_or_equal_to, :label => "Hasta fecha" %>	
+	   <% end %>
+	   <%= f.buttons do %>
+	      <%= f.commit_button :search %>
+	   <% end %>
+	<% end %>
+  </div>
+</div>
+<%end%>

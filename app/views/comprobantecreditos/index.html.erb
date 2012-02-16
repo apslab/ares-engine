@@ -1,0 +1,48 @@
+<h1>Listado de Comprobantes de debito</h1>
+
+<% content_for(:breadcrumbs) do %>
+<%= breadcrumbs do |b|
+	b.item "Principal", root_path
+    b.item "Clientes", clientes_path
+end %>
+<%end%>
+
+<% content_for(:controls) do %>
+<%= controls do |c|
+         c.item "Nuevo", new_cliente_comprobantedebito_path, :icon => "add"
+         c.item "Exportar PDF", root_path, :icon => "report_go", :method => :delete
+end %>
+<%end%>
+
+
+<table>
+  <tr>
+    <th>Cliente</th>
+    <th>Fecha</th>
+    <th>Importe</th>
+    <th>Numero</th>
+    <th>Fecha Vto</th>
+    <th>Cant.Items</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @comprobantedebitos.each do |cpbte| %>
+	  <tr>
+	    <td><%= cpbte.cliente.try(:razonsocial) %></td>
+	    <td><%= cpbte.fecha %></td>
+	    <td align="right"><%= cpbte.total_recibo %></td>
+	    <td align="right"><%= cpbte.numero %></td>
+	    <td><%= cpbte.fechavto %></td>
+	    <td><%= cpbte.count_items %></td>
+	    <td><%= link_to icon('application_go', :small, :title => 'ver'), cpbte %></td>
+	    <td><%= link_to icon('application_edit', :small, :title => 'editar'), edit_comprobantedebito_path(cpbte) %></td>
+	    <td><%= link_to icon('application_delete', :small, :title => 'borrar'), cpbte, :confirm => 'Esta ud. seguro?', :method => :delete %></td>
+	  </tr>
+	<% end %>
+</table>
+<%= paginate @comprobantedebitos %>
+<br />
+<br />
+<%= link_to 'Nuevo Comprobante de Debito', new_cliente_comprobantedebito_path %>

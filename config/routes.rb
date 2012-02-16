@@ -23,6 +23,9 @@ Rails.application.routes.draw do
     resources :facturas
     resources :recibos
     resources :notacreditos
+    resources :comprobantedebitos
+    resources :comprobantecreditos
+    resources :afectacions
 
     resources :facturarecibos
     resources :facturanotacreditos
@@ -32,7 +35,9 @@ Rails.application.routes.draw do
       get 'cuentacorriente', :action => :cuentacorriente 
     end
   end  
-    
+  
+  resources :afectacions  
+
   resources :facturas do
     resources :facturadetalles, :only => [:new, :create, :index, :destroy, :edit]
     member do

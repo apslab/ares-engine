@@ -30,18 +30,24 @@ class RecibosController < AuthorizedController
       format.xml  { render :xml => @recibo }
       format.pdf do
        
-        #unless @factura.isprinted?
+        unless @recibo.isprinted?
            @entry = @recibo.to_entry
            unless @entry.save
              flash[:error] = @entry.errors.full_messages.join("\n")
-             redirect_to [@recibo.cliente,:recibos]
+             redirect_to [@recibo.cliente]
              return
            end
-        #end
+        end
         
         dump_tmp_filename = Rails.root.join('tmp',@recibo.cache_key)
         Dir.mkdir(dump_tmp_filename.dirname) unless File.directory?(dump_tmp_filename.dirname)
-        @recibo.save_pdf_to(dump_tmp_filename)
+        if @recibo.cliente.company.recibo_method_print.blank?
+          @recibo.save_pdf_to(dump_tmp_filename) 
+        else
+          if @recibo.respond_to?(@recibo.cliente.company.recibo_method_print)
+            @recibo.send( @recibo.cliente.company.recibo_method_print , dump_tmp_filename )
+          end  
+        end
         send_file(dump_tmp_filename, :type => :pdf, :disposition => 'attachment', :filename => "#{@cliente.razonsocial}-recibo-#{@recibo.numero}.pdf")
         File.delete(dump_tmp_filename)
       end
@@ -52,6 +58,7 @@ class RecibosController < AuthorizedController
   # GET /recibos/new.xml
   def new
     @recibo = @cliente.recibos.build
+    @recibo.fecha = Date.today
     
     respond_to do |format|
       format.html # new.html.erb

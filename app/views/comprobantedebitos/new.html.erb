@@ -1,0 +1,9 @@
+<h1>Nuevo recibo</h1>
+
+<% content_for(:controls) do %>
+<%= controls do |c|
+         c.item t('scaffold.actions.back', :item => Comprobantedebito.model_name.human).titlecase,  cliente_path(@comprobantedebito.cliente), :icon => "application_go"
+end %>
+<%end%>
+
+<%= render 'form' %>

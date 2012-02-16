@@ -34,14 +34,23 @@ class FacturasController < AuthorizedController
            @entry = @factura.to_entry
            unless @entry.save
              flash[:error] = @entry.errors.full_messages.join("\n")
-             redirect_to [@factura.cliente,:facturas]
+             redirect_to [@factura.cliente]
              return
            end
         #end
         
+
         dump_tmp_filename = Rails.root.join('tmp',@factura.cache_key)
         Dir.mkdir(dump_tmp_filename.dirname) unless File.directory?(dump_tmp_filename.dirname)
-        @factura.save_pdf_to(dump_tmp_filename)
+        
+        if @factura.cliente.company.factura_method_print.blank?
+          @factura.save_pdf_to(dump_tmp_filename) 
+        else
+          if @factura.respond_to?(@factura.cliente.company.factura_method_print)
+            @factura.send( @factura.cliente.company.factura_method_print , dump_tmp_filename )
+          end  
+        end
+
         send_file(dump_tmp_filename, :type => :pdf, :disposition => 'attachment', :filename => "#{@cliente.razonsocial}-factura-#{@factura.numero}.pdf")
         File.delete(dump_tmp_filename)
       end
@@ -52,7 +61,9 @@ class FacturasController < AuthorizedController
   # GET /facturas/new.xml
   def new
     @factura = @cliente.facturas.build
-    
+    @factura.fecha = Date.today
+    @factura.fechavto = Date.today
+
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @factura }
