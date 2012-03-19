@@ -98,9 +98,9 @@ class Recibo < Comprobante
 
       @line = 535
       @total_cpb = 0
-      self.facturarecibos.each do |cpb|
-        pdf.draw_text cpb.factura.fecha.to_s , :at => [-10,@line], :size => 8
-        pdf.draw_text format("%04d" % cpb.factura.sale_point).to_s + '-' + format("%08d" % cpb.factura.numero).to_s , :at => [35,@line], :size => 8
+      self.debitoafectaciones.each do |cpb|
+        pdf.draw_text cpb.debito.fecha.to_s , :at => [-10,@line], :size => 8
+        pdf.draw_text format("%04d" % cpb.debito.sale_point).to_s + '-' + format("%08d" % cpb.debito.numero).to_s , :at => [35,@line], :size => 8
         pdf.draw_text "%9.02f" % cpb.importe.to_s , :at => [130,@line], :size => 10
         @total_cpb += cpb.importe
         @line -= 15
@@ -126,7 +126,7 @@ class Recibo < Comprobante
       pdf.draw_text self.fecha.to_s, :at => [360,705], :size => 14, :style => :bold
     
       pdf.draw_text self.cliente.razonsocial, :at => [30,620], :size => 12
-      pdf.draw_text self.cliente.condicioniva.name, :at => [10,600], :size => 10
+      #pdf.draw_text self.cliente.condicioniva.name, :at => [10,600], :size => 10
       pdf.draw_text self.cliente.cuit, :at => [300,600], :size => 10
     
       pdf.draw_text Apslabs::Numlet.new.numero_a_palabras( self.importe ) + '.-', :at => [330,560]

@@ -1,7 +1,7 @@
 <% content_for(:breadcrumbs) do %>
 <%= breadcrumbs do |b|
-	b.item "Principal", root_path
-    b.item "Clientes", clientes_path
+	  b.item current_company.name.titlecase, root_path
+    b.item Cliente.model_name.human, clientes_path
     b.item @cliente.razonsocial, root_path, :active => true
 end %>
 <%end%>
@@ -50,7 +50,11 @@ end %>
 <% @cliente.comprobantes.order("fecha desc").each do |cpbte| %>
   <tr>
     <td><%= cpbte.type %></td>
-    <td class="last"><%= format("%04d" % cpbte.sale_point).to_s + '-' + format("%08d" % cpbte.numero).to_s %></td>
+    <% if cpbte.sale_point.nil? %>
+      <td class="last"><%= format("%04d" % 0).to_s + '-' + format("%08d" % 0).to_s %></td>    
+    <% else %>
+      <td class="last"><%= format("%04d" % cpbte.sale_point).to_s + '-' + format("%08d" % cpbte.numero).to_s %></td>
+    <% end %>
     <td><%= cpbte.fecha %></td>
     <td class="last"><%= format("%.2f" % cpbte.total_comprobante).to_s %></td>
     <td><%= cpbte.fechavto %></td>
