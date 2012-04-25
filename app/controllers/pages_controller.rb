@@ -1,18 +1,19 @@
 class PagesController < AuthorizedController
+
   def home
-    @title = "Principal"
+    #@title = "Principal"
   end
 
   def contact
-    @title = "Contacto"
+    #@title = "Contacto"
   end
 
   def about
-    @title = "acerca de"
+    #@title = "acerca de"
   end
 
   def help
-    @title = "Ayuda"
+    #@title = "Ayuda"
   end
 
 end

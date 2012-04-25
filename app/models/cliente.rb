@@ -56,7 +56,7 @@ class Cliente < ActiveRecord::Base
   validates :cuit,:length => { :maximum => 11, :minimum => 11 }, :allow_nil => true, :allow_blank => true
   validates :codigopostal,  :length => { :maximum => 7, :minimum => 4 }, :allow_nil => true, :allow_blank => true
   validates :localidad, :presence => true
-  validates_uniqueness_of :cuit, :scope => [:company_id], :message => "existe otra cuenta con el mismo cuit", :allow_nil => true
+  validates_uniqueness_of :cuit, :scope => [:company_id], :message => "existe otra cuenta con el mismo cuit", :allow_blank => true
 
   validates_numericality_of :cuit, :only_integer => true, :message => "solo numeros", :allow_nil => true, :allow_blank => true
   
