@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "ares"
-  s.version = "0.4.37"
+  s.version = "0.4.38"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["AP System"]
-  s.date = "2012-04-25"
+  s.date = "2012-05-13"
   s.description = "Adminsitracion de Ventas"
   s.email = "info@ap-sys.com.ar"
   s.extra_rdoc_files = [
@@ -113,7 +113,9 @@ Gem::Specification.new do |s|
     "app/views/facturarecibos/index.html.erb",
     "app/views/facturarecibos/new.html.erb",
     "app/views/facturarecibos/show.html.erb",
-    "app/views/facturas/_detalle_fields.html.erb",
+    "app/views/facturas/_detalle_fields.html.haml",
+    "app/views/facturas/_detalle_fields_new.html.erb",
+    "app/views/facturas/_detalle_fields_old.html.erb",
     "app/views/facturas/_filtros.html.erb",
     "app/views/facturas/_form.html.erb",
     "app/views/facturas/edit.html.erb",
@@ -154,7 +156,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/lguardiola/ares"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.10"
+  s.rubygems_version = "1.8.24"
   s.summary = "Proyecto Facturacion"
 
   if s.respond_to? :specification_version then
