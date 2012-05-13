@@ -6,8 +6,8 @@ end %>
 
 <% content_for(:breadcrumbs) do %>
 <%= breadcrumbs do |b|
-	b.item "Principal", root_path
-    b.item "Clientes", clientes_path
+	b.item current_company.name.titlecase, root_path
+    b.item Cliente.model_name.human, clientes_path
     b.item @cliente.razonsocial, root_path, :active => true
 end %>
 <%end%>

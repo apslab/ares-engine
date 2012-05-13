@@ -1,0 +1,11 @@
+<tr class="nested-fields">
+  <td><%= f.input :product, :label => false, :as => :select, :collection => current_company.products.map{|c| [c.name, c.id]}, :prompt => '--elija un producto--', :input_html => {:class => :product_select,:onchange => "pasa_tasa(this)"} %>
+      <%= f.input :tasaiva, :as => :hidden, :input_html => {:class => "tasaiva"} %>
+  </td>
+  <td align="left"><%= f.input :descripcion , :label => false, :as => :text, :input_html => {:class => 'description' , :rows => 2} %></td>
+  <td><%= f.input :cantidad, :min => 1, :label => false, :as => :numeric, :input_html => { :class => ['para_calcula','cantidad'], :onblur => 'calcula_total(this);', :size => 10, :style => "text-align:right;"} %></td>
+  <td><%= f.input :preciounitario, :min => 0,:label => false, :as => :numeric,:input_html => {:onblur => 'calcula_total(this);', :class => ['para_calcula','preciounitario'], :size => 10, :style => "text-align:right;"} %></td>
+  <td align='right'><%= content_tag(:span, (f.object.new_record?) ? '0.00' : "%0.2f"%f.object.tasaiva, :class => 'labeltasaiva') %></td>
+  <td align='right'><%= content_tag(:span, f.object.totalitem, :class => 'calcula_total', :size => 10) %></td>
+  <td><%= link_to_remove_association icon('cross', :small, :title => 'eliminar detalle'), f %></td>
+</tr>

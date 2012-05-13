@@ -63,6 +63,7 @@ class FacturasController < AuthorizedController
     @factura = @cliente.facturas.build
     @factura.fecha = Date.today
     @factura.fechavto = Date.today
+    @factura.detalles.build
 
     respond_to do |format|
       format.html # new.html.erb

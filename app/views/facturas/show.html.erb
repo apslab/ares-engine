@@ -1,3 +1,10 @@
+<% content_for(:breadcrumbs) do %>
+<%= breadcrumbs do |breadcrumb|
+  breadcrumb.item current_company.name.titlecase, root_path
+  breadcrumb.item Cliente.model_name.human, cliente_path(@factura.cliente)
+end %>
+<%end%>
+
 <% content_for(:controls) do %>
 <%= controls do |c|
          c.item "Editar", edit_cliente_factura_path(@factura.cliente.id,@factura), :icon => "application_form_edit"
@@ -5,28 +12,42 @@
 end %>
 <%end%>
 
-<%= semantic_attributes_for @factura do |attr| %>
-  <%= attr.attributes "Cabecera" do %>
-  	<%= attr.attribute :fecha %>
-  	<%= attr.attribute :sale_point , :label => "Punto de venta"%>
-  	<%= attr.attribute :numero , :label => "Numero de factura"%>
-  	<%= attr.attribute :total, :label => "Total de factura" %>
-  	<%= attr.attribute :fechavto %>
+<h4>cabecera</h4>
+<table>
+  <tr>
+    <td>Fecha de emision</td>
+    <th align="right"><%= @factura.fecha %></th>
+  </tr>
+  <tr>
+    <td>Numero de comprobante</td>
+    <th align="right"><%= "%04d" % @factura.sale_point %> - <%= "%08d" % @factura.numero %></th>
+  </tr>
+  <tr>
+    <td>Fecha de vencimiento</td>
+    <th align="right"><%= @factura.fechavto  %></th>
+  </tr>
+  <tr>
+    <td>Cliente</td>
+    <th align="right"><%= @factura.cliente.razonsocial  %></th>
+  </tr>
+  <tr>
+    <td>CUIT</td>
+    <th align="right"><%= @factura.cliente.cuit  %></th>
+  </tr>
+  <tr>
+    <td>Telefono</td>
+    <th align="right"><%= @factura.cliente.telefono  %></th>
+  </tr>
+  <tr>
+    <td>Direccion</td>
+    <th align="right"><%= @factura.cliente.direccion  %></th>
+  </tr>
+</table>
 
-	<%= attr.attributes :for => :cliente do |cliente| %>
-		<%= cliente.attribute :razonsocial , :label => "Razón social"%>
-	 	<%= cliente.attribute :cuit %>
-   	<%= cliente.attribute :telefono %>
-   	<%= cliente.attribute :direccion %>
-	<% end.html_safe %>
-
-  	<%= attr.attribute :count_items, :label => "Cantidad de items en la factura" %>
-  <% end %>
-
- <hr />
-
-  <%= attr.attributes "Detalle" do %>
-	<table>
+<h4>items</h4>
+<hr />
+	<table class='factura_detalle_items'>
+      <thead>
 	  <tr>
 		 <th>Descripcion</th>
 		 <th align="center">Cantidad</th>
@@ -34,15 +55,13 @@ end %>
 		 <th align="center">Precio unitario</th>
 		 <th align="center">IVA</th>
 		 <th align="center">Precio total</th>
-		 <th></th>
-		 <th></th>
-		 <th></th>	
 	  </tr>
+      </thead>
 	<% @factura.detalles.each do |item| %>
 	  <tr>
 	    <td align="left" ><%= item.descripcion %></td>
 	    <td align="right"><%= item.cantidad %></td>
-	    <td align="right"><%= item.product.unitmeasure.try(:name) %></td>
+	    <td align="right"><%= item.product.try(:unitmeasure).try(:name) %></td>
 	    <td align="right"><%= number_to_currency(item.preciounitario) %></td>
 	    <td align="right"><%= number_to_percentage(item.tasaiva, :precision => 2) %></td>
 	    <td align="right"><%= number_to_currency(item.totalitem) %></td>
@@ -52,14 +71,14 @@ end %>
 	  <td align="left" ><b>Total :</b></td>
 	  <td align="right"></td>
 	  <td align="right"></td>
-	  <td align="right"></td>
+	  <td align="right"><%= number_to_currency(@factura.total - @factura.total_iva_factura) %></td>
+      <td align="right"><%= number_to_currency(@factura.total_iva_factura) %></td>
 	  <td align="right"><%= number_to_currency(@factura.total) %></td>
 	</tr>
 	</table>
 	</br>
-  <% end %>
 
-  <h3>documentada</h3>
+  <h4>documentada</h4>
 	<% @factura.debitoafectaciones.each do |item| %>
 		<%= item.fecha %>
 		<%= item.type %>
@@ -67,7 +86,7 @@ end %>
 		<%= item.numero %>
 		<%= item.importe %>
         <%= link_to 'Borrar', [@factura.cliente,item], :confirm => 'Esta ud. seguro?', :method => :delete %>
-	</br>
+	<br />
   <% end %>
 	<% @factura.creditoafectaciones.each do |item| %>
 		<%= item.fecha %>
@@ -76,8 +95,6 @@ end %>
 		<%= item.numero %>
 		<%= item.importe %>
         <%= link_to 'Borrar', [@factura.cliente,item], :confirm => 'Esta ud. seguro?', :method => :delete %>
-	</br>
+	<br />
   <% end %>
-<% end %>
-
 <div class="clear"></div>
