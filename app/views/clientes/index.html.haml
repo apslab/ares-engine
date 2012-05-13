@@ -22,6 +22,9 @@
 
 .block
   - if @clientes.any?
+    .clear
+    .block{:style => 'margin:20px;'}= paginate(@clientes)
+    .clear
     %table.table
       %tr
         %th= Cliente.human_attribute_name('razonsocial')
@@ -44,7 +47,4 @@
             = link_to icon('application_get', :large, :title => t('scaffold.actions.show').titlecase), cliente
             = link_to icon('application_edit', :large, :title => t('scaffold.actions.edit').titlecase), edit_cliente_path(cliente)
             = link_to icon('application_delete', :large, :title => t('scaffold.actions.destroy').titlecase), cliente, :confirm => t('scaffold.actions.destroy_confirm').titlecase, :method => :delete
-    .clear
-    .block{:style => 'margin:20px;'}= paginate(@clientes)
-    .clear
 .clear
