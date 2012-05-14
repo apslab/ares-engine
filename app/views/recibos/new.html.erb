@@ -1,4 +1,11 @@
-<h1>Nuevo recibo</h1>
+<% content_for(:breadcrumbs) do %>
+    <%= breadcrumbs do |breadcrumb|
+      breadcrumb.item current_company.name.titlecase, root_path
+      breadcrumb.item Cliente.model_name.human, clientes_path
+      breadcrumb.item @factura.cliente.razonsocial, cliente_path(@factura.cliente)
+      breadcrumb.item 'Nueva Recibo', cliente_path(@factura.cliente), :active => true
+    end %>
+<%end%>
 
 <% content_for(:controls) do %>
 <%= controls do |c|
