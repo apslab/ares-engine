@@ -59,7 +59,8 @@ class RecibosController < AuthorizedController
   def new
     @recibo = @cliente.recibos.build
     @recibo.fecha = Date.today
-    
+    @recibo.detalles.build
+
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @recibo }
@@ -74,6 +75,9 @@ class RecibosController < AuthorizedController
   # POST /recibos.xml
   def create
     @recibo = @cliente.recibos.build(params[:recibo])
+    @recibo.detalles.each do |detalle|
+      detalle.cantidad = 1
+    end
 
     respond_to do |format|
       if @recibo.save
@@ -91,6 +95,9 @@ class RecibosController < AuthorizedController
   def update
     respond_to do |format|
       if @recibo.update_attributes(params[:recibo])
+        @recibo.detalles.each do |detalle|
+          detalle.cantidad = 1
+        end
         format.html { redirect_to([@cliente, @recibo], :notice => t('flash.actions.update.notice', :resource_name => Recibo.model_name.human)) }
         format.xml  { head :ok }
       else

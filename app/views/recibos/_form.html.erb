@@ -1,17 +1,5 @@
 <% content_for(:head) do %>
-  <%= javascript_tag do %>
-    function calcula_total(input){
-      var total = parseFloat($($(input).closest('tr').find('input.para_calcula')[0]).val());
-
-      $($(input).closest('tr').find('.calcula_total')[0]).html(total.toFixed(2));
-
-      var total_total=0.0;
-      $('.calcula_total').each(function(i,data){
-	    total_total+=parseFloat($(data).html());
-      });
-      $('.total_total').html(total_total.toFixed(2));
-    }
-  <% end %>
+    <%= javascript_include_tag 'recibos_form' %>
 <% end %>
 
 <%= semantic_form_for [@cliente, @recibo] do |f| %>
@@ -26,45 +14,57 @@
   <%= f.input :observation , :as => :text, :input_html => { :size => 10, :style => "text-align:left;height:35px" } %>
 <% end %>
 
-<%= f.inputs(:class => :column_right ) do %>
-  <%= 'Saldo : ' + format("%9.02f" % @cliente.saldo).to_s() %>
-  <br/>
+  <%= f.inputs(:class => :column_right ) do %>
+    <%= 'Saldo : ' + format("%9.02f" % @cliente.saldo).to_s() %>
+    <br/>
 	<% @cliente.comprobantes.each do |cpbte| %>
 	  <% unless cpbte.total_monto_adeudado == 0 %>
-    <%= cpbte.fecha.to_s %>
-    <%= cpbte.fechavto.to_s %>
+      <%= cpbte.fecha.to_s %>
+      <%= cpbte.fechavto.to_s %>
 	  <%= cpbte.type.to_s %>  
-    <%= format("%04d" % cpbte.sale_point).to_s %>
-    <%= format("%08d" % cpbte.numero).to_s %>
+      <%= format("%04d" % cpbte.sale_point).to_s %>
+      <%= format("%08d" % cpbte.numero).to_s %>
 	  <%= format("%9.02f" % cpbte.importe) %> 
 	  <%= format("%9.02f" % cpbte.total_monto_adeudado) %>
-	  <br/>	
-	  <% end %>	
+	  <br/>
+      <% end %>
+    <% end %>
   <% end %>
-<% end %>
 
-<hr class="clear" />
+  <hr class="clear" />
+  <h2 class='items-title'>Items</h2>
+  <%= f.inputs do %>
+    <table class='factura_detalle_items'>
+      <thead>
+        <tr>
+          <th>Forma de pago</th>
+          <th>Descripción</th>
+          <th>Monto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= f.semantic_fields_for :detalles do |fd|%>
+          <%= render 'detalle_fields', :f => fd %>
+        <% end %>
+        <tr class="total_row">
+          <td colspan="4"></td>
+          <td>Total:</td>
+          <td class="total_total">
+            $ <%= f.object.importe.presence || 0.0 %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <% end %>
+    <hr class="clear" />
 
-<%= f.inputs do %>
-<table width="80%" style="margin-top:15px">
-	<tr>
-		<th>Descripción</th>
-		<th>Monto</th>
-		<th>Total <%= content_tag(:span, f.object.importe.presence || 0.0, :class => 'total_total') %></th>		
-	</tr>
-</table>
-<% end %>
+    <div class="links">
+      <%= link_to_add_association icon('add', :small, :style => 'vertical-align:middle;')+'Agrega detalle', f,
+                                  :detalles,
+                                  'data-association-insertion-position' => :append,
+                                  'data-association-insertion-node' => 'tbody',
+                                  :class => 'global_button button'%>
+    </div>
 
-<hr class="clear">
-<div class="links">
-	<%= link_to_add_association icon('add', :small, :style => 'vertical-align:middle;')+'Agrega detalle', f, :detalles,'data-association-insertion-position' => :after , :class => 'global_button button'%>
-</div>
-
-<div class='detalles'>
-	<%= f.semantic_fields_for :detalles do |fd|%>    
-    	<%= render 'detalle_fields', :f => fd %> 
-	<% end %>
-</div>
-
-<%= render('shared/common_form_buttons') %>
-<% end %>
+    <%= render('shared/common_form_buttons') %>
+  <% end %>

@@ -1,12 +1,11 @@
 %tr.nested-fields
   %td
-    = f.select :product_id, current_company.products.map{ |c| [c.name, c.id] },
-      { include_blank: '-- elija el producto --' } , { class: 'product_select' }
-    = f.hidden_field :tasaiva, class: 'tasaiva'    
+    = f.select :product_id, current_company.formapagos.map{ |c| [c.name, c.id] },
+      { include_blank: '-- elija forma de pago --' } , { class: 'product_select' }
+    = f.hidden_field :tasaiva, class: 'tasaiva'
   %td= f.text_area :descripcion, class: 'description', rows: 2
-  %td= f.number_field :cantidad, min: 1, class: 'para_calcula cantidad',  size: 10, style: 'text-align:right;'
-  %td= f.number_field :preciounitario, min: 0, class: 'para_calcula preciounitario', style: 'text-align:right;'
-  %td{align: 'right'}= content_tag(:span, (f.object.new_record?) ? '0.00' : '%0.2f'%f.object.tasaiva, class: 'labeltasaiva')
+  %td
+    = f.number_field :preciounitario, min: 1, class: 'para_calcula preciounitario',  size: 10, style: 'text-align:right;'
+    = f.hidden_field :cantidad, min: 1, class: 'para_calcula cantidad',  size: 10, style: 'text-align:right;'
   %td{align: 'right'}= content_tag(:span, f.object.totalitem, class: 'calcula_total', size: 10)
   %td.remove= link_to_remove_association icon('cross', :small, title: 'eliminar detalle'), f
-

@@ -1,3 +1,11 @@
+<% content_for(:breadcrumbs) do %>
+    <%= breadcrumbs do |breadcrumb|
+      breadcrumb.item current_company.name.titlecase, root_path
+      breadcrumb.item Cliente.model_name.human, clientes_path
+      breadcrumb.item @recibo.cliente.razonsocial, cliente_path(@recibo.cliente)
+    end %>
+<%end%>
+
 <% content_for(:controls) do %>
 <%= controls do |c|
          c.item "Editar", edit_cliente_recibo_path(@recibo.cliente.id,@recibo), :icon => "application_form_edit"

@@ -1,0 +1,17 @@
+<!--
+<%# content_for(:head) do %>
+<%#= javascript_tag do %>
+    function calcula_total(input){
+      var total = parseFloat($($(input).closest('tr').find('input.para_calcula')[0]).val());
+
+      $($(input).closest('tr').find('.calcula_total')[0]).html(total.toFixed(2));
+
+      var total_total=0.0;
+      $('.calcula_total').each(function(i,data){
+	    total_total+=parseFloat($(data).html());
+      });
+      $('.total_total').html(total_total.toFixed(2));
+    }
+  <%# end %>
+<%# end %>
+-->

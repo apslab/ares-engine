@@ -2,8 +2,8 @@
     <%= breadcrumbs do |breadcrumb|
       breadcrumb.item current_company.name.titlecase, root_path
       breadcrumb.item Cliente.model_name.human, clientes_path
-      breadcrumb.item @factura.cliente.razonsocial, cliente_path(@factura.cliente)
-      breadcrumb.item 'Nueva Recibo', cliente_path(@factura.cliente), :active => true
+      breadcrumb.item @recibo.cliente.razonsocial, cliente_path(@recibo.cliente)
+      breadcrumb.item 'Nueva Recibo', cliente_path(@recibo.cliente), :active => true
     end %>
 <%end%>
 
