@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "ares"
-  s.version = "0.4.39"
+  s.version = "0.4.40"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["AP System"]
-  s.date = "2012-05-15"
+  s.date = "2012-05-17"
   s.description = "Adminsitracion de Ventas"
   s.email = "info@ap-sys.com.ar"
   s.extra_rdoc_files = [
@@ -72,8 +72,10 @@ Gem::Specification.new do |s|
     "app/stylesheets/partials/formtastic/_formtastic.sass",
     "app/stylesheets/partials/formtastic/_formtastic_changes.sass",
     "app/stylesheets/uniform.aristo.sass",
+    "app/views/clientes/_address_fields.html.erb",
     "app/views/clientes/_filtros.html.erb",
     "app/views/clientes/_form.html.erb",
+    "app/views/clientes/_phone_fields.html.erb",
     "app/views/clientes/_sidebar.html.erb",
     "app/views/clientes/cuentacorriente.html.erb",
     "app/views/clientes/cuentacorriente.pdf.erb",
