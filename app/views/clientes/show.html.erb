@@ -20,6 +20,8 @@ end %>
   <%= f.label :razonsocial, :class => "apsLabel" %>: <%= @cliente.razonsocial %> <br/>
   <%= f.label :fantasyname, :class => "apsLabel" %>: <%= @cliente.fantasyname %> <br/>
   <%= f.label :cuit, :class => "apsLabel" %>: <%= @cliente.cuit %> <br/>
+  <%= f.label :tipodocumento, :class => "apsLabel" %>: <%= @cliente.tipodocumento.name %>
+  <%= f.label :numerodocumento, :class => "apsLabel" %>: <%= @cliente.numerodocumento %> <br/>
   <%= f.label :telefono, :class => "apsLabel" %>: <%= @cliente.telefono %> <br/>
   <%= f.label :direccion, :class => "apsLabel" %>: <%= @cliente.direccion %> <br/>
   <%= f.label :localidad, :class => "apsLabel" %>: <%= @cliente.localidad %> <br/>
@@ -33,7 +35,52 @@ end %>
   <%= f.label :account_id, :class => "apsLabel" %>: <%= @cliente.account.try('name') %> <br/>
   <%= f.label :observation, :class => "apsLabel" %>: <%= @cliente.observation %> <br/>
 <% end %>
-<hr class="clear">  
+<table class="table">
+  <thead>
+  <tr>
+    <th>Tipo</th>
+    <th>Numero</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @cliente.phones.each do |phone| %>
+  <tr>
+    <td><%= phone.type_phone.name %></td>
+    <td><%= phone.number %></td>
+  </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<table class="table">
+  <thead>
+  <tr>
+    <th>Tipo</th>
+    <th>Calle</th>
+    <th>Numero</th>
+    <th>Piso</th>
+    <th>Dpto</th>
+    <th>Ciudad</th>
+    <th>Codigo Postal</th>
+    <th>Provincia</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @cliente.addresses.each do |address| %>
+      <tr>
+        <td><%= address.type_address.name %></td>
+        <td><%= address.street %></td>
+        <td><%= address.number %></td>
+        <td><%= address.floor %></td>
+        <td><%= address.dpto %></td>
+        <td><%= address.city %></td>
+        <td><%= address.codpos %></td>
+        <td><%= address.province.try(:name) %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+<hr class="clear">
 <p>
   <b>Cuenta corriente - Saldo : <%= format("%.2f" % @cliente.saldo).to_s %></b>
 </p>

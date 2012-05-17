@@ -20,6 +20,13 @@ class Cliente < ActiveRecord::Base
   has_many :facturas
   has_many :recibos
   has_many :notacreditos
+  belongs_to :tipodocumento, :class_name => "Tipodocumento", :foreign_key => "tipodocumento_id"
+  has_many :phones, :class_name => "Phone", :foreign_key => "cliente_id", :dependent => :destroy
+  has_many :addresses, :class_name => "Address", :foreign_key => "cliente_id", :dependent => :destroy
+
+  accepts_nested_attributes_for :addresses, :allow_destroy => true
+  accepts_nested_attributes_for :phones, :allow_destroy => true
+
   #has_many :debitos, :class_name => "Comprobante" #, :foreign_key => "reference_id"
   #scope :debitos, where("comprobantes.signo = 1 ")
 
@@ -67,7 +74,7 @@ class Cliente < ActiveRecord::Base
               :contacto, :account_id, :company_id,
               :email, :fantasyname, :codigopostal, :localidad,
               :province_id, :observation, :date_and_time_attention,
-              :envelope
+              :envelope, :tipodocumento_id, :numerodocumento, :phones_attributes, :addresses_attributes
 
   scope :sin_telefono, where("clientes.telefono = '' ")
   scope :no_actualizados, where("updated_at IS NULL" )
@@ -80,8 +87,9 @@ class Cliente < ActiveRecord::Base
 
   # control para 
   before_destroy :control_sin_comprobantes
-  
-  # funcionalidad: accesible_by(current_ability)) 
+
+
+  # funcionalidad: accesible_by(current_ability))
   # 1) rails g cancan:ability
  
 def save_ctacte_pdf_to(filename,entity)

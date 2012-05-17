@@ -40,7 +40,9 @@ class ClientesController < AuthorizedController
   # GET /clientes/new.xml
   def new
     @cliente = current_company.clientes.build
-    
+    #@cliente.addresses.build
+    #@cliente.phones.build
+
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @cliente }

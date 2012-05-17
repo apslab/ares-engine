@@ -1,0 +1,5 @@
+<tr class="nested-fields">
+  <td><%= f.input :type_phone_id, :label => false, :as => :select, :collection => current_company.type_phones.map{|c| [c.name, c.id]} %></td>
+  <td><%= f.input :number,:label => false %></td>
+  <td><%= link_to_remove_association icon('cross', :small, :title => 'eliminar detalle'), f %></td>
+</tr>

@@ -1,0 +1,11 @@
+<tr class="nested-fields">
+  <td><%= f.input :type_address_id, :label => false, :as => :select, :collection => current_company.type_addresses.map{|c| [c.name, c.id]} %></td>
+  <td><%= f.input :street,:label => false %></td>
+  <td><%= f.input :number,:label => false %></td>
+  <td><%= f.input :floor,:label => false %></td>
+  <td><%= f.input :dpto,:label => false %></td>
+  <td><%= f.input :city,:label => false %></td>
+  <td><%= f.input :codpos,:label => false %></td>
+  <td><%= f.input :province_id, :label => false, :as => :select, :collection => Province.all.map{|c| [c.name, c.id]} %></td>
+  <td><%= link_to_remove_association icon('cross', :small, :title => 'eliminar detalle'), f %></td>
+</tr>

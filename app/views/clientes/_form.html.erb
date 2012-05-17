@@ -13,7 +13,9 @@
 <% end %>
 
 <%= f.inputs(:class => :column_right ) do %>
-	  <%= f.input :telefono %>
+      <%= f.input :tipodocumento_id, :as => :select, :collection => current_company.tipodocumentos.all.map{|c| [c.name, c.id]}, :include_blank => false %>
+      <%= f.input :numerodocumento %>
+      <%= f.input :telefono %>
 	  <%= f.input :direccion %>
 	  <%= f.input :localidad %>		
 	  <%= f.input :province_id, :label => true, :as => :select, :collection => Province.all.map{|c| [c.name, c.id]}, :include_blank => false %>
@@ -26,4 +28,60 @@
 	current_company.accounts.leaves.map{|a|[[a.code, a.name].compact.join(' &raquo; ').html_safe, a.id]} , :include_blank => true %>
 <% end %>
 <hr class="clear">
+<h2 class='items-title'>Telefonos</h2>
+<%= f.inputs do %>
+  <table class='factura_detalle_items'>
+    <thead>
+      <tr>
+        <th>Tipo de telefono</th>
+        <th>Numero</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody class='phones'>
+       <%= f.semantic_fields_for :phones do |fd|%>
+          <%= render 'phone_fields', :f => fd %>
+        <% end %>
+    </tbody>
+  </table>
+<% end %>
+    <div class="links">
+      <%= link_to_add_association icon('add', :small, :style => 'vertical-align:middle;')+'Agrega telefonos', f,
+                                  :phones,
+                                  'data-association-insertion-node' => 'tbody.phones',
+                                  :class => 'global_button button'%>
+    </div>
+    <hr class="clear">
+
+    <h2 class='items-title'>Direccion</h2>
+    <%= f.inputs do %>
+        <table class='factura_detalle_items'>
+          <thead>
+          <tr>
+            <th>Tipo de direccion</th>
+            <th>Calle</th>
+            <th>Numero</th>
+            <th>Piso</th>
+            <th>Dpto</th>
+            <th>Ciudad</th>
+            <th>Codigo Postal</th>
+            <th>Provincia</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody class='addresses'>
+          <%= f.semantic_fields_for :addresses do |fd|%>
+              <%= render 'address_fields', :f => fd %>
+          <% end %>
+          </tbody>
+        </table>
+    <% end %>
+    <div class="links">
+      <%= link_to_add_association icon('add', :small, :style => 'vertical-align:middle;')+'Agrega direccion', f,
+                                  :addresses,
+                                  'data-association-insertion-node' => 'tbody.addresses',
+                                  :class => 'global_button button'%>
+    </div>
+    <hr class="clear">
+
 <% end %>
