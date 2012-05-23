@@ -20,7 +20,7 @@ end %>
   <%= f.label :razonsocial, :class => "apsLabel" %>: <%= @cliente.razonsocial %> <br/>
   <%= f.label :fantasyname, :class => "apsLabel" %>: <%= @cliente.fantasyname %> <br/>
   <%= f.label :cuit, :class => "apsLabel" %>: <%= @cliente.cuit %> <br/>
-  <%= f.label :tipodocumento, :class => "apsLabel" %>: <%= @cliente.tipodocumento.name %>
+  <%= f.label :tipodocumento, :class => "apsLabel" %>: <%= @cliente.tipodocumento.try(:name) %>
   <%= f.label :numerodocumento, :class => "apsLabel" %>: <%= @cliente.numerodocumento %> <br/>
   <%= f.label :telefono, :class => "apsLabel" %>: <%= @cliente.telefono %> <br/>
   <%= f.label :direccion, :class => "apsLabel" %>: <%= @cliente.direccion %> <br/>
