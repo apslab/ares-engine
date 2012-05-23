@@ -68,7 +68,7 @@ end %>
   <tbody>
   <% @cliente.addresses.each do |address| %>
       <tr>
-        <td><%= address.type_address.name %></td>
+        <td><%= address.type_address.try(:name) %></td>
         <td><%= address.street %></td>
         <td><%= address.number %></td>
         <td><%= address.floor %></td>
